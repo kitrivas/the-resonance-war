@@ -272,6 +272,31 @@ footer span {
     padding: 0.3rem 0;
   }
 
+  /* Story page nav layout */
+  .nav-left { flex: 1; }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-right .nav-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(10, 10, 12, 0.95);
+    backdrop-filter: blur(12px);
+    padding: 1.2rem 1.5rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    margin-top: 0;
+    z-index: 100;
+  }
+
+  .font-sizer { display: none; }
+
   .page-header {
     padding: 7rem 1.5rem 3rem;
   }
