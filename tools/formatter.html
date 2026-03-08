@@ -8,48 +8,48 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 body { background: #0a0a0c; color: #c8c5be; font-family: ui-serif, Georgia, serif; padding: 2rem; min-height: 100vh; }
 .wrap { max-width: 800px; margin: 0 auto; }
-h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 1.8rem; color: #e8e5de; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
-.info { font-family: Inter, -apple-system, sans-serif; font-size: 0.7rem; color: #6b6860; line-height: 1.8; margin-bottom: 2rem; }
-.richinput { width: 100%; height: 300px; background: #e8e5de; border: 1px solid #d0cdc4; color: #2a2824; font-family: ui-serif, Georgia, serif; font-size: 0.9rem; line-height: 1.7; padding: 1.2rem; overflow-y: auto; white-space: pre-wrap; word-break: break-word; outline: none; border-radius: 0; }
+h1 { font-family: Georgia, serif; font-weight: 300; font-size: 1.8rem; color: #e8e5de; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.info { font-family: system-ui, sans-serif; font-size: 0.72rem; color: #6b6860; line-height: 1.9; margin-bottom: 2rem; }
+.richinput { width: 100%; height: 350px; background: #e8e5de; border: 1px solid #d0cdc4; color: #2a2824; font-family: ui-serif, Georgia, serif; font-size: 0.9rem; line-height: 1.7; padding: 1.2rem; overflow-y: auto; white-space: pre-wrap; word-break: break-word; outline: none; }
 .richinput:focus { border-color: #b5a07a; }
 .richinput:empty::before { content: attr(data-placeholder); color: #8a8578; pointer-events: none; }
-.richinput em, .richinput i { font-style: italic; }
-.btns { display: flex; gap: 0.8rem; margin: 1.2rem 0; }
-.btn { background: none; border: 1px solid #7d6f55; color: #a89570; font-family: Inter, sans-serif; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.6rem 1.5rem; cursor: pointer; transition: all 0.3s; }
+.btns { display: flex; gap: 0.8rem; margin: 1.2rem 0; flex-wrap: wrap; }
+.btn { background: none; border: 1px solid #7d6f55; color: #a89570; font-family: system-ui, sans-serif; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.6rem 1.5rem; cursor: pointer; transition: all 0.3s; }
 .btn:hover { background: #b5a07a; color: #0a0a0c; }
 .btn-secondary { border-color: #1e1d1a; color: #6b6860; }
 .btn-secondary:hover { border-color: #7d6f55; color: #a89570; background: none; }
-.btn-copied { color: #a89570 !important; }
-.label { font-family: Inter, sans-serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: #7d6f55; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
+.label { font-family: system-ui, sans-serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: #7d6f55; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
 .label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, #2a2518, transparent); }
-pre { width: 100%; background: #11110f; border: 1px solid #1e1d1a; color: #b5b2ab; font-family: monospace; font-size: 0.75rem; line-height: 1.6; padding: 1.2rem; overflow: auto; max-height: 400px; white-space: pre-wrap; word-break: break-word; }
+pre { width: 100%; background: #11110f; border: 1px solid #1e1d1a; color: #b5b2ab; font-family: monospace; font-size: 0.72rem; line-height: 1.6; padding: 1.2rem; overflow: auto; max-height: 400px; white-space: pre-wrap; word-break: break-word; }
 .preview { max-width: 640px; padding: 2rem 0; }
 .preview p { font-family: ui-serif, Georgia, serif; font-size: 1rem; line-height: 1.9; color: #b5b2ab; margin-bottom: 1.3rem; text-indent: 1.5rem; }
-.preview p:first-child, .preview h2 + p { text-indent: 0; }
-.preview h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 1.4rem; color: #e8e5de; margin: 3rem 0 1.5rem; letter-spacing: 0.04em; text-align: center; }
+.preview p:first-child, .preview h2 + p, .preview .story-break + p { text-indent: 0; }
+.preview h2 { font-family: Georgia, serif; font-weight: 400; font-size: 1.4rem; color: #e8e5de; margin: 3rem 0 1.5rem; letter-spacing: 0.04em; text-align: center; }
 .preview .story-break { max-width: 120px; margin: 4rem auto; height: 1px; background: linear-gradient(90deg, transparent, #7d6f55, transparent); }
 .preview em { font-style: italic; }
 .hidden { display: none; }
+.hint { font-family: system-ui, sans-serif; font-size: 0.65rem; color: #4a4740; margin-top: 0.5rem; line-height: 1.6; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Story Formatter</h1>
   <div class="info">
-    Paste your story from Word, Docs, or plain text. The formatter will:<br>
-    &bull; Wrap each paragraph in &lt;p&gt; tags<br>
-    &bull; Convert -- and &mdash; to &amp;mdash;<br>
-    &bull; Convert "quotes" to smart quotes<br>
-    &bull; Preserve italics pasted from Word/Docs (or use *text* for manual italics)<br>
-    &bull; Lines starting with ## become &lt;h2&gt; headings<br>
-    &bull; Blank lines with *** or --- or === become section breaks
+    Paste from Word/Docs or plain text. Italics from rich text are preserved automatically.<br><br>
+    <strong>Markup you add before pasting:</strong><br>
+    <code>## Your Heading Here</code> &rarr; becomes &lt;h2&gt;<br>
+    <code>---</code> on its own line &rarr; becomes a section break<br>
+    <code>***</code> on its own line &rarr; also a section break<br>
+    <code>*italic text*</code> &rarr; becomes &lt;em&gt; (only needed for plain text; Word italics auto-detected)
   </div>
 
-  <div class="richinput" id="input" contenteditable="true" data-placeholder="Paste your story here (formatting preserved from Word/Docs)..."></div>
+  <div class="richinput" id="input" contenteditable="true" data-placeholder="Paste your story here..."></div>
+  <div class="hint">Tip: Add <code>##</code> before headings in your source text. Example: <code>## I. The Dordogne — December 1943</code></div>
 
   <div class="btns">
-    <button class="btn" onclick="handleFormat()">Format</button>
-    <button class="btn btn-secondary hidden" id="copyBtn" onclick="handleCopy()">Copy HTML</button>
+    <button class="btn" id="formatBtn">Format</button>
+    <button class="btn btn-secondary hidden" id="copyBtn">Copy HTML</button>
+    <button class="btn btn-secondary" id="clearBtn">Clear</button>
   </div>
 
   <div id="outputSection" class="hidden">
@@ -62,133 +62,175 @@ pre { width: 100%; background: #11110f; border: 1px solid #1e1d1a; color: #b5b2a
 </div>
 
 <script>
+// ─── Extract text from rich paste, preserving italics as *markers* ───
 function getRawContent() {
   var el = document.getElementById("input");
   var html = el.innerHTML;
 
-  // Normalize italic tags from Word/Docs/etc to *markers*
+  // Normalize all italic variants to *markers*
   html = html.replace(/<i\b[^>]*>([\s\S]*?)<\/i>/gi, '*$1*');
   html = html.replace(/<em\b[^>]*>([\s\S]*?)<\/em>/gi, '*$1*');
   html = html.replace(/<span[^>]*font-style:\s*italic[^>]*>([\s\S]*?)<\/span>/gi, '*$1*');
 
-  // Normalize bold (strip it, we don't use bold in stories)
+  // Strip bold (not used in story output)
   html = html.replace(/<b\b[^>]*>([\s\S]*?)<\/b>/gi, '$1');
   html = html.replace(/<strong\b[^>]*>([\s\S]*?)<\/strong>/gi, '$1');
 
-  // Convert <br> and block elements to newlines
+  // Block elements to newlines
   html = html.replace(/<br\s*\/?>/gi, '\n');
   html = html.replace(/<\/p>/gi, '\n\n');
   html = html.replace(/<\/div>/gi, '\n');
   html = html.replace(/<\/h[1-6]>/gi, '\n\n');
   html = html.replace(/<\/li>/gi, '\n');
 
-  // Strip all remaining HTML tags
+  // Strip remaining tags
   html = html.replace(/<[^>]+>/g, '');
 
-  // Decode HTML entities
-  var txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  return txt.value;
+  // Decode entities
+  var d = document.createElement('textarea');
+  d.innerHTML = html;
+  return d.value;
 }
 
+// ─── Inline formatting ───
 function formatInline(text) {
   var t = text;
 
   // Em dashes
-  t = t.replace(/---/g, "\u2014");
-  t = t.replace(/--/g, "\u2014");
+  t = t.replace(/---/g, '\u2014');
+  t = t.replace(/--/g, '\u2014');
 
-  // Normalize any existing smart quotes to straight for re-processing
-  t = t.replace(/\u201C|\u201D/g, '"');
-  t = t.replace(/\u2018|\u2019/g, "'");
+  // Normalize existing smart quotes to straight for reprocessing
+  t = t.replace(/[\u201C\u201D]/g, '"');
+  t = t.replace(/[\u2018\u2019]/g, "'");
 
-  // Italics: *text* to <em>text</em>
-  t = t.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  // *italic* to <em>
+  t = t.replace(/\*([^*]+)\*/g, '<em>$1</em>');
 
   // Smart double quotes
-  t = t.replace(/"([^"]*?)"/g, "\u201C$1\u201D");
-  t = t.replace(/"(\S)/g, "\u201C$1");
-  t = t.replace(/(\S)"/g, "$1\u201D");
-  t = t.replace(/"/g, "\u201D");
+  t = t.replace(/"([^"]*?)"/g, '\u201C$1\u201D');
+  t = t.replace(/"(\S)/g, '\u201C$1');
+  t = t.replace(/(\S)"/g, '$1\u201D');
+  t = t.replace(/"/g, '\u201D');
 
-  // Smart single quotes / apostrophes
-  t = t.replace(/(\w)'(\w)/g, "$1\u2019$2");
-  t = t.replace(/'(\S)/g, "\u2018$1");
-  t = t.replace(/(\S)'/g, "$1\u2019");
+  // Apostrophes and single quotes
+  t = t.replace(/(\w)'(\w)/g, '$1\u2019$2');
+  t = t.replace(/'(\S)/g, '\u2018$1');
+  t = t.replace(/(\S)'/g, '$1\u2019');
 
-  // Convert to HTML entities
-  t = t.replace(/\u2014/g, "&mdash;");
-  t = t.replace(/\u201C/g, "&ldquo;");
-  t = t.replace(/\u201D/g, "&rdquo;");
-  t = t.replace(/\u2018/g, "&lsquo;");
-  t = t.replace(/\u2019/g, "&rsquo;");
+  // To HTML entities
+  t = t.replace(/\u2014/g, '&mdash;');
+  t = t.replace(/\u2013/g, '&ndash;');
+  t = t.replace(/\u201C/g, '&ldquo;');
+  t = t.replace(/\u201D/g, '&rdquo;');
+  t = t.replace(/\u2018/g, '&lsquo;');
+  t = t.replace(/\u2019/g, '&rsquo;');
+  t = t.replace(/\u00e9/g, '&eacute;');
+  t = t.replace(/\u00e8/g, '&egrave;');
+  t = t.replace(/\u00ea/g, '&ecirc;');
+  t = t.replace(/\u00eb/g, '&euml;');
+  t = t.replace(/\u00e0/g, '&agrave;');
+  t = t.replace(/\u00e2/g, '&acirc;');
+  t = t.replace(/\u00f4/g, '&ocirc;');
+  t = t.replace(/\u00fc/g, '&uuml;');
+  t = t.replace(/\u00f6/g, '&ouml;');
+  t = t.replace(/\u00e4/g, '&auml;');
+  t = t.replace(/\u00c9/g, '&Eacute;');
 
   return t;
 }
 
+// ─── Main formatter ───
 function formatStory(raw) {
-  if (!raw.trim()) return "";
-  var lines = raw.split("\n");
+  if (!raw.trim()) return '';
+
+  var lines = raw.split('\n');
   var blocks = [];
   var current = [];
 
   for (var i = 0; i < lines.length; i++) {
     var trimmed = lines[i].trim();
-    if (trimmed === "") {
-      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
+
+    // Empty line = paragraph break
+    if (trimmed === '') {
+      if (current.length > 0) {
+        blocks.push({ type: 'p', text: current.join(' ') });
+        current = [];
+      }
       continue;
     }
-    // Section break markers
-    if (/^(\*\s*\*\s*\*|---+|===+|\u00b7 \u00b7 \u00b7|\* \* \*)$/.test(trimmed)) {
-      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
-      blocks.push("__BREAK__");
+
+    // Section breaks: ---, ***, ===, · · ·
+    if (/^(-{3,}|\*{3,}|={3,}|\*\s\*\s\*|\u00b7\s\u00b7\s\u00b7)$/.test(trimmed)) {
+      if (current.length > 0) {
+        blocks.push({ type: 'p', text: current.join(' ') });
+        current = [];
+      }
+      blocks.push({ type: 'break' });
       continue;
     }
-    // Headings marked with ##
+
+    // Headings: ## text
     if (/^##\s+/.test(trimmed)) {
-      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
-      blocks.push("__HEADING__" + trimmed.replace(/^##\s+/, ""));
+      if (current.length > 0) {
+        blocks.push({ type: 'p', text: current.join(' ') });
+        current = [];
+      }
+      blocks.push({ type: 'h2', text: trimmed.replace(/^##\s+/, '') });
       continue;
     }
+
+    // Regular text line — accumulate into paragraph
     current.push(trimmed);
   }
-  if (current.length > 0) blocks.push(current.join(" "));
 
-  var htmlBlocks = [];
-  for (var j = 0; j < blocks.length; j++) {
-    var block = blocks[j];
-    if (block === "__BREAK__") {
-      htmlBlocks.push('<div class="story-break"></div>');
-      continue;
-    }
-    if (block.indexOf("__HEADING__") === 0) {
-      var h = formatInline(block.replace("__HEADING__", ""));
-      htmlBlocks.push('<h2>' + h + '</h2>');
-      continue;
-    }
-    htmlBlocks.push('<p>' + formatInline(block) + '</p>');
+  // Flush remaining
+  if (current.length > 0) {
+    blocks.push({ type: 'p', text: current.join(' ') });
   }
-  return htmlBlocks.join("\n\n");
+
+  // Build HTML
+  var out = [];
+  for (var j = 0; j < blocks.length; j++) {
+    var b = blocks[j];
+    if (b.type === 'break') {
+      out.push('<div class="story-break"></div>');
+    } else if (b.type === 'h2') {
+      out.push('<h2>' + formatInline(b.text) + '</h2>');
+    } else {
+      out.push('<p>' + formatInline(b.text) + '</p>');
+    }
+  }
+
+  return out.join('\n\n');
 }
 
-function handleFormat() {
+// ─── UI handlers ───
+document.getElementById('formatBtn').addEventListener('click', function() {
   var raw = getRawContent();
   var result = formatStory(raw);
-  document.getElementById("output").textContent = result;
-  document.getElementById("preview").innerHTML = result;
-  document.getElementById("outputSection").classList.remove("hidden");
-  document.getElementById("copyBtn").classList.remove("hidden");
-}
+  document.getElementById('output').textContent = result;
+  document.getElementById('preview').innerHTML = result;
+  document.getElementById('outputSection').classList.remove('hidden');
+  document.getElementById('copyBtn').classList.remove('hidden');
+});
 
-function handleCopy() {
-  var text = document.getElementById("output").textContent;
+document.getElementById('copyBtn').addEventListener('click', function() {
+  var text = document.getElementById('output').textContent;
   navigator.clipboard.writeText(text).then(function() {
-    var btn = document.getElementById("copyBtn");
-    btn.textContent = "Copied";
-    btn.classList.add("btn-copied");
-    setTimeout(function() { btn.textContent = "Copy HTML"; btn.classList.remove("btn-copied"); }, 2000);
+    var btn = document.getElementById('copyBtn');
+    btn.textContent = 'Copied';
+    setTimeout(function() { btn.textContent = 'Copy HTML'; }, 2000);
   });
-}
+});
+
+document.getElementById('clearBtn').addEventListener('click', function() {
+  document.getElementById('input').innerHTML = '';
+  document.getElementById('output').textContent = '';
+  document.getElementById('preview').innerHTML = '';
+  document.getElementById('outputSection').classList.add('hidden');
+  document.getElementById('copyBtn').classList.add('hidden');
+});
 </script>
 </body>
 </html>
