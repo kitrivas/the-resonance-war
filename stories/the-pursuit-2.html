@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pursuit: Part II — The Resonance War</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0a0a0c; --bg-elevated: #11110f; --text: #b5b2ab; --text-bright: #e8e5de; --text-muted: #6b6860;
+  --accent: #b5a07a; --accent-dim: #7d6f55; --accent-soft: #a89570; --border: #1e1d1a; --border-warm: #2a2518;
+  --serif: 'Cormorant Garamond', 'Georgia', serif; --body-serif: ui-serif, 'Georgia', 'Cambria', 'Times New Roman', serif; --sans: 'Inter', -apple-system, sans-serif;
+}
+[data-theme="light"] {
+  --bg: #f5f3ee; --bg-elevated: #edeae3; --text: #4a4740; --text-bright: #2a2824; --text-muted: #8a8578;
+  --accent: #8a7a5a; --accent-dim: #a69878; --accent-soft: #7a6c50; --border: #d8d4cb; --border-warm: #c8c2b4;
+}
+html { font-size: 18px; scroll-behavior: smooth; scrollbar-width: thin; }
+body { background: var(--bg); color: var(--text); font-family: var(--body-serif); line-height: 1.7; -webkit-font-smoothing: antialiased; transition: background 0.4s, color 0.4s; }
+::selection { background: rgba(181, 160, 122, 0.2); color: var(--text-bright); }
+nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all 0.4s ease; }
+nav.scrolled { padding: 0.8rem 2rem; }
+.nav-left { display: flex; align-items: center; gap: 2rem; }
+.nav-title { font-family: var(--sans); font-weight: 300; font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--text-muted); }
+.nav-title span { color: var(--accent-dim); margin: 0 0.4rem; }
+.nav-author { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-author:hover { color: var(--accent-soft); }
+.nav-right { display: flex; align-items: center; gap: 2.2rem; }
+.nav-links { display: flex; gap: 2.2rem; list-style: none; }
+.nav-links a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-links a:hover { color: var(--text-bright); }
+.theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.3s; }
+.theme-toggle:hover { border-color: var(--accent-dim); color: var(--text-bright); }
+.font-sizer { display: flex; align-items: center; gap: 0.4rem; }
+.sizer-label { font-family: var(--body-serif); font-size: 0.65rem; color: var(--text-muted); user-select: none; }
+.sizer-large { font-size: 0.9rem; }
+#fontSlider { -webkit-appearance: none; appearance: none; width: 60px; height: 1px; background: var(--border); outline: none; cursor: pointer; }
+#fontSlider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-dim); border: none; cursor: pointer; }
+#fontSlider::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-dim); border: none; cursor: pointer; }
+.audio-player { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter: blur(16px); border-top: 1px solid var(--border); padding: 0.8rem 2rem; transform: translateY(100%); transition: transform 0.4s ease, background 0.4s, border-color 0.4s; }
+.audio-player.visible { transform: translateY(0); }
+.player-inner { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; }
+.player-controls { display: flex; align-items: center; gap: 1rem; }
+.player-btn { background: none; border: none; color: var(--text-muted); font-family: var(--sans); font-size: 0.9rem; cursor: pointer; padding: 0.2rem; transition: color 0.3s; line-height: 1; }
+.player-btn:hover { color: var(--text-bright); }
+.player-btn.play-btn { width: 32px; height: 32px; border: 1px solid var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--accent-soft); flex-shrink: 0; }
+.player-btn.play-btn:hover { border-color: var(--accent); color: var(--accent); }
+.player-progress-wrap { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
+.player-time { font-family: var(--sans); font-size: 0.58rem; letter-spacing: 0.05em; color: var(--text-muted); min-width: 32px; text-align: center; user-select: none; }
+.progress-bar { flex: 1; height: 2px; background: var(--border); cursor: pointer; position: relative; border-radius: 1px; }
+.progress-fill { height: 100%; background: var(--accent-dim); border-radius: 1px; width: 0%; position: relative; transition: background 0.3s; }
+.progress-bar:hover .progress-fill { background: var(--accent); }
+.progress-handle { position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; border-radius: 50%; background: var(--accent-dim); opacity: 0; transition: opacity 0.3s; }
+.progress-bar:hover .progress-handle { opacity: 1; }
+.player-speed { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.1em; padding: 0.25rem 0.5rem; cursor: pointer; transition: all 0.3s; min-width: 36px; text-align: center; }
+.player-speed:hover { border-color: var(--accent-dim); color: var(--text-bright); }
+.player-close { background: none; border: none; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; padding: 0.2rem 0.4rem; transition: color 0.3s; margin-left: 0.5rem; }
+.player-close:hover { color: var(--text-bright); }
+.listen-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--accent-dim); color: var(--accent-soft); font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.5rem 1.2rem; cursor: pointer; transition: all 0.3s; }
+.listen-btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.listen-icon { font-size: 0.7rem; }
+.body-audio-active { padding-bottom: 4rem; }
+.story-header { padding: 10rem 2rem 4rem; max-width: 680px; margin: 0 auto; text-align: center; }
+.story-header h1 { font-family: var(--serif); font-weight: 300; font-size: clamp(2rem, 5vw, 3rem); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-bright); margin-bottom: 0.8rem; }
+.story-meta { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); margin-bottom: 0.5rem; }
+.story-tagline { font-family: var(--body-serif); font-style: italic; font-size: 1rem; color: var(--text-muted); }
+.story-rule { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); margin: 3rem auto; }
+.story-body { max-width: 640px; margin: 0 auto; padding: 0 2rem 6rem; }
+.story-body h2 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; color: var(--text-bright); margin: 3rem 0 1.5rem; letter-spacing: 0.04em; text-align: center; }
+.story-body p { font-family: var(--body-serif); font-size: 1rem; line-height: 1.9; color: var(--text); margin-bottom: 1.3rem; text-indent: 1.5rem; }
+.story-body p:first-of-type, .story-body h2 + p { text-indent: 0; }
+.story-body p em { font-style: italic; }
+.story-break { max-width: 120px; margin: 4rem auto; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); }
+.story-nav { max-width: 640px; margin: 0 auto; padding: 0 2rem 4rem; display: flex; justify-content: space-between; align-items: center; }
+.story-nav a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); text-decoration: none; transition: color 0.3s; }
+.story-nav a:hover { color: var(--accent-soft); }
+footer { border-top: 1px solid var(--border); padding: 3rem 2rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-muted); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--accent-soft); }
+@media (max-width: 640px) {
+  html { font-size: 17px; } nav { padding: 1rem 1.2rem; } .nav-links { display: none; }
+  .story-header { padding: 8rem 1.5rem 3rem; } .story-body { padding: 0 1.5rem 4rem; }
+  .audio-player { padding: 0.6rem 1.2rem; } .player-speed { display: none; } .story-nav { padding: 0 1.5rem 4rem; }
+}
+</style>
+</head>
+<body>
+<nav id="nav">
+  <div class="nav-left">
+    <div class="nav-title"><a href="../../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../world.html">World</a></li>
+      <li><a href="../characters.html">Characters</a></li>
+      <li><a href="../read.html">Read</a></li>
+      <li><a href="../media.html">Media</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle">Light</button>
+    <div class="font-sizer">
+      <span class="sizer-label">A</span>
+      <input type="range" id="fontSlider" min="16" max="24" value="18" step="1">
+      <span class="sizer-label sizer-large">A</span>
+    </div>
+  </div>
+</nav>
+
+<div class="story-header">
+  <div class="story-meta">Short Fiction &middot; Part II</div>
+  <h1>The Pursuit</h1>
+  <div class="story-tagline">Budapest. Ankara. Beirut. Damascus.</div>
+</div>
+
+<div class="story-rule"></div>
+
+<div class="story-body">
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <button class="listen-btn" id="listenBtn"><span class="listen-icon">&#9654;</span> Listen</button>
+  </div>
+
+  <!-- PASTE FORMATTED PART II TEXT HERE -->
+  <p>YOUR STORY TEXT GOES HERE.</p>
+
+</div>
+
+<div class="story-nav">
+  <a href="the-pursuit-1.html">&larr; Part I</a>
+  <a href="../read.html">Back to Read &rarr;</a>
+</div>
+
+<div class="audio-player" id="audioPlayer">
+  <div class="player-inner">
+    <div class="player-controls">
+      <button class="player-btn" id="skipBack" title="Back 15s">&#8634;</button>
+      <button class="player-btn play-btn" id="playPause">&#9654;</button>
+      <button class="player-btn" id="skipFwd" title="Forward 15s">&#8635;</button>
+      <div class="player-progress-wrap">
+        <span class="player-time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"><div class="progress-handle"></div></div></div>
+        <span class="player-time" id="totalTime">0:00</span>
+      </div>
+      <button class="player-speed" id="speedBtn">1&times;</button>
+      <button class="player-close" id="playerClose">&times;</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>&copy; 2026 Kit Rivas</span>
+  <div class="footer-links"><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">Threads</a></div>
+</footer>
+
+<script>
+var nav=document.getElementById('nav');window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>60)});
+var toggle=document.getElementById('themeToggle'),html=document.documentElement;function getSystemTheme(){return window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}function applyTheme(t){html.setAttribute('data-theme',t);toggle.textContent=t==='dark'?'Light':'Dark'}var currentTheme=getSystemTheme();applyTheme(currentTheme);var manualOverride=false;window.matchMedia('(prefers-color-scheme: light)').addEventListener('change',function(e){if(!manualOverride){currentTheme=e.matches?'light':'dark';applyTheme(currentTheme)}});toggle.addEventListener('click',function(){manualOverride=true;currentTheme=currentTheme==='dark'?'light':'dark';applyTheme(currentTheme)});
+document.getElementById('fontSlider').addEventListener('input',function(e){document.documentElement.style.fontSize=e.target.value+'px'});
+var audioPlayer=document.getElementById('audioPlayer'),listenBtn=document.getElementById('listenBtn'),playPause=document.getElementById('playPause'),skipBack=document.getElementById('skipBack'),skipFwd=document.getElementById('skipFwd'),progressBar=document.getElementById('progressBar'),progressFill=document.getElementById('progressFill'),currentTimeEl=document.getElementById('currentTime'),totalTimeEl=document.getElementById('totalTime'),speedBtn=document.getElementById('speedBtn'),playerClose=document.getElementById('playerClose');
+var audio=new Audio('audio/the-pursuit-2.mp3'),isPlaying=false,speeds=[0.75,1,1.25,1.5,2],speedIndex=1;
+function formatTime(s){if(isNaN(s))return'0:00';var m=Math.floor(s/60),sec=Math.floor(s%60);return m+':'+(sec<10?'0':'')+sec}
+listenBtn.addEventListener('click',function(){audioPlayer.classList.add('visible');document.body.classList.add('body-audio-active');audio.play();isPlaying=true;playPause.innerHTML='&#10074;&#10074;'});
+playPause.addEventListener('click',function(){if(isPlaying){audio.pause();playPause.innerHTML='&#9654;'}else{audio.play();playPause.innerHTML='&#10074;&#10074;'}isPlaying=!isPlaying});
+skipBack.addEventListener('click',function(){audio.currentTime=Math.max(0,audio.currentTime-15)});
+skipFwd.addEventListener('click',function(){audio.currentTime=Math.min(audio.duration,audio.currentTime+15)});
+speedBtn.addEventListener('click',function(){speedIndex=(speedIndex+1)%speeds.length;audio.playbackRate=speeds[speedIndex];speedBtn.textContent=speeds[speedIndex]+'\u00d7'});
+audio.addEventListener('loadedmetadata',function(){totalTimeEl.textContent=formatTime(audio.duration)});
+audio.addEventListener('timeupdate',function(){var pct=(audio.currentTime/audio.duration)*100;progressFill.style.width=pct+'%';currentTimeEl.textContent=formatTime(audio.currentTime)});
+audio.addEventListener('ended',function(){isPlaying=false;playPause.innerHTML='&#9654;';progressFill.style.width='0%'});
+progressBar.addEventListener('click',function(e){var rect=progressBar.getBoundingClientRect();var pct=(e.clientX-rect.left)/rect.width;audio.currentTime=pct*audio.duration});
+playerClose.addEventListener('click',function(){audio.pause();isPlaying=false;playPause.innerHTML='&#9654;';audioPlayer.classList.remove('visible');document.body.classList.remove('body-audio-active')});
+</script>
+</body>
+</html>
