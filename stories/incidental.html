@@ -433,8 +433,6 @@
 <div class="back-link">
   <a href="../read.html">&larr; Back to Read</a>
 </div>
-
-<!-- CHANGE 4: Audio file path -->
 <div class="audio-player" id="audioPlayer">
   <div class="player-inner">
     <div class="player-controls">
@@ -465,107 +463,7 @@
   </div>
 </footer>
 
-<script>
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-});
-
-// Theme
-const toggle = document.getElementById('themeToggle');
-const html = document.documentElement;
-function getSystemTheme() {
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-}
-function applyTheme(theme) {
-  html.setAttribute('data-theme', theme);
-  toggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
-}
-let currentTheme = getSystemTheme();
-applyTheme(currentTheme);
-let manualOverride = false;
-window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-  if (!manualOverride) {
-    currentTheme = e.matches ? 'light' : 'dark';
-    applyTheme(currentTheme);
-  }
-});
-toggle.addEventListener('click', () => {
-  manualOverride = true;
-  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  applyTheme(currentTheme);
-});
-
-// Font size
-const fontSlider = document.getElementById('fontSlider');
-fontSlider.addEventListener('input', (e) => {
-  document.documentElement.style.fontSize = e.target.value + 'px';
-});
-
-// Audio
-const audioPlayer = document.getElementById('audioPlayer');
-const listenBtn = document.getElementById('listenBtn');
-const playPause = document.getElementById('playPause');
-const skipBack = document.getElementById('skipBack');
-const skipFwd = document.getElementById('skipFwd');
-const progressBar = document.getElementById('progressBar');
-const progressFill = document.getElementById('progressFill');
-const currentTimeEl = document.getElementById('currentTime');
-const totalTimeEl = document.getElementById('totalTime');
-const speedBtn = document.getElementById('speedBtn');
-const playerClose = document.getElementById('playerClose');
-
-// CHANGE 4: Audio file path — update this to match the story
-const audio = new Audio('audio/FILENAME.mp3');
-let isPlaying = false;
-const speeds = [0.75, 1, 1.25, 1.5, 2];
-let speedIndex = 1;
-
-function formatTime(s) {
-  if (isNaN(s)) return '0:00';
-  const m = Math.floor(s / 60);
-  const sec = Math.floor(s % 60);
-  return m + ':' + (sec < 10 ? '0' : '') + sec;
-}
-listenBtn.addEventListener('click', () => {
-  audioPlayer.classList.add('visible');
-  document.body.classList.add('body-audio-active');
-  audio.play();
-  isPlaying = true;
-  playPause.innerHTML = '&#10074;&#10074;';
-});
-playPause.addEventListener('click', () => {
-  if (isPlaying) { audio.pause(); playPause.innerHTML = '&#9654;'; }
-  else { audio.play(); playPause.innerHTML = '&#10074;&#10074;'; }
-  isPlaying = !isPlaying;
-});
-skipBack.addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
-skipFwd.addEventListener('click', () => { audio.currentTime = Math.min(audio.duration, audio.currentTime + 15); });
-speedBtn.addEventListener('click', () => {
-  speedIndex = (speedIndex + 1) % speeds.length;
-  audio.playbackRate = speeds[speedIndex];
-  speedBtn.textContent = speeds[speedIndex] + '\u00d7';
-});
-audio.addEventListener('loadedmetadata', () => { totalTimeEl.textContent = formatTime(audio.duration); });
-audio.addEventListener('timeupdate', () => {
-  const pct = (audio.currentTime / audio.duration) * 100;
-  progressFill.style.width = pct + '%';
-  currentTimeEl.textContent = formatTime(audio.currentTime);
-});
-audio.addEventListener('ended', () => { isPlaying = false; playPause.innerHTML = '&#9654;'; progressFill.style.width = '0%'; });
-progressBar.addEventListener('click', (e) => {
-  const rect = progressBar.getBoundingClientRect();
-  const pct = (e.clientX - rect.left) / rect.width;
-  audio.currentTime = pct * audio.duration;
-});
-playerClose.addEventListener('click', () => {
-  audio.pause();
-  isPlaying = false;
-  playPause.innerHTML = '&#9654;';
-  audioPlayer.classList.remove('visible');
-  document.body.classList.remove('body-audio-active');
-});
-</script>
-
+<script src="../js/site.js"></script>
+<script src="../js/story.js"></script>
 </body>
 </html>
