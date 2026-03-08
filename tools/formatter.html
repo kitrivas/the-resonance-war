@@ -37,8 +37,8 @@ pre { width: 100%; background: #11110f; border: 1px solid #1e1d1a; color: #b5b2a
 • Convert -- and — to &amp;mdash;
 • Convert "quotes" to smart quotes
 • Convert *italics* to &lt;em&gt; tags
-• Detect section breaks (blank lines with *** or --- or ===)
-• Detect lines that look like headings (short, no period, often a place/date)</div>
+• Lines starting with ## become &lt;h2&gt; headings
+• Blank lines with *** or --- or === become section breaks</div>
 
   <textarea id="input" placeholder="Paste your plain text story here..."></textarea>
 
@@ -91,9 +91,19 @@ function formatStory(raw) {
       if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
       continue;
     }
-    if (/^(\*\s*\*\s*\*|---+|===+|· · ·|\* \* \*)$/.test(trimmed)) {
+    if (/^(\*\s*\*\s*\*|===+|· · ·|\* \* \*)$/.test(trimmed)) {
       if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
       blocks.push("__BREAK__");
+      continue;
+    }
+    if (/^---+$/.test(trimmed)) {
+      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
+      blocks.push("__BREAK__");
+      continue;
+    }
+    if (/^##\s+/.test(trimmed)) {
+      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
+      blocks.push("__HEADING__" + trimmed.replace(/^##\s+/, ""));
       continue;
     }
     current.push(trimmed);
@@ -107,15 +117,9 @@ function formatStory(raw) {
       htmlBlocks.push('<div class="story-break"></div>');
       continue;
     }
-    const isHeading = block.length < 80 && !block.endsWith(".") && !block.endsWith(",") && !block.endsWith('"') && !block.endsWith("\u2019") && (
-      /^[A-Z]/.test(block) && (
-        block.includes("\u2014") || block.includes("—") || block.includes("–") ||
-        block.includes(",") || /^\d{4}/.test(block) || /\d{4}$/.test(block) ||
-        (block.split(" ").length <= 8 && !block.includes('"') && !block.includes('\u201C'))
-      )
-    );
-    if (isHeading && block.length < 60) {
-      htmlBlocks.push(`<h2>${formatInline(block)}</h2>`);
+    if (block.startsWith("__HEADING__")) {
+      let h = formatInline(block.replace("__HEADING__", ""));
+      htmlBlocks.push(`<h2>${h}</h2>`);
       continue;
     }
     htmlBlocks.push(`<p>${formatInline(block)}</p>`);
