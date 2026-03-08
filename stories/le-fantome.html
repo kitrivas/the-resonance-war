@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- CHANGE 1: Page title -->
+<title>Le Fant&ocirc;me — The Resonance War</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --bg-elevated: #11110f;
+  --text: #b5b2ab;
+  --text-bright: #e8e5de;
+  --text-muted: #6b6860;
+  --accent: #b5a07a;
+  --accent-dim: #7d6f55;
+  --accent-soft: #a89570;
+  --border: #1e1d1a;
+  --border-warm: #2a2518;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --body-serif: ui-serif, 'Georgia', 'Cambria', 'Times New Roman', serif;
+  --sans: 'Inter', -apple-system, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg: #f5f3ee;
+  --bg-elevated: #edeae3;
+  --text: #4a4740;
+  --text-bright: #2a2824;
+  --text-muted: #8a8578;
+  --accent: #8a7a5a;
+  --accent-dim: #a69878;
+  --accent-soft: #7a6c50;
+  --border: #d8d4cb;
+  --border-warm: #c8c2b4;
+}
+
+html { font-size: 18px; scroll-behavior: smooth; scrollbar-width: thin; }
+body { background: var(--bg); color: var(--text); font-family: var(--body-serif); line-height: 1.7; -webkit-font-smoothing: antialiased; transition: background 0.4s, color 0.4s; }
+::selection { background: rgba(181, 160, 122, 0.2); color: var(--text-bright); }
+
+/* Nav */
+nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all 0.4s ease; }
+nav.scrolled { padding: 0.8rem 2rem; }
+.nav-left { display: flex; align-items: center; gap: 2rem; }
+.nav-title { font-family: var(--sans); font-weight: 300; font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--text-muted); }
+.nav-title span { color: var(--accent-dim); margin: 0 0.4rem; }
+.nav-author { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-author:hover { color: var(--accent-soft); }
+.nav-right { display: flex; align-items: center; gap: 2.2rem; }
+.nav-links { display: flex; gap: 2.2rem; list-style: none; }
+.nav-links a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-links a:hover { color: var(--text-bright); }
+
+/* Theme Toggle */
+.theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.3s; }
+.theme-toggle:hover { border-color: var(--accent-dim); color: var(--text-bright); }
+
+/* Font Sizer */
+.font-sizer { display: flex; align-items: center; gap: 0.4rem; }
+.sizer-label { font-family: var(--body-serif); font-size: 0.65rem; color: var(--text-muted); user-select: none; }
+.sizer-large { font-size: 0.9rem; }
+#fontSlider { -webkit-appearance: none; appearance: none; width: 60px; height: 1px; background: var(--border); outline: none; cursor: pointer; }
+#fontSlider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-dim); border: none; cursor: pointer; transition: background 0.3s; }
+#fontSlider::-webkit-slider-thumb:hover { background: var(--accent); }
+#fontSlider::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-dim); border: none; cursor: pointer; }
+
+/* Audio Player */
+.audio-player { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter: blur(16px); border-top: 1px solid var(--border); padding: 0.8rem 2rem; transform: translateY(100%); transition: transform 0.4s ease, background 0.4s, border-color 0.4s; }
+.audio-player.visible { transform: translateY(0); }
+.player-inner { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; }
+.player-controls { display: flex; align-items: center; gap: 1rem; }
+.player-btn { background: none; border: none; color: var(--text-muted); font-family: var(--sans); font-size: 0.9rem; cursor: pointer; padding: 0.2rem; transition: color 0.3s; line-height: 1; }
+.player-btn:hover { color: var(--text-bright); }
+.player-btn.play-btn { width: 32px; height: 32px; border: 1px solid var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--accent-soft); flex-shrink: 0; }
+.player-btn.play-btn:hover { border-color: var(--accent); color: var(--accent); }
+.player-progress-wrap { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
+.player-time { font-family: var(--sans); font-size: 0.58rem; letter-spacing: 0.05em; color: var(--text-muted); min-width: 32px; text-align: center; user-select: none; }
+.progress-bar { flex: 1; height: 2px; background: var(--border); cursor: pointer; position: relative; border-radius: 1px; }
+.progress-fill { height: 100%; background: var(--accent-dim); border-radius: 1px; width: 0%; position: relative; transition: background 0.3s; }
+.progress-bar:hover .progress-fill { background: var(--accent); }
+.progress-handle { position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; border-radius: 50%; background: var(--accent-dim); opacity: 0; transition: opacity 0.3s; }
+.progress-bar:hover .progress-handle { opacity: 1; }
+.player-speed { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.1em; padding: 0.25rem 0.5rem; cursor: pointer; transition: all 0.3s; min-width: 36px; text-align: center; }
+.player-speed:hover { border-color: var(--accent-dim); color: var(--text-bright); }
+.player-close { background: none; border: none; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; padding: 0.2rem 0.4rem; transition: color 0.3s; margin-left: 0.5rem; }
+.player-close:hover { color: var(--text-bright); }
+
+/* Listen Button */
+.listen-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--accent-dim); color: var(--accent-soft); font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.5rem 1.2rem; cursor: pointer; transition: all 0.3s; margin-top: 0; }
+.listen-btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.listen-icon { font-size: 0.7rem; }
+
+.body-audio-active { padding-bottom: 4rem; }
+
+/* Story Header */
+.story-header { padding: 10rem 2rem 4rem; max-width: 680px; margin: 0 auto; text-align: center; }
+.story-header h1 { font-family: var(--serif); font-weight: 300; font-size: clamp(2rem, 5vw, 3rem); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-bright); margin-bottom: 0.8rem; }
+.story-meta { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); margin-bottom: 0.5rem; }
+.story-tagline { font-family: var(--body-serif); font-style: italic; font-size: 1rem; color: var(--text-muted); }
+.story-rule { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); margin: 3rem auto; }
+
+/* Story Body */
+.story-body { max-width: 640px; margin: 0 auto; padding: 0 2rem 6rem; }
+.story-body h2 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; color: var(--text-bright); margin: 3rem 0 1.5rem; letter-spacing: 0.04em; text-align: center; }
+.story-body p { font-family: var(--body-serif); font-size: 1rem; line-height: 1.9; color: var(--text); margin-bottom: 1.3rem; text-indent: 1.5rem; }
+.story-body p:first-of-type, .story-body h2 + p { text-indent: 0; }
+.story-body p em { font-style: italic; }
+.story-break { max-width: 120px; margin: 4rem auto; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); }
+
+/* Back Link */
+.back-link { max-width: 640px; margin: 0 auto; padding: 0 2rem 4rem; text-align: center; }
+.back-link a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); text-decoration: none; transition: color 0.3s; }
+.back-link a:hover { color: var(--accent-soft); }
+
+/* Footer */
+footer { border-top: 1px solid var(--border); padding: 3rem 2rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-muted); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--accent-soft); }
+
+@media (max-width: 640px) {
+  html { font-size: 17px; }
+  nav { padding: 1rem 1.2rem; }
+  .nav-links { display: none; }
+  .story-header { padding: 8rem 1.5rem 3rem; }
+  .story-body { padding: 0 1.5rem 4rem; }
+  .audio-player { padding: 0.6rem 1.2rem; }
+  .player-speed { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-left">
+    <div class="nav-title"><a href="../../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../world.html">World</a></li>
+      <li><a href="../characters.html">Characters</a></li>
+      <li><a href="../read.html">Read</a></li>
+      <li><a href="../media.html">Media</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle">Light</button>
+    <div class="font-sizer">
+      <span class="sizer-label">A</span>
+      <input type="range" id="fontSlider" min="16" max="24" value="18" step="1">
+      <span class="sizer-label sizer-large">A</span>
+    </div>
+  </div>
+</nav>
+
+<div class="story-header">
+  <div class="story-meta">Short Fiction</div>
+
+  <!-- CHANGE 2: Story title and tagline -->
+  <h1>STORY TITLE</h1>
+  <div class="story-tagline">TAGLINE GOES HERE</div>
+</div>
+
+<div class="story-rule"></div>
+
+<div class="story-body">
+
+<div style="text-align: center; margin-bottom: 2.5rem;">
+  <button class="listen-btn" id="listenBtn">
+    <span class="listen-icon">&#9654;</span> Listen
+  </button>
+</div>
+
+<!-- CHANGE 3: Story content goes here -->
+<h2>I. The Dordogne &mdash; December 1943</h2>
+
+<p>They found the road on the third day of a supply run that should have taken one.</p>
+
+<p>The detour had been Arnaud&rsquo;s decision&mdash;German patrols had thickened along the D660 since the depot at Bergerac changed hands, and the southern route through the valley added six hours but kept them beneath the canopy of chestnut and walnut that had sheltered maquis operations since the first year of occupation. Arnaud drove. Lucien rode in the bed of the Citro&euml;n with the radio equipment and four crates of ammunition wrapped in canvas and straw, the truck jolting over frozen ruts with a violence that turned his kidneys to pulp and his teeth to dice in a cup. The December cold was biblical. His fingers, wrapped in rags inside leather gloves that had lost their lining somewhere around Sarlat, had stopped reporting sensation an hour ago.</p>
+
+<p>The road was a departmental lane&mdash;single track, unpaved, cut through forest so thick the canopy met overhead even in winter, the bare limbs laced together like the ribs of a cathedral stripped of its roof. In summer it would have been green and close and fragrant with earth. In December it was a corridor of frozen mud and iron light, the sky visible only in slivers between the branches, grey and low and carrying the particular weight of cloud that promised snow but withheld it out of spite.</p>
+
+<p>Arnaud stopped the truck.</p>
+
+<p>Lucien, jolted from the half-sleep of cold and vibration, peered over the cab&rsquo;s roof. The road ahead was blocked by a vehicle. German. A K&uuml;belwagen, standard Wehrmacht field car, olive drab, the Balkenkreuz stencilled on the door in the regulation white that the occupiers applied to everything, as though the cross could consecrate the steel and make the theft of France somehow orderly.</p>
+
+<p>The vehicle was on its side.</p>
+
+<p>Placed there with the specificity of a book laid open on a table&mdash;the undercarriage facing them, the wheels still, the chassis unmarked, every pane of glass intact. Moved, from its correct orientation to this one, as though the hand that had done it considered the distinction between upright and lateral a matter of indifference.</p>
+
+<p>Lucien dropped from the truck bed. His boots cracked through a skin of ice into mud beneath. Arnaud was already out, the Sten gun he kept beneath the seat braced at his hip&mdash;not aimed, but present, the way you keep a hand near a wall in the dark.</p>
+
+<p>&ldquo;<em>Merde</em>,&rdquo; Arnaud said, and kept walking.</p>
+
+<p>There were more vehicles beyond the first.</p>
+
+<p>A convoy. Four&mdash;no, five vehicles. Two K&uuml;belwagen, two Opel Blitz trucks with canvas covers, and an Sd.Kfz. 251 half-track whose armoured hull had been, as far as Lucien could determine, <em>folded</em>. Folded. The steel plates of the hull compressed inward along lines so clean they resembled creases in paper, the metal bent at angles that should have required an industrial press and had instead been accomplished in the field, on a forest road, in December, to a vehicle that weighed eight tonnes.</p>
+
+<p>Lucien had been with the maquis for nineteen months. He had seen the aftermath of ambushes&mdash;messy, human, the predictable geometry of bullets and blood and men dying in postures that bore no resemblance to the heroism of the posters. He had seen what explosives did to armour and what fire did to canvas and what cold did to flesh left unburied. He had seen the Germans at their worst and the Resistance at its most desperate and the civilians caught between them at their most silent.</p>
+
+<p>He had not seen this.</p>
+
+<p>The soldiers were dead.</p>
+
+<p>Eighteen, by his count, though the count was difficult because some of them were no longer arranged in configurations that corresponded to individual bodies. They had been ended with a force and a specificity that left Lucien standing in the frozen road with his mouth open and his mind running through every category of violence he possessed, discarding each one as inadequate. No bullet wounds. No shrapnel. No burns. No evidence of any weapon he could name.</p>
+
+<p>One man lay against the base of a chestnut tree, his back to the trunk, his rifle still in his hands. His face was intact&mdash;young, perhaps twenty, fair-haired, the particular ruddy complexion of a boy from the north who had not yet lost the flush of home. His expression was pure incomprehension. He had died without understanding what was killing him, and his face had kept the question.</p>
+
+<p>Arnaud stood over an officer&mdash;<em>Hauptmann</em>, by the insignia&mdash;whose body lay in the centre of the road with a stillness that went beyond death into a territory Lucien had no word for. The man&rsquo;s uniform was undamaged. His sidearm was holstered. He had not drawn it. Had not had time. Had not had, Lucien suspected, the neurological capacity to process what he was seeing quickly enough to reach for a weapon.</p>
+
+<p>&ldquo;No shells,&rdquo; Arnaud said. His voice was flat. &ldquo;No casings. No fragments. No blast marks.&rdquo; He crouched beside the half-track, ran his hand along the fold in the hull where the steel had been compressed. His fingers traced the crease the way a man might trace a scar&mdash;searching for the logic of the wound. &ldquo;This wasn&rsquo;t an ambush.&rdquo;</p>
+
+<p>&ldquo;Then what was it?&rdquo;</p>
+
+<p>Arnaud stood. The Sten hung forgotten at his side. He looked at the convoy&mdash;the vehicles arranged in their various states of impossible damage, the soldiers arranged in their various states of impossible death&mdash;and for the first time in the nineteen months Lucien had known him, Arnaud had nothing to say.</p>
+
+<p>They stood in the road for a long time.</p>
+
+<p>The forest was silent. A deeper silence than absence&mdash;no birdsong, no wind, no rustle of the undergrowth that never truly stills, even in December. The silence of aftermath. The kind that follows the withdrawal of a force too large for the space it occupied, the air still compressed by what had passed through it.</p>
+
+<p>&ldquo;There are tracks,&rdquo; Lucien said at last.</p>
+
+<p>Boot prints. One set. Leading from the southern end of the convoy&mdash;from the direction of approach&mdash;through the carnage, around the folded half-track, past the dead officer, and continuing north along the road without deviation or hesitation or any alteration of stride that might suggest their owner had paused, or hurried, or cared.</p>
+
+<p>The prints were long. A tall man&rsquo;s gait, wide between steps, the imprint deep in the frozen mud. They did not weave or dodge. They walked in a straight line through the centre of the road, as though the convoy and its eighteen dead were not obstacles but scenery.</p>
+
+<p>&ldquo;One man,&rdquo; Arnaud said.</p>
+
+<p>Lucien said nothing. The cold bit into his face and the silence pressed against his ears and the boot prints led away north into the forest and the grey December sky hung overhead like a lid.</p>
+
+<p>They took the documents from the convoy&mdash;maps, code books, a leather satchel from the Hauptmann&rsquo;s vehicle containing intelligence dispatches that the Sarlat r&eacute;seau would spend weeks decrypting. They took the officer&rsquo;s sidearm and three rifles. They did not take the dead. The dead were beyond help and beyond insult and the ground was frozen too hard for graves.</p>
+
+<p>When they reached the maquis camp that evening, Arnaud told the story to Commandant Delmas.</p>
+
+<p>Delmas listened without interruption. When Arnaud finished, Delmas poured three glasses of marc from a bottle he kept in an ammunition box beneath his cot, and sat for a long time in the lamplight with his jaw working and his eyes on the middle distance.</p>
+
+<p>&ldquo;There are stories,&rdquo; Delmas said at last. &ldquo;From the Dordogne. From the Corr&egrave;ze. From as far south as the Lot.&rdquo; He drank. The marc was rough, distilled by a farmer who was either a genius or a sadist&mdash;opinions within the r&eacute;seau varied. &ldquo;A man. Alone. Tall, pale, silver hair. He appears at German installations&mdash;checkpoints, depots, communications posts. He walks in the front door. They fire. And afterward&mdash;&rdquo; He made a gesture with his glass that encompassed the road, the convoy, the folded steel, the eighteen dead. &ldquo;This.&rdquo;</p>
+
+<p>&ldquo;Resistance?&rdquo; Lucien asked.</p>
+
+<p>&ldquo;No r&eacute;seau claims him. No network has contact. SOE says he&rsquo;s not theirs. The Gaullists say the same. The communists&mdash;&rdquo; Delmas shrugged. &ldquo;The communists say he&rsquo;s a Soviet agent, but the communists say everything is a Soviet agent.&rdquo;</p>
+
+<p>&ldquo;Then who is he?&rdquo;</p>
+
+<p>Delmas drank again. Set the glass down.</p>
+
+<p>&ldquo;<em>Le fant&ocirc;me</em>,&rdquo; he said. &ldquo;That&rsquo;s what the Germans call him. In their dispatches&mdash;the ones we&rsquo;ve intercepted. <em>Der Geist.</em> The ghost.&rdquo; He paused. &ldquo;They&rsquo;ve distributed his photograph to every SS unit in the southwest. Shoot on sight. They&rsquo;re afraid of him.&rdquo;</p>
+
+<p>&ldquo;The SS are afraid?&rdquo;</p>
+
+<p>&ldquo;<em>Terrified.</em>&rdquo; The word carried weight that had nothing to do with emphasis. &ldquo;I&rsquo;ve read the intercepts. The language isn&rsquo;t operational. It&rsquo;s superstitious. They describe him the way peasants describe demons. One report&mdash;from a <em>Sturmbannf&uuml;hrer</em> in P&eacute;rigueux&mdash;requests transfer to the Eastern Front. The Eastern Front, Lucien. He would rather face the Russians than remain in a sector where this man operates.&rdquo;</p>
+
+<p>The lamp guttered. Shadows moved against the canvas walls.</p>
+
+<p>&ldquo;Three installations in the Dordogne corridor,&rdquo; Delmas continued. &ldquo;Destroyed. Every man inside killed. No explosives used. No evidence of any weapon. And always the same account from the few survivors&mdash;the ones who ran far enough, fast enough. A tall man. Pale. Moving through them like&mdash;&rdquo; He stopped. Shook his head. &ldquo;The survivors don&rsquo;t agree on the details. They can&rsquo;t. Their minds won&rsquo;t hold the memory in one shape. But they agree on one thing.&rdquo;</p>
+
+<p>&ldquo;What?&rdquo;</p>
+
+<p>&ldquo;The cold,&rdquo; Delmas said. &ldquo;They all mention the cold.&rdquo;</p>
+
+<div class="story-break"></div>
+
+<h2>II. Bordeaux &mdash; August 1944</h2>
+
+<p>The photograph was taken on the twenty-eighth of August, the day the last German garrison in Bordeaux capitulated.</p>
+
+<p>The city had been liberated in stages&mdash;the FFI moving through the quartiers with the kind of chaotic purpose that marked every liberation, a mixture of tactical coordination and ecstatic amateurism that somehow produced results despite violating every principle of military science. Lucien was among them. Arnaud was not. Arnaud had taken a bullet through the throat at Oradour-sur-Vayre in June, two weeks after the massacre at Oradour-sur-Glane had turned the entire d&eacute;partement into a wound that would not close. He&rsquo;d died on the floor of a barn with his hand in Lucien&rsquo;s and his mouth opening and closing around words that the blood would not let pass.</p>
+
+<p>Lucien carried this the way he carried everything&mdash;silently, completely, without the luxury of processing it, because the war was still happening and processing was a peacetime indulgence.</p>
+
+<p>The twenty-eighth of August was warm. Bordeaux in late summer&mdash;the stone buildings holding the heat, the Garonne low and sluggish, the air thick with dust raised by vehicles and the tramping of thousands of feet. The smell of cordite had faded but not vanished. Flowers appeared from windows. Wine appeared from cellars. The tricolore flew from balconies and lamp posts and from the hands of children who had been born under occupation and would remember this day in the particular way that children remember days when the adults around them weep openly.</p>
+
+<p>Lucien was crossing the Place de la Bourse when he saw the man.</p>
+
+<p>He stood at the edge of the square, near the fountain, with a rifle slung over his shoulder&mdash;a Kar98k, German-issue, carried with the ease of someone for whom the weapon was an accessory rather than a necessity. Dark coat, leather gloves despite the August heat, silver hair that caught the sunlight and threw it back with a metallic brightness that had no business on a human head. His face was turned in profile, watching the column of surrendering Germans file past with an expression that carried no triumph, no anger, no satisfaction&mdash;only a still, absolute attention, the gaze of a being for whom this was neither the first surrender nor the hundredth.</p>
+
+<p>Around him, people celebrated. Against him, the celebration broke and reformed, as though the crowd&rsquo;s joy reached his perimeter and there encountered a surface it could not penetrate. He stood in the centre of the liberation and was not part of it. Was not part of anything except the cold geometry of his own presence, the particular weight he imposed on the air around him that made the nearest celebrants move a half-step wider without knowing why.</p>
+
+<p>Lucien stopped.</p>
+
+<p>Eight months since the road. Eight months since the convoy and the dead and the folded steel and the boot prints that walked through carnage without breaking stride. Eight months during which he had filed the memory where the mind files its impossibilities&mdash;sealed behind a membrane of rationality that permitted daily function, walled in but alive, pressing against the glass. He had fought. He had lost Arnaud. He had survived the summer&rsquo;s worst and emerged into this August sun with his rifle and his grief and his capacity for wonder intact, though diminished.</p>
+
+<p>The man turned.</p>
+
+<p>And Lucien felt the cold.</p>
+
+<p>The cold of that December road&mdash;here, in August, rising from beneath the cobblestones of the Place de la Bourse as though the earth itself remembered what this man was. A cold that entered through the soles of his boots and climbed his spine and settled at the base of his skull with the weight of absolute recognition.</p>
+
+<p>The man&rsquo;s eyes found him.</p>
+
+<p>Ice-blue. Pale as a January sky over the P&eacute;rigord, bright and depthless and carrying behind them a weight of time that Lucien&rsquo;s mind could not hold any more than his hands could hold the Garonne. For one instant&mdash;less than a second, a fragment of a second, the duration of a single heartbeat&mdash;those eyes assessed him with a completeness that left him feeling transparent. Every thought, every memory, every fear and grief and secret tallied, weighed, and filed with an efficiency that had nothing to do with human cognition.</p>
+
+<p>Then the eyes moved on. Dismissal, though that was not the right word&mdash;the word implied a judgment made, a decision to discard. This was simpler. Lucien was not relevant. The way a stone is not relevant to the river that passes over it: noted, accounted for, incorporated into the current&rsquo;s mathematics, and left behind.</p>
+
+<p>Lucien fumbled for the camera.</p>
+
+<p>It was Arnaud&rsquo;s&mdash;a Leica III, pre-war, rescued from the body of a dead journalist in Toulouse and carried through the rest of the campaign in a leather case that smelled of tobacco and developing fluid. Lucien had taken it from Arnaud&rsquo;s effects after Oradour-sur-Vayre. A promise: that someone would keep seeing, keep recording, keep insisting that what happened had happened.</p>
+
+<p>His hands shook. The cold&mdash;the impossible August cold&mdash;made his fingers clumsy on the focus ring. The man was turning away. The crowd was closing. The moment was passing with the particular cruelty of moments that matter&mdash;too fast, too bright, already becoming memory even as they occur.</p>
+
+<p>He pressed the shutter.</p>
+
+<p>The photograph, when he developed it three weeks later in a borrowed darkroom in Limoges, showed the following: a public square in celebration. A column of soldiers. A crowd. And at the left margin of the frame, partially occluded by a woman waving a flag, a tall figure in a dark coat with a rifle slung over his shoulder, face in three-quarter profile, silver hair a pale flare against the dark stone behind him.</p>
+
+<p>The image was slightly blurred&mdash;his shaking hands&mdash;but the face was legible. The height. The carriage. The particular quality of stillness.</p>
+
+<p>Lucien looked at the photograph for a long time.</p>
+
+<p>Then he put it in his coat pocket and went to find a drink.</p>
+
+<div class="story-break"></div>
+
+<h2>III. Bordeaux &mdash; October 1944</h2>
+
+<p>The American arrived in October.</p>
+
+<p>His name was James Hartwell&mdash;Captain, United States Army, attached to the OSS Research and Analysis Branch, which Lucien understood to mean intelligence, though the Americans had a peculiar talent for giving their intelligence services names that sounded like academic departments. Hartwell was thirty-one, lean, bespectacled, from a place called Bryn Mawr which he pronounced as though expecting Lucien to have heard of it. He had a notebook, a fountain pen, and the particular manner of a man who believed that if he asked enough questions in the right order, the world would yield its architecture.</p>
+
+<p>He was debriefing former r&eacute;sistants. Not the operational details&mdash;those had been extracted weeks ago by men with less patience and more specific agendas. Hartwell was interested in what he called <em>anomalous contact reports</em>: encounters that defied standard classification, incidents that the existing categories could not accommodate. He was, in his meticulous American way, collecting ghosts.</p>
+
+<p>They sat in a caf&eacute; near the Quai des Chartrons. The October light fell through windows that had survived four years of occupation and come out the other side with their glass intact, a minor miracle in a city that had learned to measure survival in such terms. Lucien drank coffee that was, for the first time in four years, actually coffee. Hartwell drank nothing, his pen moving across the notebook in a handwriting so small and precise it was nearly a code in itself.</p>
+
+<p>&ldquo;The convoy,&rdquo; Hartwell said. &ldquo;December &lsquo;43. Dordogne. You said one man.&rdquo;</p>
+
+<p>&ldquo;One set of tracks.&rdquo;</p>
+
+<p>&ldquo;Could the tracks have been made prior to the engagement? Or after, by a different individual?&rdquo;</p>
+
+<p>&ldquo;The tracks walked through the site. Through the blood. The mud was frozen&mdash;the prints were distinct. One individual, consistent stride, no deviation.&rdquo;</p>
+
+<p>Hartwell&rsquo;s pen paused. &ldquo;And the vehicles?&rdquo;</p>
+
+<p>&ldquo;The half-track was folded.&rdquo;</p>
+
+<p>&ldquo;You keep using that word.&rdquo;</p>
+
+<p>&ldquo;Because it is the word.&rdquo; Lucien set down his cup. &ldquo;I am not a man who lacks vocabulary, Captain. I have read Montaigne in the original. I can describe what I saw with precision. The steel hull of a Sd.Kfz. 251 armoured half-track had been compressed along clean lines, as one folds a letter. The metal was not torn. Not melted. Not deformed by blast. It was folded. By a force applied from outside, uniformly, along axes that an engineer could have drawn with a ruler.&rdquo;</p>
+
+<p>&ldquo;No known weapon&mdash;&rdquo;</p>
+
+<p>&ldquo;No known weapon. No explosive. No incendiary. No mechanical device. I have considered every possibility, Captain, because I have had ten months to do so. I assure you the list is exhausted.&rdquo;</p>
+
+<p>Hartwell wrote. The pen made a sound like insects against the page.</p>
+
+<p>&ldquo;And the dead?&rdquo;</p>
+
+<p>&ldquo;Eighteen men. No wounds consistent with any weapon I could identify. Several showed signs of massive blunt trauma&mdash;ribs caved, spines displaced&mdash;but without external marks. As though the force had been applied from inside. Or&mdash;&rdquo; Lucien paused, reaching for precision, distrusting the sentence even as he formed it. &ldquo;As though the air itself had struck them.&rdquo;</p>
+
+<p>&ldquo;You&rsquo;re describing a concussive weapon.&rdquo;</p>
+
+<p>&ldquo;I&rsquo;m describing what I saw. You may categorise it as you wish.&rdquo;</p>
+
+<p>Hartwell looked up. Behind the spectacles, his eyes were grey and sharp and already, Lucien could see, infected with the same disease that had been growing in Lucien&rsquo;s own mind since December&mdash;the disease of a question that would not resolve.</p>
+
+<p>&ldquo;There are other reports,&rdquo; Hartwell said. &ldquo;From the Corr&egrave;ze. The Lot. A Wehrmacht garrison in P&eacute;rigueux&mdash;thirty-seven men, all dead, no casualties on the other side. An SS communications post near Brant&ocirc;me&mdash;razed. Not burned. Dismantled. The stones separated from the mortar as though the building had been <em>unbuilt</em>.&rdquo;</p>
+
+<p>Lucien said nothing.</p>
+
+<p>&ldquo;And in every case,&rdquo; Hartwell continued, &ldquo;the same description from survivors. Tall. Pale. Silver hair. Moving alone. Operating outside any known network.&rdquo; He turned a page. &ldquo;The German files are more detailed than ours. They designated him a priority target in March &lsquo;43. SS intelligence distributed a photograph to units across the southwest. Their internal communications use language I&rsquo;ve never encountered in military reporting.&rdquo;</p>
+
+<p>&ldquo;What language?&rdquo;</p>
+
+<p>Hartwell hesitated. The hesitation was brief&mdash;a beat, a breath&mdash;but it told Lucien that the American had arrived at the same wall Lucien had hit ten months ago, the same frontier beyond which rational explanation ceased and you were left standing in the cold with your mouth open and your taxonomy in ruins.</p>
+
+<p>&ldquo;Religious language,&rdquo; Hartwell said. &ldquo;One <em>Sturmbannf&uuml;hrer</em> refers to him as <em>der Engel</em>. The angel. Another&mdash;the one who requested transfer to the Eastern Front&mdash;describes encountering him at a checkpoint near Sarlat. He says the man walked through rifle fire. Walked through it, Lucien. Stood in the road while an entire platoon emptied their weapons at him, and the bullets&mdash;&rdquo;</p>
+
+<p>&ldquo;Did not arrive,&rdquo; Lucien finished.</p>
+
+<p>Hartwell stared at him.</p>
+
+<p>&ldquo;I have a photograph,&rdquo; Lucien said.</p>
+
+<p>He drew it from his coat pocket&mdash;not the inside pocket where you kept things of value, but the breast pocket, close to the chest, where it had rested since Limoges. He laid it on the table between them, among the coffee cups and the notebook and the October light.</p>
+
+<p>Hartwell picked it up. Studied it. His face did not change, but his breathing did&mdash;a subtle shift, a slight quickening, the physiological signature of a man whose careful categories were buckling under the weight of evidence.</p>
+
+<p>&ldquo;Bordeaux,&rdquo; Lucien said. &ldquo;The twenty-eighth of August. The liberation. He was standing in the Place de la Bourse.&rdquo;</p>
+
+<p>&ldquo;You&rsquo;re certain this is the same individual described in the convoy incident?&rdquo;</p>
+
+<p>&ldquo;I felt the cold, Captain.&rdquo;</p>
+
+<p>The sentence hung between them. Hartwell could have dismissed it&mdash;could have filed it with the superstitions and the exaggerations and the post-traumatic distortions that padded every wartime account. His training demanded it. His categories required it. The rational architecture of his education&mdash;Bryn Mawr, Princeton, the particular American faith in classification as a form of control&mdash;insisted that <em>I felt the cold</em> was a subjective report from a traumatised combatant, not evidence, not data, not anything that belonged in a notebook with grid lines and a fountain pen.</p>
+
+<p>He did not dismiss it.</p>
+
+<p>He looked at the photograph. He looked at Lucien. He set the photograph down and picked up his pen, and then he put the pen down too, and for a long time they sat in the caf&eacute; on the Quai des Chartrons in the October light and did not speak.</p>
+
+<p>&ldquo;I&rsquo;d like to keep looking,&rdquo; Hartwell said at last.</p>
+
+<p>&ldquo;Yes,&rdquo; Lucien said. &ldquo;So would I.&rdquo;</p>
+
+<div class="story-break"></div>
+
+<h2>IV. The Correspondence &mdash; 1945&ndash;1989</h2>
+
+<p>The first letter arrived in March 1945. Postmarked Washington, D.C. Hartwell&rsquo;s handwriting&mdash;that meticulous script, as legible as typeset&mdash;on a single sheet of government stationery with the letterhead trimmed off, a small act of discretion that established the terms of their exchange. This was not official. This was not sanctioned. This was two men writing to each other about a thing they could not stop thinking about, and the absence of letterhead was the closest either of them would come to admitting it.</p>
+
+<p><em>I&rsquo;ve located the German intelligence file. Compiled by Amt IV of the RSHA between March and November 1943. Fourteen pages. Photograph attached&mdash;poor quality, consistent with the image you showed me. The file classifies the subject as a high-priority foreign operative, likely British, though no evidence of SOE or SIS affiliation has been established. Recommended action: neutralise on contact. Fourteen separate engagement reports are included. In every case, the engaging unit was destroyed. Total German casualties attributed to this single operative: four hundred and twelve.</em></p>
+
+<p>Lucien read the letter in his apartment on the Rue du Pas-Saint-Georges. The building had survived the occupation with the indifference of stone that has weathered centuries and considers war a temporary inconvenience. He read the number&mdash;four hundred and twelve&mdash;and folded the letter and put it in the drawer of his desk where he kept Arnaud&rsquo;s camera and the photograph and the Hauptmann&rsquo;s sidearm he had never turned in.</p>
+
+<p>He wrote back the following week.</p>
+
+<p><em>The number does not surprise me. I saw what he did to eighteen men and five vehicles without a weapon I could see. Four hundred and twelve, distributed across fourteen engagements over eight months, represents a rate that is&mdash;if we accept the premise, which neither of us has yet stated aloud&mdash;entirely consistent with what I witnessed on that road.</em></p>
+
+<p><em>What concerns me more is the language in the file. You mentioned religious terminology. I have noticed the same pattern in the oral accounts I&rsquo;ve collected from other r&eacute;sistants&mdash;not superstition, exactly, but the use of words that belong to a different register. Delmas, who commanded our r&eacute;seau, called him le fant&ocirc;me. But when he spoke of the man privately, after the marc, the word he used was l&rsquo;ange. The angel. A man who had not attended mass since 1936 reaching for the vocabulary of faith to describe what he&rsquo;d seen.</em></p>
+
+<p><em>I don&rsquo;t believe in angels, James. But I find it significant that men who don&rsquo;t believe in them keep using the word.</em></p>
+
+<p>The letters continued. Monthly, then bimonthly, then quarterly&mdash;the rhythm of obsession in its mature phase, when the initial fever has cooled to a sustained, low-grade burn that interferes with daily life only intermittently but never fully remits. Hartwell returned to civilian life, took a position at the Library of Congress, married a woman named Eleanor who appears in the letters only as a presence in the margins&mdash;a hand that refilled the coffee, a voice that called from another room, the quiet pressure of a life that did not understand why her husband spent his evenings writing to a Frenchman about a war that was supposed to be over.</p>
+
+<p>Lucien remained in Bordeaux. Taught history at the lyc&eacute;e on the Cours Victor Hugo. Married no one. The war had left him with a tolerance for solitude that most people mistook for contentment, and he did not correct them.</p>
+
+<p>The letters circled and circled.</p>
+
+<p>Hartwell found additional German records&mdash;fragmentary, many destroyed in the final days of the Reich, but sufficient to establish a pattern. The subject had appeared at military installations across occupied France between 1941 and 1944. Always alone. Always on foot. Always moving with a purpose that defied the networks and command structures through which every other operative, Allied or Axis, could be traced. No supply lines. No safe houses. No contacts. No trail except the dead he left behind him.</p>
+
+<p><em>He doesn&rsquo;t operate like an agent</em>, Hartwell wrote in 1952. <em>Agents have infrastructure. Support. Objectives that fit into larger campaigns. This man&rsquo;s movements follow a pattern I can&rsquo;t decode&mdash;seemingly random until you map them, and then you see something, but what you see doesn&rsquo;t correspond to any military logic. He wasn&rsquo;t targeting supply lines or communications or command structures. He was going to specific locations, doing something there, and moving on. The German casualties were incidental.</em></p>
+
+<p><em>Incidental</em>, Lucien wrote back. <em>Four hundred and twelve men, incidental. I have been thinking about this for nine years now, James, and this is the word I keep returning to. The killing wasn&rsquo;t the purpose. It was a consequence. A byproduct of his presence in places the Germans also happened to be. He wasn&rsquo;t hunting them. They were simply in his way.</em></p>
+
+<p><em>What was he hunting?</em></p>
+
+<p>The question recurred across decades. Neither man could answer it. Neither man could stop asking.</p>
+
+<p>Lucien sent Hartwell a second photograph in 1961&mdash;a clipping from <em>Le Monde</em>, a brief article about a cultural fund that had donated a significant collection of Renaissance manuscripts to the Biblioth&egrave;que nationale. The director of the fund was photographed at the ceremony. The image was small, grainy with newsprint reproduction, but the height and the carriage and the pale hair were unmistakable.</p>
+
+<p><em>V. Montrevault</em>, the caption read. <em>Directeur, Fondation Calandrian.</em></p>
+
+<p>Hartwell&rsquo;s reply took three weeks.</p>
+
+<p><em>The face is the same. Seventeen years since Bordeaux, and the face is the same. I&rsquo;ve requested the Foundation&rsquo;s registration documents through a contact at the State Department. The Calandrian Trust has been in continuous operation since 1793. Current director listed as V. Montrevault. Previous director listed as V. Montrevault. The name appears in the foundation&rsquo;s records at irregular intervals going back to its founding.</em></p>
+
+<p><em>Eleanor thinks I should stop.</em></p>
+
+<p><em>I cannot stop.</em></p>
+
+<p>They met in person twice after the war.</p>
+
+<p>The first time was Paris, 1967. A brasserie on the Boulevard Saint-Germain. Hartwell&rsquo;s hair had gone grey. Lucien&rsquo;s hands trembled from a neuropathy the doctors attributed to the cold of the maquis winters, though Lucien knew better. The cold he trembled from had a different origin. Twenty-three years of correspondence spread between them in notebooks and clippings, a body of evidence that proved nothing except that two men could not stop looking at a thing the world had decided not to see.</p>
+
+<p>Hartwell ordered coffee. Drank none of it. His hands, Lucien noticed, were not steady either.</p>
+
+<p>&ldquo;I found someone,&rdquo; Hartwell said. &ldquo;A witness. Living.&rdquo;</p>
+
+<p>His name was &Eacute;tienne Soulier. Seventy-one years old in 1967, living in a village outside Brive-la-Gaillarde, in a stone house with a garden he no longer tended and shutters he no longer opened. He had been a saboteur with the Arm&eacute;e Secr&egrave;te during the war&mdash;bridges, rail lines, the particular work that required a tolerance for solitude and an intimacy with explosives. In February 1944, he had been tasked with destroying a rail junction east of Terrasson that the Germans were using to move materiel south.</p>
+
+<p>&ldquo;He arrived at the junction at oh-three-hundred,&rdquo; Hartwell said, reading from a transcript in handwriting that was not his own&mdash;a different hand, older, shakier, the pen pressed hard enough to score the paper. &ldquo;Found the charges had already been placed. Not his charges. Unfamiliar configuration. He decided to observe.&rdquo;</p>
+
+<p>Hartwell paused. Set down the transcript. Picked it up again.</p>
+
+<p>&ldquo;He hid in a drainage culvert forty metres from the junction. Good sight line. Full moon&mdash;February, cold, the sky clear. The German garrison at the junction was a platoon. Twenty-six men. He counted them.&rdquo;</p>
+
+<p>Lucien waited.</p>
+
+<p>&ldquo;At oh-three-twenty, a man walked out of the tree line.&rdquo;</p>
+
+<p>The brasserie noise&mdash;glasses, conversation, the particular Parisian murmur of a Tuesday evening&mdash;continued around them. Neither heard it.</p>
+
+<p>&ldquo;Soulier&rsquo;s account becomes&mdash;&rdquo; Hartwell stopped. Started again. &ldquo;I interviewed him for four hours. I recorded it. The recording is in my hotel room. I couldn&rsquo;t&mdash;I didn&rsquo;t want to play it here.&rdquo; He folded his hands on the table. &ldquo;Lucien, the man hasn&rsquo;t left that house in nine years. His wife told me he stopped sleeping in 1944. Entirely. He sits in a chair by the window all night, every night, and watches the road.&rdquo;</p>
+
+<p>&ldquo;What did he see?&rdquo;</p>
+
+<p>Hartwell opened the transcript. His voice, when he read, was the voice of a man reciting something he wished he had never learned.</p>
+
+<p>&ldquo;&lsquo;He walked out of the trees and the air changed. I don&rsquo;t mean wind. I mean the quality of the air&mdash;the way it sits against your skin, the way it carries sound. It stopped carrying sound. Everything went silent. Not quiet. Silent. As if the air between me and the junction had been replaced with something heavier. Something that didn&rsquo;t transmit noise.&rsquo;</p>
+
+<p>&ldquo;&lsquo;The Germans saw him. They shouted. They fired. Every rifle in the garrison, and the MG 42 on the emplacement, all at once, the noise so loud it should have deafened me at forty metres but it didn&rsquo;t because the air wasn&rsquo;t carrying sound properly anymore, it came to me muffled, as though I were hearing it through water.&rsquo;</p>
+
+<p>&ldquo;&lsquo;He walked through it.&rsquo;</p>
+
+<p>&ldquo;&lsquo;I don&rsquo;t mean he dodged. I don&rsquo;t mean he found cover. He walked. The same pace. The same stride. Straight into the fire, and the bullets&mdash;I could see them, in the moonlight, I could see the tracers&mdash;they reached him and then they didn&rsquo;t. As if the air around him was a different substance. As if he existed inside a space where the rules were different.&rsquo;</p>
+
+<p>&ldquo;&lsquo;Then he&mdash;&rsquo;</p>
+
+<p>&ldquo;Soulier&rsquo;s account breaks here,&rdquo; Hartwell said. He set the transcript down. His hands were trembling. &ldquo;The recording continues but his language becomes&mdash;&rdquo; He searched for the word. &ldquo;Theological. He begins describing what happened to the garrison in terms I&rsquo;ve only encountered in medieval texts. The vocabulary of saints&rsquo; lives and martyrologies. A farmer from the Corr&egrave;ze with a primary school education reaching for the language of Jacobus de Voragine to describe what he watched happen to twenty-six men in the moonlight.&rdquo;</p>
+
+<p>&ldquo;What did happen?&rdquo;</p>
+
+<p>Hartwell looked at him. The look was very old.</p>
+
+<p>&ldquo;He says it took less than a minute. He says the man moved through them the way a hand moves through smoke&mdash;and that the soldiers, when he reached them, came apart. Those were his words. <em>Ils se sont d&eacute;faits.</em> They came undone. As though whatever held them together&mdash;as men, as bodies, as coherent physical structures&mdash;ceased to apply in his proximity.&rdquo;</p>
+
+<p>&ldquo;And afterward?&rdquo;</p>
+
+<p>&ldquo;The man walked out the other side of the junction. Same pace. Same direction. The charges detonated behind him&mdash;the ones that had been placed before Soulier arrived. The junction burned. And the man continued north, into the trees, without looking back.&rdquo;</p>
+
+<p>&ldquo;He&rsquo;s never left the house,&rdquo; Hartwell said finally. &ldquo;His wife brings his meals. He sits by the window. He watches the road.&rdquo;</p>
+
+<p>&ldquo;For what?&rdquo;</p>
+
+<p>&ldquo;He didn&rsquo;t say. But I think&mdash;&rdquo; Hartwell removed his glasses. Cleaned them on his tie. Put them back on. The gesture was mechanical, the motions of a body buying its mind time. &ldquo;I think he&rsquo;s watching for the shadow. I think he believes that if he looks away&mdash;if he stops watching&mdash;it will come back. That it knows where he is. That it has always known.&rdquo;</p>
+
+<p>Lucien&rsquo;s hands trembled on the table. The old cold&mdash;the December cold, the August cold, the cold that had nothing to do with temperature&mdash;climbed his spine and settled at the base of his skull and did not leave.</p>
+
+<p>&ldquo;The door,&rdquo; Lucien said.</p>
+
+<p>&ldquo;What?&rdquo;</p>
+
+<p>&ldquo;The cold. The wrongness. What Soulier saw. It&rsquo;s a door.&rdquo; He spoke with the conviction of a man who has spent decades circling a truth and has just, at last, walked into it face-first. &ldquo;When he chooses to move among us as one of us&mdash;when he walks into a camp and helps clear a checkpoint and speaks quiet French and leaves again&mdash;the door is closed. What&rsquo;s behind it is contained. Hidden. Held in check.&rdquo;</p>
+
+<p>&ldquo;And when the Germans attacked&mdash;&rdquo;</p>
+
+<p>&ldquo;He opened the door. For <em>himself.</em> To do what he came to do. The terror, the cold, the shadow&mdash;those aren&rsquo;t weapons. They&rsquo;re <em>leakage.</em> Overflow. What spills out when something that vast tries to act through a space that small.&rdquo; Lucien&rsquo;s voice had dropped to a whisper. &ldquo;We aren&rsquo;t seeing what he can do, James. We&rsquo;re seeing what he <em>is.</em> The part that doesn&rsquo;t fit inside the man.&rdquo;</p>
+
+<p>Hartwell stared at him.</p>
+
+<p>&ldquo;Then what does the whole thing look like?&rdquo;</p>
+
+<p>Neither answered. The question filled the space between them like the cold filled a December road, and both men understood that to answer it would require a capacity for perception that human architecture did not possess.</p>
+
+<p>They paid. They left. They walked in different directions through the Paris night, and neither spoke of the transcript again in their letters, though both thought of it&mdash;Lucien in his apartment on the Rue du Pas-Saint-Georges, Hartwell in his study in Georgetown&mdash;on every night that remained to them, which for Hartwell was not many and for Lucien was not enough.</p>
+
+<p>They met once more. Washington, 1978. Lucien&rsquo;s single trip to America, undertaken because Hartwell had written to say he was ill and wanted to give Lucien the notebooks.</p>
+
+<p>Hartwell&rsquo;s study was small, lined with books, fragrant with pipe tobacco and the dry smell of paper that has been handled too often. The illness had pared him to bone and angles&mdash;pancreatic, terminal, a diagnosis he&rsquo;d received with the composure of a man who had spent decades in the company of the inexplicable and found his own mortality merely pedestrian by comparison.</p>
+
+<p>&ldquo;One more thing,&rdquo; Hartwell said. He produced a photograph&mdash;a group portrait, Resistance fighters, Bordeaux, summer &lsquo;44. The man stood in the back row. Rifle on his shoulder. Same coat. Same face.</p>
+
+<p>&ldquo;He&rsquo;s smiling,&rdquo; Lucien said.</p>
+
+<p>&ldquo;Yes.&rdquo; Hartwell coughed&mdash;the long, racking sound of illness. &ldquo;I tracked down two of the others in the photograph. One died in &lsquo;58. The other&mdash;a woman, former courier for the Lib&eacute;ration-Sud network&mdash;remembered him vaguely. Said he appeared and disappeared. Spoke perfect French. Never gave a name. Never stayed.&rdquo; He coughed again. &ldquo;She said he was kind. Quiet. Helped them clear a checkpoint near Langon. And then he was gone.&rdquo;</p>
+
+<p>&ldquo;Did she feel the cold?&rdquo;</p>
+
+<p>Hartwell looked at him. After thirty-four years, the question needed no context.</p>
+
+<p>&ldquo;No,&rdquo; he said. &ldquo;She said he felt normal. Pleasant, even. Whatever you and I perceived&mdash;whatever the Germans perceived&mdash;she didn&rsquo;t.&rdquo;</p>
+
+<p>Lucien was quiet for a long time. The study ticked with the sound of a clock and the distant hum of the Georgetown evening and the particular silence of a man whose theory has just been confirmed by a witness he did not expect.</p>
+
+<p>&ldquo;The door,&rdquo; he said again. &ldquo;She saw the closed door.&rdquo;</p>
+
+<p>&ldquo;Yes.&rdquo;</p>
+
+<p>&ldquo;He&rsquo;s not cruel. The killing is terrible and the shadow is terrible and the cold is terrible and he is not cruel. He simply&mdash;exists. At a scale we can&rsquo;t survive perceiving.&rdquo;</p>
+
+<p>Hartwell was quiet for a time. Eleanor moved in the kitchen. Plates. Water. The sounds of a life.</p>
+
+<p>&ldquo;Like staring at the sun,&rdquo; Hartwell said.</p>
+
+<p>&ldquo;Yes. The sun is not cruel. It doesn&rsquo;t burn you out of malice. It burns you because you are made of the kind of matter that burns, and it is made of the kind of matter that does not, and the distance between those two facts is everything.&rdquo;</p>
+
+<p>Hartwell smiled. It was the first time Lucien had seen him smile in thirty-four years of knowing him, and it was a terrible smile&mdash;illuminated, incandescent with the particular joy of a man who has spent his life building a cathedral of questions and has just, in the final year, seen the shape of what it was built to house.</p>
+
+<p>&ldquo;That&rsquo;s the answer, isn&rsquo;t it,&rdquo; Hartwell said.</p>
+
+<p>&ldquo;That&rsquo;s the answer.&rdquo;</p>
+
+<p>They shook hands at the door. Lucien flew back to Bordeaux. Hartwell died in April 1979. Eleanor sent the remaining notebooks with a brief note that carried, beneath its courtesy, the faint relief of a woman who had outlived the thing that had taken her husband from her long before the cancer had.</p>
+
+<p>Lucien lived until 1991. He left no instructions regarding the notebooks, the photographs, the German intelligence file, the thirty-five years of correspondence. His estate&mdash;such as it was&mdash;went to a nephew in Lyon who found the materials in a trunk and, not knowing what to make of them, donated the lot to the departmental archives in P&eacute;rigueux.</p>
+
+<p>They are there still. Uncatalogued. Unexamined. A box among boxes in a basement that smells of damp and calcium and the mineral patience of stone that has outlasted every war fought above it. The archivist who received the donation noted the contents in a ledger&mdash;<em>correspondence, misc. photographs, wartime ephemera, provenance unclear</em>&mdash;and placed the box on a shelf between a collection of agricultural surveys from 1923 and a parish record from the Ancien R&eacute;gime.</p>
+
+<p>The damp will take the letters first. Then the notebooks. The photographs will last longer&mdash;the Leica&rsquo;s silver gelatin print, the newsprint clipping, the group portrait from Bordeaux&mdash;but not forever. Paper remembers only as long as paper lasts, and paper, in the end, is mortal too.</p>
+
+<p>The man in the photographs is not.</p>
+
+<p>Somewhere in New York, in a room lined with books that span the breadth of written history, he continues. The face unchanged. The cold contained. The door closed, or opened, as the centuries require.</p>
+
+<p>He does not know about the box in P&eacute;rigueux. Would not care if he did. Two men spent thirty-five years asking a question whose answer was, in the end, very simple&mdash;and very old, and very terrible, and no comfort at all.</p>
+
+<p>He is what he is.</p>
+
+<p>And the world, which cannot hold the knowledge, learns to look away.</p>
+
+-->
+
+<p>YOUR STORY TEXT GOES HERE.</p>
+
+</div>
+
+<div class="back-link">
+  <a href="../read.html">&larr; Back to Read</a>
+</div>
+
+<!-- CHANGE 4: Audio file path -->
+<div class="audio-player" id="audioPlayer">
+  <div class="player-inner">
+    <div class="player-controls">
+      <button class="player-btn" id="skipBack" title="Back 15s">&#8634;</button>
+      <button class="player-btn play-btn" id="playPause">&#9654;</button>
+      <button class="player-btn" id="skipFwd" title="Forward 15s">&#8635;</button>
+      <div class="player-progress-wrap">
+        <span class="player-time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-fill" id="progressFill">
+            <div class="progress-handle"></div>
+          </div>
+        </div>
+        <span class="player-time" id="totalTime">0:00</span>
+      </div>
+      <button class="player-speed" id="speedBtn">1&times;</button>
+      <button class="player-close" id="playerClose">&times;</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>&copy; 2026 Kit Rivas</span>
+  <div class="footer-links">
+    <a href="#">Twitter</a>
+    <a href="#">Instagram</a>
+    <a href="#">Threads</a>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Theme
+const toggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+function applyTheme(theme) {
+  html.setAttribute('data-theme', theme);
+  toggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+}
+let currentTheme = getSystemTheme();
+applyTheme(currentTheme);
+let manualOverride = false;
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+  if (!manualOverride) {
+    currentTheme = e.matches ? 'light' : 'dark';
+    applyTheme(currentTheme);
+  }
+});
+toggle.addEventListener('click', () => {
+  manualOverride = true;
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(currentTheme);
+});
+
+// Font size
+const fontSlider = document.getElementById('fontSlider');
+fontSlider.addEventListener('input', (e) => {
+  document.documentElement.style.fontSize = e.target.value + 'px';
+});
+
+// Audio
+const audioPlayer = document.getElementById('audioPlayer');
+const listenBtn = document.getElementById('listenBtn');
+const playPause = document.getElementById('playPause');
+const skipBack = document.getElementById('skipBack');
+const skipFwd = document.getElementById('skipFwd');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+const speedBtn = document.getElementById('speedBtn');
+const playerClose = document.getElementById('playerClose');
+
+// CHANGE 4: Audio file path — update this to match the story
+const audio = new Audio('audio/FILENAME.mp3');
+let isPlaying = false;
+const speeds = [0.75, 1, 1.25, 1.5, 2];
+let speedIndex = 1;
+
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+listenBtn.addEventListener('click', () => {
+  audioPlayer.classList.add('visible');
+  document.body.classList.add('body-audio-active');
+  audio.play();
+  isPlaying = true;
+  playPause.innerHTML = '&#10074;&#10074;';
+});
+playPause.addEventListener('click', () => {
+  if (isPlaying) { audio.pause(); playPause.innerHTML = '&#9654;'; }
+  else { audio.play(); playPause.innerHTML = '&#10074;&#10074;'; }
+  isPlaying = !isPlaying;
+});
+skipBack.addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
+skipFwd.addEventListener('click', () => { audio.currentTime = Math.min(audio.duration, audio.currentTime + 15); });
+speedBtn.addEventListener('click', () => {
+  speedIndex = (speedIndex + 1) % speeds.length;
+  audio.playbackRate = speeds[speedIndex];
+  speedBtn.textContent = speeds[speedIndex] + '\u00d7';
+});
+audio.addEventListener('loadedmetadata', () => { totalTimeEl.textContent = formatTime(audio.duration); });
+audio.addEventListener('timeupdate', () => {
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progressFill.style.width = pct + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+audio.addEventListener('ended', () => { isPlaying = false; playPause.innerHTML = '&#9654;'; progressFill.style.width = '0%'; });
+progressBar.addEventListener('click', (e) => {
+  const rect = progressBar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+});
+playerClose.addEventListener('click', () => {
+  audio.pause();
+  isPlaying = false;
+  playPause.innerHTML = '&#9654;';
+  audioPlayer.classList.remove('visible');
+  document.body.classList.remove('body-audio-active');
+});
+</script>
+
+</body>
+</html>
