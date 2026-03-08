@@ -412,13 +412,7 @@ nav {
   .story-header h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
   .story-body { padding: 0 1.5rem 4rem; }
   .story-nav { padding: 0 1.5rem 4rem; }
+  .back-link { padding: 0 1.5rem 4rem; }
   .audio-player { padding: 0.6rem 1.2rem; }
   .player-speed { display: none; }
-  .font-sizer { display: none; }
-
-  .nav-right {
-    gap: 1rem;
-  }
-
-  .nav-right .nav-links { display: none; }
 }
