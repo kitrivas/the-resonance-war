@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Characters — The Resonance War</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --bg-elevated: #11110f;
+  --text: #c8c5be;
+  --text-bright: #e8e5de;
+  --text-muted: #6b6860;
+  --accent: #b5a07a;
+  --accent-dim: #7d6f55;
+  --accent-soft: #a89570;
+  --accent-glow: rgba(181, 160, 122, 0.05);
+  --border: #1e1d1a;
+  --border-warm: #2a2518;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --sans: 'Inter', -apple-system, sans-serif;
+  --cjk: 'Noto Serif SC', serif;
+}
+
+html {
+  font-size: 18px;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: #2a2a2e #0a0a0c;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--serif);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(181, 160, 122, 0.2);
+  color: var(--text-bright);
+}
+
+/* ─── Navigation ─── */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding: 1.2rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(10, 10, 12, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.4s ease;
+}
+
+nav.scrolled { padding: 0.8rem 2rem; }
+
+.nav-title {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.nav-title span { color: #3a3830; margin: 0 0.4rem; }
+
+.nav-author {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-author:hover { color: var(--accent-soft); }
+
+.nav-links {
+  display: flex;
+  gap: 2.2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover { color: var(--text-bright); }
+.nav-links a:hover::after { width: 100%; }
+.nav-links a.active { color: var(--accent-soft); }
+.nav-links a.active::after { width: 100%; }
+
+/* ─── Page Header ─── */
+.page-header {
+  padding: 10rem 2rem 4rem;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.page-header h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 1rem;
+}
+
+.page-header p {
+  font-size: 1rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+/* ─── Sections ─── */
+section {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 2rem 5rem;
+}
+
+.section-label {
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-warm), transparent);
+}
+
+/* ─── Character Cards ─── */
+.char-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.char-card {
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  padding: 2rem 2.2rem;
+  position: relative;
+  transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
+}
+
+.char-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.char-card:hover {
+  border-color: var(--border-warm);
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(181, 160, 122, 0.03);
+}
+
+.char-card:hover::before { opacity: 1; }
+
+.char-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.char-name {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: 1.35rem;
+  color: var(--text-bright);
+  letter-spacing: 0.02em;
+}
+
+.char-cjk {
+  font-family: var(--cjk);
+  font-size: 0.75rem;
+  color: var(--accent-dim);
+}
+
+.char-faction {
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-soft);
+  margin-bottom: 1rem;
+}
+
+.char-desc {
+  font-size: 0.95rem;
+  color: var(--text);
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ─── AEON Grid ─── */
+.aeon-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.aeon-card {
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  padding: 1.5rem 1.6rem;
+  position: relative;
+  transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
+}
+
+.aeon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.aeon-card:hover {
+  border-color: var(--border-warm);
+  transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(181, 160, 122, 0.03);
+}
+
+.aeon-card:hover::before { opacity: 1; }
+
+.aeon-card .char-name {
+  font-size: 1.15rem;
+  margin-bottom: 0.15rem;
+}
+
+.aeon-card .char-faction {
+  margin-bottom: 0.7rem;
+}
+
+.aeon-card .char-desc {
+  font-size: 0.88rem;
+}
+
+/* ─── Divider ─── */
+.divider {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.divider-line {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-warm), transparent);
+}
+
+/* ─── Footer ─── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 3rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+footer span {
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-links a:hover { color: var(--accent-soft); }
+
+/* ─── Responsive ─── */
+@media (max-width: 640px) {
+  html { font-size: 16px; }
+  nav { padding: 1rem 1.2rem; }
+  .nav-links { gap: 1.2rem; }
+  .page-header { padding: 8rem 1.5rem 3rem; }
+  section { padding: 2rem 1.5rem 4rem; }
+  .char-card { padding: 1.5rem; }
+  .aeon-grid { grid-template-columns: 1fr; }
+  .aeon-card { padding: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-title"><a href="../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="world.html">World</a></li>
+    <li><a href="characters.html" class="active">Characters</a></li>
+    <li><a href="read.html">Read</a></li>
+    <li><a href="media.html">Media</a></li>
+  </ul>
+</nav>
+
+<div class="page-header">
+  <h1>Characters</h1>
+  <p>Beings older than the civilizations that named them.</p>
+</div>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ─── CORE TRIAD ─── -->
+<section>
+  <div class="section-label">The Core Triad</div>
+
+  <div class="char-list">
+
+    <div class="char-card">
+      <div class="char-header">
+        <div class="char-name">Valen</div>
+      </div>
+      <div class="char-faction">Vashirai &middot; Judicator &middot; Origin: Daeva</div>
+      <p class="char-desc">Former First Severant, now Judicator of the Vashirai — the enforcer of divine law between factions. Platinum-haired, frost-eyed, and possessed of a stillness more dangerous than fury. He has kept his vessel for six hundred years and anchored fragments of his essence into sacred sites across the world to preserve the balance. Where he walks, law follows.</p>
+    </div>
+
+    <div class="char-card">
+      <div class="char-header">
+        <div class="char-name">Kira</div>
+      </div>
+      <div class="char-faction">Vashirai &middot; Severant &middot; Origin: Ashura</div>
+      <p class="char-desc">The Ashura who saved the world twice. Kira's resonance is black and white fire — equilibrium between creation and unmaking. In her female vessel she is slight, dark-haired, violet-eyed, and lethal. In combat she is savage, elegant, and precise. She has died, been unmade, and returned bearing the memory of both. The ground remembers her step.</p>
+    </div>
+
+    <div class="char-card">
+      <div class="char-header">
+        <div class="char-name">Azrael</div>
+      </div>
+      <div class="char-faction">Ashura &middot; Kratarch of Ending &middot; The Spear of Ending</div>
+      <p class="char-desc">The Eighth Kratarch. His domain is finality — not destruction but the absolute cessation from which nothing returns. His divine form is a storm of black flame laced with red lightning. In his mortal vessel he is tall, dark-haired, and heavy with a gravity that slows time in his proximity. He broke the world once. Now he wakes in mortal flesh with no memory of what he was.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ─── ESZAHAR ─── -->
+<section>
+  <div class="section-label">The Mirror</div>
+
+  <div class="char-list">
+
+    <div class="char-card">
+      <div class="char-header">
+        <div class="char-name">Eszahar</div>
+        <div class="char-cjk">鏡榮</div>
+      </div>
+      <div class="char-faction">Daeva &middot; Exarch &middot; Mirror of Glory</div>
+      <p class="char-desc">Exarch of revelation and annihilating truth. Silver-haired, mirror-eyed, draped in layers of chrome and silver jewelry. His domain is reflection as control — truth so pure it annihilates illusion. He commands AEON as his personal strike unit and projects Daevic order with a cold precision that his glittering exterior does nothing to soften. The second most powerful Exarch.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div></div>
+
+<!-- ─── AEON ─── -->
+<section>
+  <div class="section-label">AEON</div>
+
+  <p style="color: var(--text-muted); margin-bottom: 2.5rem; font-size: 0.95rem;">Eszahar's elite operatives — a strike unit forged to project Daevic authority into the mortal world. They answer to the Mirror of Glory and move at his command.</p>
+
+  <div class="aeon-grid">
+
+    <div class="aeon-card">
+      <div class="char-header">
+        <div class="char-name">Shiyun</div>
+        <div class="char-cjk">時韻</div>
+      </div>
+      <div class="char-faction">Daeva &middot; AEON Operative</div>
+      <p class="char-desc">The emotional anchor. Tall, dark-eyed, with a commanding presence that holds the unit's centre. The strategic heart of AEON — calm, measured, quietly dangerous.</p>
+    </div>
+
+    <div class="aeon-card">
+      <div class="char-header">
+        <div class="char-name">Ryuha</div>
+        <div class="char-cjk">竜羽</div>
+      </div>
+      <div class="char-faction">Daeva &middot; AEON Operative</div>
+      <p class="char-desc">Three thousand years old and still the most magnetic presence in any room. Silver-tongued, flamboyant, and impeccably styled. His charm is a weapon he has never once failed to deploy.</p>
+    </div>
+
+    <div class="aeon-card">
+      <div class="char-header">
+        <div class="char-name">Liam</div>
+        <div class="char-cjk">利安</div>
+      </div>
+      <div class="char-faction">Daeva &middot; AEON Operative</div>
+      <p class="char-desc">The youngest member and kinetic powerhouse. Disarming softness off-duty. In the field, explosive and relentless. The duality is the point.</p>
+    </div>
+
+    <div class="aeon-card">
+      <div class="char-header">
+        <div class="char-name">Jisu</div>
+        <div class="char-cjk">智秀</div>
+      </div>
+      <div class="char-faction">Daeva &middot; AEON Operative</div>
+      <p class="char-desc">The architect. Sharp-cropped hair, intellectual precision, understated rebellion. He built AEON's operational framework from the bones up and guards it with quiet ferocity.</p>
+    </div>
+
+    <div class="aeon-card">
+      <div class="char-header">
+        <div class="char-name">Kairo</div>
+        <div class="char-cjk">凱洛</div>
+      </div>
+      <div class="char-faction">Daeva &middot; AEON Operative</div>
+      <p class="char-desc">The brooding mystic. Amber-eyed, warm-skinned, moving with the deliberate weight of something vast held in check. More whispered about than understood.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <span>&copy; 2026 Kit Rivas</span>
+  <div class="footer-links">
+    <a href="#">Twitter</a>
+    <a href="#">Instagram</a>
+    <a href="#">Threads</a>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('section').forEach(s => {
+  s.style.opacity = '0';
+  s.style.transform = 'translateY(20px)';
+  s.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+  observer.observe(s);
+});
+</script>
+
+</body>
+</html>
