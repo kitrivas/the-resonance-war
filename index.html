@@ -74,7 +74,15 @@ nav.scrolled { padding: 0.8rem 2rem; }
   color: var(--text-muted);
 }
 
-.nav-title span { color: var(--accent); font-weight: 400; }
+.nav-title span { color: #3a3830; margin: 0 0.4rem; }
+
+.nav-author {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.nav-author:hover { color: var(--accent-soft); }
 
 .nav-links {
   display: flex;
@@ -307,6 +315,12 @@ p.lead {
   margin: 3rem 0;
   position: relative;
   overflow: hidden;
+  transition: border-color 0.4s, transform 0.3s;
+}
+
+.featured-book:has(.featured-book-link):hover {
+  border-color: var(--border-warm);
+  transform: translateY(-2px);
 }
 
 .featured-book::before {
@@ -351,6 +365,12 @@ p.lead {
   line-height: 1.8;
 }
 
+.featured-book-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
 .featured-status {
   display: inline-block;
   font-family: var(--sans);
@@ -376,13 +396,42 @@ p.lead {
   padding: 1.5rem;
   border: 1px solid var(--border);
   text-decoration: none;
-  transition: border-color 0.4s, transform 0.3s;
+  position: relative;
+  transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s;
+}
+
+.explore-link::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.explore-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
 }
 
 .explore-link:hover {
   border-color: var(--border-warm);
   transform: translateY(-2px);
+  box-shadow: 0 0 20px rgba(181, 160, 122, 0.04), inset 0 0 20px rgba(181, 160, 122, 0.02);
 }
+
+.explore-link:hover::before,
+.explore-link:hover::after { opacity: 1; }
 
 .explore-link .link-label {
   font-family: var(--sans);
@@ -524,9 +573,9 @@ footer span {
 <body>
 
 <nav id="nav">
-  <div class="nav-title"><span>The Resonance</span> War</div>
+  <div class="nav-title"><a href="../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
   <ul class="nav-links">
-    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="index.html">Home</a></li>
     <li><a href="world.html">World</a></li>
     <li><a href="characters.html">Characters</a></li>
     <li><a href="read.html">Read</a></li>
@@ -537,7 +586,7 @@ footer span {
 <div class="hero">
   <div class="hero-line"></div>
   <h1 class="hero-title">The Resonance War</h1>
-  <p class="hero-subtitle">A Series by [Author Name]</p>
+  <p class="hero-subtitle">A Series by Kit Rivas</p>
   <p class="hero-cjk">共鳴戦争</p>
   <div class="hero-scroll">
     <span>Scroll</span>
@@ -549,10 +598,10 @@ footer span {
 
 <section>
   <div class="section-label">The Fracture</div>
-  <p class="lead">When the harmonic architecture binding the divine and mortal realms shattered, the beings born from that resonance did not perish. They divided — and they remembered everything.</p>
+  <p class="lead">Before there were gods, there were the Azhar — and the war between them shattered the architecture of heaven. The factions that rose from it have waged their war in the mortal world, across every era since.</p>
 
   <div class="excerpt">
-    <p>[Place excerpt here — a passage that captures voice and stakes.]</p>
+    <p>"In the other realm — that which your myths name the heavens, or the otherworld — we existed long before the count of human time. Before the Breaking of the World, we were one."</p>
     <div class="attribution">— An Awakening of Flame</div>
   </div>
 
@@ -560,8 +609,18 @@ footer span {
     <div class="featured-label">Book One</div>
     <h3>An Awakening of Flame</h3>
     <div class="book-series">The Resonance War</div>
-    <p>[One or two lines — the hook for this novel. What collision sets it in motion.]</p>
+    <p>A god of destruction reawakens in mortal flesh. Two Azhar — once a legendary pair, divided by centuries of conflict — are drawn together once more as the war that shattered heaven finds its way back to earth.</p>
     <div class="featured-status">Coming Soon</div>
+  </div>
+
+  <div class="featured-book">
+    <div class="featured-label">Side Stories</div>
+    <a href="read.html" class="featured-book-link">
+      <h3>Short Fiction</h3>
+      <div class="book-series">The Resonance War</div>
+      <p>Stories set in the world of The Resonance War — missions, memories, and the wars between the wars.</p>
+      <div class="featured-status">Ongoing</div>
+    </a>
   </div>
 </section>
 
@@ -601,7 +660,7 @@ footer span {
 </section>
 
 <footer>
-  <span>&copy; 2026 [Author Name]</span>
+  <span>&copy; 2026 Kit Rivas</span>
   <div class="footer-links">
     <a href="#">Twitter</a>
     <a href="#">Instagram</a>
