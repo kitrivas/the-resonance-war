@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Wiedersehen — The Resonance War</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --bg-elevated: #11110f;
+  --text: #b5b2ab;
+  --text-bright: #e8e5de;
+  --text-muted: #6b6860;
+  --accent: #b5a07a;
+  --accent-dim: #7d6f55;
+  --accent-soft: #a89570;
+  --border: #1e1d1a;
+  --border-warm: #2a2518;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --body-serif: ui-serif, 'Georgia', 'Cambria', 'Times New Roman', serif;
+  --sans: 'Inter', -apple-system, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg: #f5f3ee;
+  --bg-elevated: #edeae3;
+  --text: #4a4740;
+  --text-bright: #2a2824;
+  --text-muted: #8a8578;
+  --accent: #8a7a5a;
+  --accent-dim: #a69878;
+  --accent-soft: #7a6c50;
+  --border: #d8d4cb;
+  --border-warm: #c8c2b4;
+}
+
+html { font-size: 18px; scroll-behavior: smooth; scrollbar-width: thin; }
+body { background: var(--bg); color: var(--text); font-family: var(--body-serif); line-height: 1.7; -webkit-font-smoothing: antialiased; transition: background 0.4s, color 0.4s; }
+::selection { background: rgba(181, 160, 122, 0.2); color: var(--text-bright); }
+
+/* ─── Nav ─── */
+nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all 0.4s ease; }
+nav.scrolled { padding: 0.8rem 2rem; }
+.nav-left { display: flex; align-items: center; gap: 2rem; }
+.nav-title { font-family: var(--sans); font-weight: 300; font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--text-muted); }
+.nav-title span { color: var(--accent-dim); margin: 0 0.4rem; }
+.nav-author { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-author:hover { color: var(--accent-soft); }
+.nav-right { display: flex; align-items: center; gap: 2.2rem; }
+.nav-links { display: flex; gap: 2.2rem; list-style: none; }
+.nav-links a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-links a:hover { color: var(--text-bright); }
+
+/* ─── Theme Toggle ─── */
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.theme-toggle:hover {
+  border-color: var(--accent-dim);
+  color: var(--text-bright);
+}
+
+/* ─── Font Sizer ─── */
+.font-sizer {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.sizer-label {
+  font-family: var(--body-serif);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  user-select: none;
+}
+
+.sizer-large {
+  font-size: 0.9rem;
+}
+
+#fontSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 60px;
+  height: 1px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+#fontSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+#fontSlider::-webkit-slider-thumb:hover {
+  background: var(--accent);
+}
+
+#fontSlider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  border: none;
+  cursor: pointer;
+}
+
+/* ─── Audio Player ─── */
+.audio-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: color-mix(in srgb, var(--bg) 95%, transparent);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border);
+  padding: 0.8rem 2rem;
+  transform: translateY(100%);
+  transition: transform 0.4s ease, background 0.4s, border-color 0.4s;
+}
+
+.audio-player.visible {
+  transform: translateY(0);
+}
+
+.player-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.player-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.player-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  transition: color 0.3s;
+  line-height: 1;
+}
+
+.player-btn:hover { color: var(--text-bright); }
+
+.player-btn.play-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--accent-dim);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  color: var(--accent-soft);
+  flex-shrink: 0;
+}
+
+.player-btn.play-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.player-progress-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.player-time {
+  font-family: var(--sans);
+  font-size: 0.58rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  min-width: 32px;
+  text-align: center;
+  user-select: none;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--border);
+  cursor: pointer;
+  position: relative;
+  border-radius: 1px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--accent-dim);
+  border-radius: 1px;
+  width: 0%;
+  position: relative;
+  transition: background 0.3s;
+}
+
+.progress-bar:hover .progress-fill {
+  background: var(--accent);
+}
+
+.progress-handle {
+  position: absolute;
+  right: -4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-dim);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.progress-bar:hover .progress-handle {
+  opacity: 1;
+}
+
+.player-speed {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: var(--sans);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  min-width: 36px;
+  text-align: center;
+}
+
+.player-speed:hover {
+  border-color: var(--accent-dim);
+  color: var(--text-bright);
+}
+
+.player-close {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  transition: color 0.3s;
+  margin-left: 0.5rem;
+}
+
+.player-close:hover { color: var(--text-bright); }
+
+/* ─── Listen Button ─── */
+.listen-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: 1px solid var(--accent-dim);
+  color: var(--accent-soft);
+  font-family: var(--sans);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.2rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0;
+}
+
+.listen-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+}
+
+.listen-icon {
+  font-size: 0.7rem;
+}
+
+@media (max-width: 640px) {
+  .audio-player { padding: 0.6rem 1.2rem; }
+  .player-speed { display: none; }
+}
+.story-header {
+  padding: 10rem 2rem 4rem;
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.story-header h1 {
+  font-family: var(--serif);
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-bright);
+  margin-bottom: 0.8rem;
+}
+
+.story-meta {
+  font-family: var(--sans);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  margin-bottom: 0.5rem;
+}
+
+.story-tagline {
+  font-family: var(--body-serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.story-rule {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+  margin: 3rem auto;
+}
+
+/* ─── Story Body ─── */
+.story-body {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 2rem 6rem;
+}
+
+.story-body h2 {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 1.4rem;
+  color: var(--text-bright);
+  margin: 3rem 0 1.5rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+}
+
+.story-body p {
+  font-family: var(--body-serif);
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--text);
+  margin-bottom: 1.3rem;
+  text-indent: 1.5rem;
+}
+
+.story-body p:first-of-type,
+.story-body h2 + p {
+  text-indent: 0;
+}
+
+.story-body p em {
+  font-style: italic;
+}
+
+.story-break {
+  max-width: 120px;
+  margin: 4rem auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
+}
+
+/* ─── Back Link ─── */
+.back-link {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+  text-align: center;
+}
+
+.back-link a {
+  font-family: var(--sans);
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.back-link a:hover { color: var(--accent-soft); }
+
+.body-audio-active { padding-bottom: 4rem; }
+
+/* ─── Footer ─── */
+footer { border-top: 1px solid var(--border); padding: 3rem 2rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-muted); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--accent-soft); }
+
+@media (max-width: 640px) {
+  html { font-size: 17px; }
+  nav { padding: 1rem 1.2rem; }
+  .nav-links { display: none; }
+  .story-header { padding: 8rem 1.5rem 3rem; }
+  .story-body { padding: 0 1.5rem 4rem; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-left">
+    <div class="nav-title"><a href="../../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../world.html">World</a></li>
+      <li><a href="../characters.html">Characters</a></li>
+      <li><a href="../read.html">Read</a></li>
+      <li><a href="../media.html">Media</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle">Light</button>
+    <div class="font-sizer">
+      <span class="sizer-label">A</span>
+      <input type="range" id="fontSlider" min="16" max="24" value="18" step="1">
+      <span class="sizer-label sizer-large">A</span>
+    </div>
+  </div>
+</nav>
+
+<div class="story-header">
+  <div class="story-meta">Short Fiction</div>
+  <h1>The Wiedersehen</h1>
+  <div class="story-tagline">Bordeaux, 1943. New York, 2012.</div>
+</div>
+
+<div class="story-rule"></div>
+
+<div class="story-body">
+
+<div style="text-align: center; margin-bottom: 2.5rem;">
+  <button class="listen-btn" id="listenBtn">
+    <span class="listen-icon">&#9654;</span> Listen
+  </button>
+</div>
+
+<h2>New York &mdash; Autumn, 2013</h2>
+
+<p>The gallery was too warm.</p>
+
+<p>Heinrich Brandt sat on the bench near the Caravaggio, both hands folded over the head of his cane, and watched his granddaughter pretend she hadn't brought him here out of pity. She moved through the exhibition with the self-conscious attentiveness of someone performing culture for an audience of one&mdash;pausing too long at the plaques, tilting her head at the prescribed angle, holding her catalogue like scripture. She had her mother's face and her father's complete inability to stand still.</p>
+
+<p>He did mind less than she feared.</p>
+
+<p>The bench was good. The museum was quiet on a Tuesday, the galleries half-empty, the light from the high windows falling in long shafts that turned the dust to gold. His left knee burned and his right hip ached and his lungs, ravaged by seventy years of cigarettes he'd quit too late, labored around air that tasted of climate control and old varnish. The bench was good. The Caravaggio was good&mdash;that savage chiaroscuro, the sword half-drawn, the figure in the dark emerging with the weight of something final. Caravaggio understood violence. That it arrived as interruption, swift and casual, between one breath and the absence of the next.</p>
+
+<p>Heinrich had turned eighty-eight in March. His wife of fifty-one years was three years dead. His son had stopped calling in October. His body was a catalogue of surrender&mdash;the knees, the lungs, the left eye clouded to milk by a cataract the surgeon said was operable, though Heinrich could not imagine letting someone cut into the last eye that still functioned with any fidelity. What remained was sufficient. He could see the Caravaggio. He could see his granddaughter. He could see the way the autumn light fell through the museum's upper windows and striped the marble floor with long bars of copper and ash.</p>
+
+<p>He could see the man who entered the gallery from the western corridor.</p>
+
+<p>The height struck first&mdash;taller than the tourists who parted around him without appearing to notice they were parting. Then the pale platinum of his hair, which caught the window-light and burned briefly white, almost metallic, forged rather than grown. Then the beauty of the face, the architecture of it, the jaw and cheekbone and brow arranged with a symmetry that belonged to mathematics rather than to God&mdash;the bones beneath the skin set by a geometer, every proportion answering to something older than aesthetics.</p>
+
+<p>Then the cold.</p>
+
+<p>Heinrich felt it from thirty feet away&mdash;a faint, depthless chill that had nothing to do with the museum's ventilation and everything to do with a knowledge his body carried before his mind caught up. The small hairs on his forearms lifted. His chest tightened. His hands, liver-spotted and trembling on the cane's ivory head, went rigid.</p>
+
+<p>The man moved through the gallery without haste. Dark suit, collar open at the throat&mdash;dressed with the kind of severity that made the clothes irrelevant, merely a concession to the expectation that one wore them. He stopped before a painting at the gallery's far wall and studied it with the still attention of someone who had all the time in the world.</p>
+
+<p>He had all the time in the world.</p>
+
+<p>Heinrich's breath came shallow. His good eye watered. The sound in the gallery&mdash;footsteps, murmuring, the distant echo of a school group two halls over&mdash;receded as though someone had laid a cloth across it, muffling the world until all that remained was the hum of blood in his ears and the cold and the figure standing in profile against the Renaissance gold.</p>
+
+<p><em>Bordeaux</em>, Heinrich thought. <em>November, 1943.</em></p>
+
+<div class="story-break"></div>
+
+<p>He had been eighteen. <em>Gefreiter</em> Brandt, 276th Infantry Division, assigned to occupation duty in the Gironde because his father knew someone who knew someone and had managed&mdash;through the particular calculus of favours and cowardice that kept men alive in wartime&mdash;to get his son posted to France rather than the Eastern Front. Wine country. Requisitioned chateaux. A war that was, for a conscript in Bordeaux, mostly boredom and minor cruelties and the slow erosion of whatever you'd believed about yourself before the uniform.</p>
+
+<p>He had not been SS. Had not been a true believer. Had been eighteen and German and afraid, which was the universal condition of soldiers in every army that had ever existed, though you did not know this at eighteen. At eighteen you knew only that the food was bad and the officers were worse and that the girl at the tabac on the Rue Sainte-Catherine would not look at you.</p>
+
+<p>The intelligence briefing had come down on a Tuesday.</p>
+
+<p><em>Priority target. Foreign operative, likely British SOE or affiliated resistance network. Tall, pale, distinctive appearance&mdash;silver or light-coloured hair. Armed and extremely dangerous. Shoot on sight. Do not attempt capture.</em></p>
+
+<p>There had been a photograph. Grainy, taken at distance&mdash;a figure crossing a square, coat dark, hair a pale smear against the stone behind him. The SS Sturmbahnf&uuml;hrer who'd pinned it to the briefing board spoke of the operative the way one speaks of a persistent infestation: with irritation, yes, but also with a thread of genuine unease that sat badly on a man in black leather and silver insignia.</p>
+
+<p>&ldquo;He has destroyed three installations in the Dordogne corridor,&rdquo; the Sturmbahnf&uuml;hrer said. &ldquo;Every unit that has engaged him has been eliminated.&rdquo;</p>
+
+<p>Heinrich had not paid particular attention. There were many briefings. Many photographs. Many priority targets who were never found or, when found, proved to be farmers with antiquated rifles and faces full of exhausted defiance. The war produced enemies like it produced mud&mdash;endlessly, indistinguishably, part of the landscape.</p>
+
+<p>Three weeks later, Heinrich was assigned to an escort detail for a convoy moving documents from the Bordeaux <em>Kommandantur</em> to a secondary archive outside Libourne. Twelve men and an <em>Oberleutnant</em> named Fessler who had opinions about everything and expertise in nothing. Two vehicles. A road that wound through vineyard country, the November vines stripped to black wire against a sky the colour of old pewter.</p>
+
+<p>They came around a bend in the road and the lead vehicle was simply gone.</p>
+
+<p>The road had swallowed it. Heinrich stood in the back of the second truck and stared at the stretch of empty gravel where the first should have been and felt the first tendril of wrongness wrap itself around the base of his skull.</p>
+
+<p>The cold hit next.</p>
+
+<p>A cold from the inside out, as if the heat had been drawn from his blood in a single breath. The men around him stumbled. Fessler, in the cab, shouted an order that came out strangled and strange.</p>
+
+<p>Then the first vehicle reappeared.</p>
+
+<p>It was in the ditch. Overturned. The cab crushed inward as though a great hand had pressed down on it until the metal yielded. The men inside were&mdash;</p>
+
+<p>Heinrich's mind had stopped processing at that point. There were bodies. That was enough. His brain catalogued the fact without engaging the detail, the way a clerk files a document without reading it.</p>
+
+<p>A figure stood in the road.</p>
+
+<p>Tall. Pale-haired. Wearing a dark coat that fell to mid-thigh, open and unstirred by the wind that wasn't blowing&mdash;because the air had gone still, utterly still, the November gusts that had been rattling the bare vines extinguished, as if the atmosphere itself was holding its breath.</p>
+
+<p>He stood with his hands at his sides. Behind him, the overturned vehicle ticked and groaned as the metal cooled, and the smell coming off it was petrol and copper and the sweet, dense stink of opened viscera that Heinrich would carry in the lining of his sinuses for the rest of his life.</p>
+
+<p>Fessler fired first.</p>
+
+<p>The bullet did not reach him.</p>
+
+<p>Heinrich could never explain this afterward&mdash;not to himself, not in the sixty-nine years of nights that followed. The bullet <em>left the rifle</em>. He heard the report, saw the muzzle flash, tracked the trajectory with a soldier's instinct. And the bullet did not arrive. It ceased. Between the muzzle and the man, in the dead air of that November road, the round simply stopped being.</p>
+
+<p>Others fired. Twelve men unloading their weapons at a single standing figure&mdash;the roar of it enormous, deafening, the muzzle-flash strobing in the grey afternoon like lightning brought to ground. Casings rang against the truck bed. Cordite scorched the damp air. Four seconds of total, concentrated violence aimed at one body.</p>
+
+<p>The man stood in it the way a stone stands in a river.</p>
+
+<p>Then he moved.</p>
+
+<p>Heinrich did not see him move. He saw Fessler&mdash;Fessler who had been ten metres away&mdash;suddenly on the ground, his arm folded backward at the elbow, the joint inverted, the bone punched through the wool of his sleeve in a jag of wet white. Fessler screamed. The sound was high and animal and it broke halfway through, not from courage but because his lungs had been compressed by an impact that had already moved past him.</p>
+
+<p>Two men flew into the vineyard. Bodily. Lifted and thrown like dolls, their rifles spinning end over end, their screams truncated by the crack of bodies hitting frozen earth and trellised wire. A third&mdash;Kessler, Heinrich thought, or Brauer, he could never after remember which&mdash;hit the side of the truck with a sound like a mallet striking wet clay, his ribcage folded inward, blood already sheeting from his mouth before he slid down the panel and left a dark smear on the paint.</p>
+
+<p>The man walked through them.</p>
+
+<p>He moved around, between, among them&mdash;but the impression was of passage, of something vast moving through something fragile and small, the way a current moves through reeds. He struck without flourish. A hand on a shoulder and the man beneath it collapsed, knees folding, a sound leaving his throat that was less scream than exhalation&mdash;the noise of a body whose architecture had just been rearranged. A turn, a step, and Weidmann was down, curled around his own midsection, vomiting blood into the gravel. Gerber fired point-blank into the figure's back from three feet away and the figure turned and touched his chest and Gerber sat down very suddenly and did not get up and the stain that spread beneath him was black in the November light.</p>
+
+<p>Someone was praying. The <em>Vaterunser</em>, babbled fast and liquid with terror&mdash;<em>und vergib uns unsere Schuld</em>&mdash;and it cut off with a sound like a branch snapping and then there was only the figure, still moving, still unhurried, and the screaming, and the smell of blood and shit and cordite thickening in the frozen air until it coated the back of Heinrich's throat like oil.</p>
+
+<p>Heinrich ran.</p>
+
+<p>He was never proud of it. Had carried the cowardice of it for decades like a stone in his chest, heavy and smooth and worn by handling. He ran into the vineyard, into the leafless rows, his boots tearing through the cold mud, and behind him the sounds continued&mdash;wet, percussive, brief. A scream that spiralled up and then stopped. Another. The thud of a body on gravel. Then silence&mdash;and the silence was the worst of it, because the silence meant there was no one left to make noise.</p>
+
+<p>Heinrich lay in the mud between the vine rows, face down, breath steaming, the cold earth pressing against his cheek and the taste of soil and bile filling his mouth. He could smell the blood from here&mdash;carried on the still air, metallic and warm against the November cold, an obscenity of scent. His trousers were soaked with his own urine and he could not stop shaking and the wrongness passed over him like a shadow.</p>
+
+<p>A wrongness that had nothing to do with threat and everything to do with <em>kind</em>&mdash;the knowledge, primitive and absolute, that whatever stood on that road was not what it wore. That the human form was a garment draped over a frame that did not correspond to human architecture. That the face and the hands and the height and the hair were a surface stretched over a depth that went down and down and down, past flesh, past bone, past anything that had a name in any language Heinrich spoke or would ever learn.</p>
+
+<p>The cold seeped into the earth beneath him. His teeth chattered so violently he bit the inside of his cheek and tasted his own blood mingling with the dirt. Somewhere on the road, Fessler was still whimpering&mdash;a thin, reedy sound, barely human, the sound of a man whose body had been broken and whose mind was trying to follow.</p>
+
+<p>After a time, even that stopped.</p>
+
+<p>Heinrich lay in the mud until dark.</p>
+
+<div class="story-break"></div>
+
+<p>Sixty-nine years.</p>
+
+<p>He had told no one. Had filed the memory the way the mind files the intolerable&mdash;behind a wall of rationalisation mortared with the ordinary: shell shock, fatigue, the well-documented unreliability of memory under stress, the thousand ways a terrified eighteen-year-old could misremember a skirmish on a French road. Resistance fighters with superior weapons. A partisan ambush, better coordinated than expected. The cold was November. The silence was shock. The figure who could not be shot was a trick of light and fear and a young man's unformed brain.</p>
+
+<p>He had almost believed it.</p>
+
+<p>Sixty-nine years of almost.</p>
+
+<p>And now the man stood in the Met, in autumn light, in a suit that fit him the way the coat had fit him on that road&mdash;incidentally, irrelevantly&mdash;and he had not aged a single day.</p>
+
+<p>The same face. The same bones. The same pale symmetry that made Heinrich's hands ache with the ghost of a rifle he'd last held in 1945. The same height, the same carriage, the same quality of stillness that read as <em>containment</em>&mdash;as though what moved beneath the surface was being held in check by an act of will so constant and so total that the effort itself was invisible.</p>
+
+<p>Heinrich's granddaughter appeared beside him. &ldquo;Opa? Are you alright? You've gone white.&rdquo;</p>
+
+<p>He could not answer.</p>
+
+<p>The man turned from the painting.</p>
+
+<p>His gaze moved through the gallery&mdash;unhurried, the sweep of eyes that had already catalogued every body in the room, every exit, every angle of approach and retreat before he'd entered it. The gaze passed over tourists, over docents, over the school group spilling through the far entrance&mdash;</p>
+
+<p>And stopped.</p>
+
+<p>On Heinrich.</p>
+
+<p>The ice-blue eyes found him on the bench the way a searchlight finds a man in open water. Found him and <em>held</em>. And in that hold was recognition&mdash;immediate, total, unsurprised&mdash;the recognition of a being that remembered everything it had ever seen across millennia of seeing, for whom sixty-nine years was a minor interval and the face of a boy in the mud of a French vineyard was filed with the same fidelity as the face of every other mortal who had ever trembled in his wake.</p>
+
+<p>Heinrich felt the gaze enter him.</p>
+
+<p>There was no other word for it. The eyes did not simply look&mdash;they <em>penetrated</em>, driving through the rheumy film of his cataracts, through the brittle architecture of his skull, into the place where he kept the memory of the road and the cold and the silence and the bodies and the running. He felt himself read. Opened like a file and scanned, every page turned with an attention that was neither gentle nor cruel but simply absolute&mdash;the way a god might glance through the ledger of a single human life, noting the contents, finding them expected, and moving on.</p>
+
+<p>The man's expression did not change.</p>
+
+<p>The eyes stayed. One second. Two. Long enough for Heinrich to understand that he was known&mdash;had always been known&mdash;that the boy who had run into the vineyard and lain in the mud and survived because he was beneath the effort of killing had been catalogued and carried in a memory that did not lose, did not soften, did not forget. Long enough to understand that his sixty-nine years of silence, his rationalisation, his almost-believing, were transparent as glass to the thing that looked out from behind those frost-blue irises.</p>
+
+<p>Then the gaze released him.</p>
+
+<p>It moved on with the finality of a door closing. Whatever brief flicker of attention Heinrich Brandt had warranted&mdash;a face matched to a file, a mortal confirmed still extant, a loose thread noted and found irrelevant&mdash;was spent. The man turned back to the painting. Unhurried. Complete. The way something immeasurably vast returns its attention to what interests it after a momentary, trivial interruption.</p>
+
+<p>Heinrich sat on the bench and shook.</p>
+
+<p>His granddaughter's hand was on his arm. &ldquo;Opa. Opa, you're shaking. Should I get water?&rdquo;</p>
+
+<p>&ldquo;We should go,&rdquo; Heinrich said. His voice, when it came, was the voice of a very old man who had just been reminded of the precise dimensions of his mortality. &ldquo;Liebling. We should go now.&rdquo;</p>
+
+<p>She helped him stand. His cane shook against the marble. They moved toward the gallery exit&mdash;slowly, carefully, an old man and a young woman navigating the particular choreography of age and solicitude.</p>
+
+<p>At the threshold, Heinrich looked back.</p>
+
+<p>The man stood where he'd stood, motionless before the painting, the autumn light falling across his shoulders like a vestment. The tourists moved around him the way water moves around a stone too large to shift&mdash;unconsciously, instinctively, giving the body a berth they could not have explained if asked.</p>
+
+<p>No one looked at him. The human mind, confronted with a thing it could not parse, simply stepped aside. Forgot. The eye skipping over a flaw in the visual field, the brain patching the gap with plausible wallpaper, insisting on the coherence of a world that had, for one terrible instant, revealed its seams.</p>
+
+<p>Heinrich could not look away.</p>
+
+<p>He had never been able to look away. That was the cruelty of it&mdash;the memory that would not blur, would not soften, would not submit to the slow mercy of forgetting that time was supposed to grant. Eighteen years old in the mud of a French vineyard, face down, shaking, knowing in the marrow of his bones that the thing on the road wore humanity the way the November sky wore clouds&mdash;briefly, incidentally, a passing condition over a depth that had no floor.</p>
+
+<p>And knowing now, with the certainty of the dying, that it had seen him. Had always seen him. Had simply found him too small to warrant the effort of ending.</p>
+
+<p>His granddaughter guided him through the door.</p>
+
+<div class="story-break"></div>
+
+<p>Heinrich Brandt went home and sat in his kitchen and did not turn on the light for a long time.</p>
+
+<p>He died the following spring. Quietly. In his sleep. His granddaughter, sorting through his effects, found a photograph in a shoebox beneath the bed&mdash;a clipping from a financial magazine, recent, showing a man at a charity gala. Silver-haired. Tall. Beautiful the way a blade is beautiful, which is to say: without comfort.</p>
+
+<p><em>V. Montrevault, Director, Calandrian Trust.</em></p>
+
+<p>She studied the clipping, found no note attached, could conceive of no reason her grandfather&mdash;a retired machinist from D&uuml;sseldorf who had come to New York in 1952 and spent forty years making precision parts for machines he never fully understood&mdash;would have saved it.</p>
+
+<p>She put it in the recycling with the rest.</p>
+
+</div>
+
+<div class="back-link">
+  <a href="../read.html">&larr; Back to Read</a>
+</div>
+
+<div class="audio-player" id="audioPlayer">
+  <div class="player-inner">
+    <div class="player-controls">
+      <button class="player-btn" id="skipBack" title="Back 15s">&#8634;</button>
+      <button class="player-btn play-btn" id="playPause">&#9654;</button>
+      <button class="player-btn" id="skipFwd" title="Forward 15s">&#8635;</button>
+      <div class="player-progress-wrap">
+        <span class="player-time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-fill" id="progressFill">
+            <div class="progress-handle"></div>
+          </div>
+        </div>
+        <span class="player-time" id="totalTime">0:00</span>
+      </div>
+      <button class="player-speed" id="speedBtn">1&times;</button>
+      <button class="player-close" id="playerClose">&times;</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>&copy; 2026 Kit Rivas</span>
+  <div class="footer-links">
+    <a href="#">Twitter</a>
+    <a href="#">Instagram</a>
+    <a href="#">Threads</a>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Theme toggle with system preference detection
+const toggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+
+function applyTheme(theme) {
+  html.setAttribute('data-theme', theme);
+  toggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+}
+
+// Check for manual override, else use system
+const saved = null; // No localStorage — use in-memory
+let currentTheme = getSystemTheme();
+applyTheme(currentTheme);
+
+// Listen for system changes
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+  if (!manualOverride) {
+    currentTheme = e.matches ? 'light' : 'dark';
+    applyTheme(currentTheme);
+  }
+});
+
+let manualOverride = false;
+
+toggle.addEventListener('click', () => {
+  manualOverride = true;
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(currentTheme);
+});
+
+// Font size slider
+const fontSlider = document.getElementById('fontSlider');
+
+fontSlider.addEventListener('input', (e) => {
+  document.documentElement.style.fontSize = e.target.value + 'px';
+});
+
+// Audio Player
+const audioPlayer = document.getElementById('audioPlayer');
+const listenBtn = document.getElementById('listenBtn');
+const playPause = document.getElementById('playPause');
+const skipBack = document.getElementById('skipBack');
+const skipFwd = document.getElementById('skipFwd');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+const speedBtn = document.getElementById('speedBtn');
+const playerClose = document.getElementById('playerClose');
+
+// Replace this path with your actual mp3 file
+const audio = new Audio('audio/wiedersehen.mp3');
+let isPlaying = false;
+const speeds = [0.75, 1, 1.25, 1.5, 2];
+let speedIndex = 1;
+
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+
+listenBtn.addEventListener('click', () => {
+  audioPlayer.classList.add('visible');
+  document.body.classList.add('body-audio-active');
+  audio.play();
+  isPlaying = true;
+  playPause.innerHTML = '&#10074;&#10074;';
+});
+
+playPause.addEventListener('click', () => {
+  if (isPlaying) {
+    audio.pause();
+    playPause.innerHTML = '&#9654;';
+  } else {
+    audio.play();
+    playPause.innerHTML = '&#10074;&#10074;';
+  }
+  isPlaying = !isPlaying;
+});
+
+skipBack.addEventListener('click', () => {
+  audio.currentTime = Math.max(0, audio.currentTime - 15);
+});
+
+skipFwd.addEventListener('click', () => {
+  audio.currentTime = Math.min(audio.duration, audio.currentTime + 15);
+});
+
+speedBtn.addEventListener('click', () => {
+  speedIndex = (speedIndex + 1) % speeds.length;
+  audio.playbackRate = speeds[speedIndex];
+  speedBtn.textContent = speeds[speedIndex] + '\u00d7';
+});
+
+audio.addEventListener('loadedmetadata', () => {
+  totalTimeEl.textContent = formatTime(audio.duration);
+});
+
+audio.addEventListener('timeupdate', () => {
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progressFill.style.width = pct + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+
+audio.addEventListener('ended', () => {
+  isPlaying = false;
+  playPause.innerHTML = '&#9654;';
+  progressFill.style.width = '0%';
+});
+
+progressBar.addEventListener('click', (e) => {
+  const rect = progressBar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+});
+
+playerClose.addEventListener('click', () => {
+  audio.pause();
+  isPlaying = false;
+  playPause.innerHTML = '&#9654;';
+  audioPlayer.classList.remove('visible');
+  document.body.classList.remove('body-audio-active');
+});
+</script>
+
+</body>
+</html>
