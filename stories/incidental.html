@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- CHANGE 1: Page title -->
+<title>Incidental — The Resonance War</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0a0a0c;
+  --bg-elevated: #11110f;
+  --text: #b5b2ab;
+  --text-bright: #e8e5de;
+  --text-muted: #6b6860;
+  --accent: #b5a07a;
+  --accent-dim: #7d6f55;
+  --accent-soft: #a89570;
+  --border: #1e1d1a;
+  --border-warm: #2a2518;
+  --serif: 'Cormorant Garamond', 'Georgia', serif;
+  --body-serif: ui-serif, 'Georgia', 'Cambria', 'Times New Roman', serif;
+  --sans: 'Inter', -apple-system, sans-serif;
+}
+
+[data-theme="light"] {
+  --bg: #f5f3ee;
+  --bg-elevated: #edeae3;
+  --text: #4a4740;
+  --text-bright: #2a2824;
+  --text-muted: #8a8578;
+  --accent: #8a7a5a;
+  --accent-dim: #a69878;
+  --accent-soft: #7a6c50;
+  --border: #d8d4cb;
+  --border-warm: #c8c2b4;
+}
+
+html { font-size: 18px; scroll-behavior: smooth; scrollbar-width: thin; }
+body { background: var(--bg); color: var(--text); font-family: var(--body-serif); line-height: 1.7; -webkit-font-smoothing: antialiased; transition: background 0.4s, color 0.4s; }
+::selection { background: rgba(181, 160, 122, 0.2); color: var(--text-bright); }
+
+/* Nav */
+nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all 0.4s ease; }
+nav.scrolled { padding: 0.8rem 2rem; }
+.nav-left { display: flex; align-items: center; gap: 2rem; }
+.nav-title { font-family: var(--sans); font-weight: 300; font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--text-muted); }
+.nav-title span { color: var(--accent-dim); margin: 0 0.4rem; }
+.nav-author { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-author:hover { color: var(--accent-soft); }
+.nav-right { display: flex; align-items: center; gap: 2.2rem; }
+.nav-links { display: flex; gap: 2.2rem; list-style: none; }
+.nav-links a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.nav-links a:hover { color: var(--text-bright); }
+
+/* Theme Toggle */
+.theme-toggle { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.15em; text-transform: uppercase; padding: 0.35rem 0.8rem; cursor: pointer; transition: all 0.3s; }
+.theme-toggle:hover { border-color: var(--accent-dim); color: var(--text-bright); }
+
+/* Font Sizer */
+.font-sizer { display: flex; align-items: center; gap: 0.4rem; }
+.sizer-label { font-family: var(--body-serif); font-size: 0.65rem; color: var(--text-muted); user-select: none; }
+.sizer-large { font-size: 0.9rem; }
+#fontSlider { -webkit-appearance: none; appearance: none; width: 60px; height: 1px; background: var(--border); outline: none; cursor: pointer; }
+#fontSlider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-dim); border: none; cursor: pointer; transition: background 0.3s; }
+#fontSlider::-webkit-slider-thumb:hover { background: var(--accent); }
+#fontSlider::-moz-range-thumb { width: 10px; height: 10px; border-radius: 50%; background: var(--accent-dim); border: none; cursor: pointer; }
+
+/* Audio Player */
+.audio-player { position: fixed; bottom: 0; left: 0; right: 0; z-index: 100; background: color-mix(in srgb, var(--bg) 95%, transparent); backdrop-filter: blur(16px); border-top: 1px solid var(--border); padding: 0.8rem 2rem; transform: translateY(100%); transition: transform 0.4s ease, background 0.4s, border-color 0.4s; }
+.audio-player.visible { transform: translateY(0); }
+.player-inner { max-width: 680px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.5rem; }
+.player-controls { display: flex; align-items: center; gap: 1rem; }
+.player-btn { background: none; border: none; color: var(--text-muted); font-family: var(--sans); font-size: 0.9rem; cursor: pointer; padding: 0.2rem; transition: color 0.3s; line-height: 1; }
+.player-btn:hover { color: var(--text-bright); }
+.player-btn.play-btn { width: 32px; height: 32px; border: 1px solid var(--accent-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: var(--accent-soft); flex-shrink: 0; }
+.player-btn.play-btn:hover { border-color: var(--accent); color: var(--accent); }
+.player-progress-wrap { flex: 1; display: flex; align-items: center; gap: 0.6rem; }
+.player-time { font-family: var(--sans); font-size: 0.58rem; letter-spacing: 0.05em; color: var(--text-muted); min-width: 32px; text-align: center; user-select: none; }
+.progress-bar { flex: 1; height: 2px; background: var(--border); cursor: pointer; position: relative; border-radius: 1px; }
+.progress-fill { height: 100%; background: var(--accent-dim); border-radius: 1px; width: 0%; position: relative; transition: background 0.3s; }
+.progress-bar:hover .progress-fill { background: var(--accent); }
+.progress-handle { position: absolute; right: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; border-radius: 50%; background: var(--accent-dim); opacity: 0; transition: opacity 0.3s; }
+.progress-bar:hover .progress-handle { opacity: 1; }
+.player-speed { background: none; border: 1px solid var(--border); color: var(--text-muted); font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.1em; padding: 0.25rem 0.5rem; cursor: pointer; transition: all 0.3s; min-width: 36px; text-align: center; }
+.player-speed:hover { border-color: var(--accent-dim); color: var(--text-bright); }
+.player-close { background: none; border: none; color: var(--text-muted); font-size: 0.8rem; cursor: pointer; padding: 0.2rem 0.4rem; transition: color 0.3s; margin-left: 0.5rem; }
+.player-close:hover { color: var(--text-bright); }
+
+/* Listen Button */
+.listen-btn { display: inline-flex; align-items: center; gap: 0.5rem; background: none; border: 1px solid var(--accent-dim); color: var(--accent-soft); font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.5rem 1.2rem; cursor: pointer; transition: all 0.3s; margin-top: 0; }
+.listen-btn:hover { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+.listen-icon { font-size: 0.7rem; }
+
+.body-audio-active { padding-bottom: 4rem; }
+
+/* Story Header */
+.story-header { padding: 10rem 2rem 4rem; max-width: 680px; margin: 0 auto; text-align: center; }
+.story-header h1 { font-family: var(--serif); font-weight: 300; font-size: clamp(2rem, 5vw, 3rem); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-bright); margin-bottom: 0.8rem; }
+.story-meta { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); margin-bottom: 0.5rem; }
+.story-tagline { font-family: var(--body-serif); font-style: italic; font-size: 1rem; color: var(--text-muted); }
+.story-rule { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); margin: 3rem auto; }
+
+/* Story Body */
+.story-body { max-width: 640px; margin: 0 auto; padding: 0 2rem 6rem; }
+.story-body h2 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; color: var(--text-bright); margin: 3rem 0 1.5rem; letter-spacing: 0.04em; text-align: center; }
+.story-body p { font-family: var(--body-serif); font-size: 1rem; line-height: 1.9; color: var(--text); margin-bottom: 1.3rem; text-indent: 1.5rem; }
+.story-body p:first-of-type, .story-body h2 + p { text-indent: 0; }
+.story-body p em { font-style: italic; }
+.story-break { max-width: 120px; margin: 4rem auto; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); }
+
+/* Back Link */
+.back-link { max-width: 640px; margin: 0 auto; padding: 0 2rem 4rem; text-align: center; }
+.back-link a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); text-decoration: none; transition: color 0.3s; }
+.back-link a:hover { color: var(--accent-soft); }
+
+/* Footer */
+footer { border-top: 1px solid var(--border); padding: 3rem 2rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-muted); }
+.footer-links { display: flex; gap: 1.5rem; }
+.footer-links a { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.footer-links a:hover { color: var(--accent-soft); }
+
+@media (max-width: 640px) {
+  html { font-size: 17px; }
+  nav { padding: 1rem 1.2rem; }
+  .nav-links { display: none; }
+  .story-header { padding: 8rem 1.5rem 3rem; }
+  .story-body { padding: 0 1.5rem 4rem; }
+  .audio-player { padding: 0.6rem 1.2rem; }
+  .player-speed { display: none; }
+}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-left">
+    <div class="nav-title"><a href="../../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
+  </div>
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../world.html">World</a></li>
+      <li><a href="../characters.html">Characters</a></li>
+      <li><a href="../read.html">Read</a></li>
+      <li><a href="../media.html">Media</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle">Light</button>
+    <div class="font-sizer">
+      <span class="sizer-label">A</span>
+      <input type="range" id="fontSlider" min="16" max="24" value="18" step="1">
+      <span class="sizer-label sizer-large">A</span>
+    </div>
+  </div>
+</nav>
+
+<div class="story-header">
+  <div class="story-meta">Short Fiction</div>
+
+  <!-- CHANGE 2: Story title and tagline -->
+  <h1>Incidental</h1>
+  <div class="story-tagline">Tokyo in winter. A slow dance begins to collapse its orbit.</div>
+</div>
+
+<div class="story-rule"></div>
+
+<div class="story-body">
+
+<div style="text-align: center; margin-bottom: 2.5rem;">
+  <button class="listen-btn" id="listenBtn">
+    <span class="listen-icon">&#9654;</span> Listen
+  </button>
+</div>
+
+<!-- CHANGE 3: Story content goes here -->
+<!-- Use these building blocks:
+
+  Section header:
+  <h2>Place &mdash; Date</h2>
+
+  Paragraph (first after header — no indent):
+  <p>Text here.</p>
+
+  Paragraph (all others — auto-indented):
+  <p>Text here.</p>
+
+  Italics within a paragraph:
+  <em>italicised text</em>
+
+  Dialogue (use smart quotes):
+  &ldquo;Dialogue here,&rdquo;
+
+  Em dash:
+  &mdash;
+
+  Section break:
+  <div class="story-break"></div>
+
+-->
+
+<h2>Shibuya &mdash; Late January</h2>
+
+<p>Tokyo in winter was a different animal than Seoul.</p>
+
+<p>Seoul wore its cold like armour&mdash;blunt, grey, the wind cutting down from the mountains with a soldier&rsquo;s indifference. Tokyo&rsquo;s cold was subtler, wetter, threaded with the particular damp that crept through wool and settled in the marrow. It carried the smell of the city with it: exhaust and ginkgo and the deep-fried sweetness leaking from convenience store vents, layered beneath the mineral tang of rain that hadn&rsquo;t fallen yet but hung in the air like a held breath, promising.</p>
+
+<p>Ryuha had been in the city for two days.</p>
+
+<p>A magazine shoot&mdash;<em>Vogue Japan</em>, the February issue, a spread that required him to stand in various states of undress in a Shinjuku rooftop studio while a photographer with impeccable taste and no concept of temperature aimed reflectors at him and murmured <em>sugoi</em> at intervals that bore no relationship to anything he was actually doing. Then a recording session at Jisu&rsquo;s old studio in Shimokitazawa, a basement space that still smelled of cigarette smoke and spilled coffee and the particular staleness of rooms where people had made music for decades without once opening a window. Jisu had kept the lease for thirty years&mdash;long past the point of operational necessity, for reasons that had more to do with sentiment than strategy, though he would have denied it with his last breath.</p>
+
+<p>The session had run late. Ryuha&rsquo;s throat was raw from four hours of vocal layering&mdash;the bridge of the comeback title track demanded a sustained falsetto run that sat right at the edge of what his vessel could produce, shimmering and crystalline and aching, a sound that existed in the narrow territory between beauty and pain. Jisu had made him do it eleven times. The twelfth had been perfect. The thirteenth, which Jisu insisted on for safety, had been better than perfect&mdash;the kind of take that happened once and could never be replicated, when the vessel forgot it was mortal and the voice became pure resonance shaped by breath.</p>
+
+<p>He&rsquo;d walked out of the studio at eleven PM into the Shimokitazawa cold, the narrow streets still bright with the glow of izakayas and vintage shops and the particular warm amber of paper lanterns that Tokyo&rsquo;s older neighborhoods refused to surrender to LED. His breath clouded in the damp air. The back of his neck was still damp with studio sweat, and the cold found it immediately, a sharp sting that made him hunch deeper into his coat.</p>
+
+<p>His phone buzzed.</p>
+
+<p>Kastiel: Yokohama site was a dead end. Residual trace only, no active signature. Heading back to central Tokyo.</p>
+
+<p>Ryuha stopped walking.</p>
+
+<p>He stood on the narrow pavement outside a shuttered bookshop, the lantern light falling across his face in stripes of gold and shadow, and stared at the message. Kastiel was in Tokyo. Had been in Tokyo&mdash;tracking the anomaly through the Yokohama corridor, as predicted. Ryuha had known this in the abstract. The briefing had established the trajectory. The operational schedule existed. And yet seeing the message, the plain fact of <em>Kastiel is thirty kilometres away and moving closer</em>, sent a jolt through his chest that three thousand years of composure could not suppress.</p>
+
+<p>He could feel the idiocy of it. Could stand outside himself and observe, with perfect Daevic clarity, the spectacle of an immortal warrior losing his breath over a text message from someone he&rsquo;d kissed five days ago. The self-awareness did not help. It never helped. That was the cruelty of Daeva consciousness&mdash;you could see every angle of your own foolishness and remain powerless to correct it, because the resonance didn&rsquo;t care what the mind thought. It moved toward what it moved toward, tidal and indifferent, and the intellect could either follow or be dragged.</p>
+
+<p>Ryuha: Where in central Tokyo?</p>
+
+<p>Kastiel: Checking into a hotel near Roppongi. Zair is in Shinjuku running a separate sweep.</p>
+
+<p>Kastiel: Why?</p>
+
+<p>The typing cursor blinked against the dark screen. Ryuha&rsquo;s thumb hovered.</p>
+
+<p>Three thousand years. He&rsquo;d seduced his way into guarded vaults, charmed intelligence out of warlords, performed desire so convincingly that mortals and Azhar alike had mistaken the performance for truth. He was, by every measure that mattered, a professional at wanting&mdash;at wielding it, directing it, shaping it into a tool that served his purposes.</p>
+
+<p>And he could not think of a single clever thing to say.</p>
+
+<p>Ryuha: I&rsquo;m in Shimokitazawa. Recording session ran late.</p>
+
+<p>Kastiel: You&rsquo;re in Tokyo.</p>
+
+<p>Ryuha: I&rsquo;m in Tokyo.</p>
+
+<p>A pause. The typing indicator pulsed, vanished, pulsed again&mdash;that maddening rhythm he&rsquo;d come to associate with Kastiel weighing every word before committing.</p>
+
+<p>Kastiel: That&rsquo;s a thirty minute train ride from Roppongi.</p>
+
+<p>Ryuha: Twenty-two if you take the Keio Inokashira to Shibuya and transfer to the Hibiya line.</p>
+
+<p>Kastiel: You&rsquo;ve already mapped it.</p>
+
+<p>Ryuha: I mapped it before I replied to your first message.</p>
+
+<p>Another pause.</p>
+
+<p>Kastiel: I haven&rsquo;t eaten.</p>
+
+<p>Ryuha: Neither have I.</p>
+
+<p>Kastiel: Do you know anywhere good?</p>
+
+<p>Three thousand years across the eastward arc of civilization, moving with Eszahar&rsquo;s cohort as the centuries carried them&mdash;the Indus, then the Ganges basin, then the silk routes into China, then the sea crossing to Japan when the islands finally drew them. He knew Tokyo the way stone knew rain&mdash;had been shaped by it, worn smooth in certain places, carved deep in others. Knew the ramen counter in Ebisu that seated eight and had been open since before his current vessel was born. Knew the yakitori alley in Yurakucho where the smoke rose thick and fragrant beneath the train tracks and the cooks shouted orders over the thunder of Yamanote trains overhead. Knew the kaiseki restaurant in Azabu-Juban where the chef was seventy-three and the omakase was fourteen courses and you sat at a hinoki counter that smelled of cypress and time.</p>
+
+<p>Ryuha: I know everywhere good.</p>
+
+<div class="story-break"></div>
+
+<p>The ramen shop occupied a ground-floor slot in a building that had been ugly for forty years with complete conviction, wedged between a dry cleaner and a bar whose sign had burnt out a decade ago and never been replaced. No English menu. No signage beyond a faded curtain printed with the kanji for <em>noodles</em> in a calligraphy so weathered it was more suggestion than script. You found this place by knowing someone who knew someone, or by being Japanese enough to recognize the queue of salarymen at eleven PM as a quality indicator rather than a warning.</p>
+
+<p>Inside, the heat hit like a wall.</p>
+
+<p>Steam billowed from the open kitchen&mdash;pork bone broth that had been simmering for sixteen hours, the fat rendered to silk, the collagen so dense the liquid clung to the ladle in sheets. Eight seats at a counter of scarred wood, the surface darkened with decades of spilled broth and elbow grease. The cook was a man in his sixties with forearms like rope and a bandana tied so tight it left red marks at his temples. He didn&rsquo;t look up when they entered. Didn&rsquo;t need to. The shop was the kind of institution that existed beyond the need for hospitality&mdash;you came because the ramen was transcendent, not because anyone was pleased to see you.</p>
+
+<p>Kastiel folded himself onto the stool beside Ryuha, knees pressing the counter&rsquo;s underside, and studied the hand-lettered menu board with the intensity he brought to intelligence briefings.</p>
+
+<p>He&rsquo;d come straight from Yokohama. Dark jacket over a grey crew-neck, operational trousers, the particular rumpled quality of someone who&rsquo;d spent the day crawling through infrastructure and hadn&rsquo;t changed. His platinum hair was wind-disordered, his cheeks still carrying the cold&rsquo;s flush, and there was a smudge of something&mdash;dust, concrete, the residue of old resonance&mdash;along the line of his jaw that he either hadn&rsquo;t noticed or hadn&rsquo;t bothered to wipe away.</p>
+
+<p>He looked, Ryuha thought, devastating.</p>
+
+<p>The Daevic symmetry of his father&rsquo;s face, roughened by fieldwork. The composure and the dishevelment existing in the same frame, neither cancelling the other, the contrast between them more arresting than either quality alone. His eyes were dark in the ramen shop&rsquo;s low light, the violet reduced to near-black, and when he turned to look at Ryuha the proximity was sudden and absolute&mdash;twenty inches of steam-thick air between them, close enough that Ryuha could see the fine grain of his skin, the individual lashes, the faint shadows beneath his eyes that spoke of long hours and insufficient sleep.</p>
+
+<p>&ldquo;I can&rsquo;t read the menu,&rdquo; Kastiel said, brow furrowed at the hand-lettered board.</p>
+
+<p>Ryuha glanced at him. Glanced at the board. Glanced back.</p>
+
+<p>Kastiel held the frown with admirable commitment. Valen&rsquo;s son. Kira&rsquo;s son. Raised in a household where Azharic, English, French, Mandarin, and Korean circulated like weather, where intelligence work required fluency in a dozen more, where Kira herself was known to switch languages mid-sentence to test whether her operatives were keeping up. Nineteen years old, trained for field deployment across four countries, currently running an intelligence circuit that spanned Singapore to Shanghai&mdash;and he couldn&rsquo;t read a menu in a language that shared half its written system with the Mandarin he&rsquo;d been raised on.</p>
+
+<p>&ldquo;Liar,&rdquo; Ryuha said.</p>
+
+<p>Kastiel&rsquo;s frown held for another half-second before the corner of his mouth betrayed him. &ldquo;Order for me anyway.&rdquo;</p>
+
+<p>&ldquo;You speak Japanese.&rdquo;</p>
+
+<p>&ldquo;I speak Japanese adequately. You speak it like someone who&rsquo;s lived here. I want to hear you do it.&rdquo; The admission was disarming in its directness&mdash;stripped of pretense now that the pretense had been called. &ldquo;Also, I genuinely don&rsquo;t know what&rsquo;s good here.&rdquo;</p>
+
+<p>Ryuha ordered for both of them&mdash;tonkotsu, extra chashu, soft-boiled egg, the works&mdash;in the particular Japanese that marked him as native to this soil, the vowels clipped and warm, honorifics calibrated to the exact register of respectful-but-familiar that you used with an institution you&rsquo;d patronized for decades. The cook grunted acknowledgment without turning. Water appeared, two glasses, sweating in the heat.</p>
+
+<p>They sat shoulder to shoulder in the steam and the noise&mdash;the bubble of the broth, the clatter of bowls, the conversations of the other patrons layering over each other in that particular Japanese murmur, rapid and musical and unintelligible to anyone who hadn&rsquo;t grown up inside the rhythm of it. Kastiel&rsquo;s thigh pressed against Ryuha&rsquo;s beneath the counter. Neither of them moved away.</p>
+
+<p>&ldquo;Yokohama,&rdquo; Ryuha said.</p>
+
+<p>Kastiel picked up his water, drank. &ldquo;Drainage infrastructure near the port. Pre-war construction, resonance-neutral, same profile as the Gangnam site. The trace was there&mdash;geometric, recursive, consistent with the trajectory model. But it had decayed. Whatever manifested had already moved on.&rdquo;</p>
+
+<p>&ldquo;Timeframe?&rdquo;</p>
+
+<p>&ldquo;Forty-eight hours ahead of us, at most. The interval is still shortening.&rdquo; He set the glass down, the condensation leaving a ring on the scarred wood. &ldquo;Zair is sweeping the Shinjuku ward for fresh traces. My father has contacts in the Tokyo Vashirai outpost running parallel analysis.&rdquo;</p>
+
+<p>&ldquo;And you&rsquo;re here eating ramen.&rdquo;</p>
+
+<p>&ldquo;I&rsquo;m here because the Yokohama sweep concluded at nine PM and the next operational window isn&rsquo;t until tomorrow morning, and you told me you hadn&rsquo;t eaten.&rdquo; The corner of his mouth pulled&mdash;dry, warm, the faintest admission of intent beneath the operational language. &ldquo;Field operatives are encouraged to maintain their vessels.&rdquo;</p>
+
+<p>&ldquo;Is that what this is? Vessel maintenance?&rdquo;</p>
+
+<p>&ldquo;That&rsquo;s what the report will say.&rdquo;</p>
+
+<p>The ramen arrived.</p>
+
+<p>It came in bowls so large they occupied the full width of the counter space allotted to each seat&mdash;white ceramic, chipped at the rim, filled to the brim with broth so opaque it was nearly ivory. The chashu lay across the surface in slices thick as a finger, braised until the fat had gone translucent and the meat pulled apart at the pressure of chopsticks. The egg, halved, showed a centre of liquid gold beneath a skin of set white. Nori darkened at the edges where the broth touched it, curling. Green onion, fine as thread, scattered across the surface like confetti.</p>
+
+<p>The smell rose in a column of steam&mdash;pork fat and soy and something deeper, older, the particular umami that only came from bones simmered until they gave up their last mineral ghost.</p>
+
+<p>Kastiel ate with the focused attention he gave to everything. He broke the noodles with his chopsticks, lifted them clear of the broth in a practiced motion that suggested he&rsquo;d been eating ramen long enough to have learned the technique, and drew them into his mouth without ceremony or hesitation. His eyes closed. His jaw worked. He swallowed.</p>
+
+<p>&ldquo;This is extraordinary.&rdquo;</p>
+
+<p>&ldquo;You sound surprised.&rdquo;</p>
+
+<p>&ldquo;I&rsquo;m from New York. I&rsquo;ve had ramen.&rdquo; His gaze swept the bowl&mdash;assessing, cataloguing. &ldquo;This is different. The broth is&mdash;&rdquo; He paused, searching. &ldquo;Denser. The collagen content is higher than anything I&rsquo;ve had. And the chashu is braised with mirin, not just soy.&rdquo;</p>
+
+<p>&ldquo;Your palate is your father&rsquo;s.&rdquo;</p>
+
+<p>&ldquo;His palate is better. He&rsquo;d have identified the kombu ratio by now.&rdquo; Kastiel lifted another mouthful, ate with the same unhurried focus. &ldquo;He cooks for the household, you know. Has done for centuries. My mother says it&rsquo;s the only time his hands aren&rsquo;t holding a weapon or a pen.&rdquo;</p>
+
+<p>&ldquo;I remember.&rdquo; Ryuha&rsquo;s mouth curved at the memory&mdash;the first time AEON had been welcomed into the penthouse, the five of them standing in that vast kitchen while the Judicator, sleeves rolled to the elbow, served them a meal that had left Liam speechless and Jisu furious that he couldn&rsquo;t reverse-engineer the sauce. &ldquo;The lamb. With the pomegranate reduction.&rdquo;</p>
+
+<p>&ldquo;Persian recipe. Eighth century. He won&rsquo;t share it.&rdquo;</p>
+
+<p>&ldquo;Jisu tried to bribe him.&rdquo;</p>
+
+<p>&ldquo;Everyone tries to bribe him. It doesn&rsquo;t work.&rdquo;</p>
+
+<p>They ate in silence for a while. The steam thickened around them, warm and pungent, and the counter&rsquo;s proximity forced their shoulders together, their elbows bumping when they lifted their bowls to drink the broth. Kastiel&rsquo;s thigh was a steady line of heat against Ryuha&rsquo;s, and every time one of them shifted, the contact rearranged itself rather than breaking&mdash;knees touching, hips aligned, the unconscious negotiation of space between two bodies that wanted to be closer than a ramen counter allowed.</p>
+
+<p>Ryuha finished first. Set his bowl down, wiped his mouth, and let himself look.</p>
+
+<p>Kastiel was beautiful in the steam.</p>
+
+<p>The flush from the broth&rsquo;s heat had spread across his cheekbones and down the column of his throat, turning the pale skin faintly rose, and his hair had gone damp at the temples where the steam condensed. His lips were reddened from the heat and the salt, and when he lifted the bowl to drink the last of the broth&mdash;both hands cradling the ceramic, head tipped back, throat working&mdash;the sight of it hit Ryuha somewhere beneath the ribs with a force that had nothing to do with aesthetics and everything to do with hunger.</p>
+
+<p>Three thousand years. He&rsquo;d been beautiful in every one of them, had weaponized beauty, had understood it as architecture and leverage and camouflage. And now he sat in an eight-seat ramen shop in Ebisu watching a nineteen-year-old drink broth and felt undone by it&mdash;by the simple, mortal act of someone he wanted doing something ordinary, the intimacy of witnessing Kastiel with his guard lowered and his mouth shining and his composure dissolved by nothing more than good soup.</p>
+
+<p>Kastiel set the bowl down. Met his eyes.</p>
+
+<p>&ldquo;Stop looking at me like that,&rdquo; he said. &ldquo;We&rsquo;re in public.&rdquo;</p>
+
+<p>&ldquo;You have broth on your chin.&rdquo;</p>
+
+<p>Kastiel wiped it with the back of his hand&mdash;graceless, unhurried, the gesture so at odds with his usual composure that Ryuha&rsquo;s chest constricted.</p>
+
+<p>&ldquo;Better?&rdquo;</p>
+
+<p>&ldquo;Worse.&rdquo;</p>
+
+<div class="story-break"></div>
+
+<p>They left the ramen shop and stepped into the cold, and the city took them.</p>
+
+<p>Tokyo at midnight was a living thing. It breathed in neon and exhaled darkness, the streets pulsing with the particular energy of a metropolis that never fully slept but knew how to lower its voice. Ebisu was quieter than Shibuya or Shinjuku&mdash;residential in stretches, the commercial streets giving way to narrow lanes where the buildings leaned close and the light came from vending machines and the occasional lit window, rectangles of warm gold floating in the dark like paper lanterns.</p>
+
+<p>They walked without destination.</p>
+
+<p>East, toward the river, through streets that grew narrower as they left the station&rsquo;s orbit. Past a konbini whose fluorescent glare spilled across the pavement in a rectangle of surgical white, the smell of nikuman drifting from the steamer near the door. Past a shuttered temple whose wooden gate still carried the faint impression of resonance&mdash;old, so faded it was more memory than presence, the echo of an age when Azhar had walked these islands openly and the shrines had been built to house them.</p>
+
+<p>Kastiel paused at the gate. His hand rose, fingers hovering an inch from the wood without touching.</p>
+
+<p>&ldquo;There&rsquo;s something here,&rdquo; he said. &ldquo;Residual. Very old.&rdquo;</p>
+
+<p>&ldquo;Heian period, probably. The shrines in this ward date back a thousand years.&rdquo; Ryuha stopped beside him, hands in his pockets, watching the way Kastiel&rsquo;s resonance reached toward the faded impression in the wood&mdash;blade-bright geometries extending with the delicacy of someone handling an artefact, careful, reverent. &ldquo;Tokyo is layered with it. Resonance sedimentation. Centuries of Azhar passing through, leaving traces in the stone and the wood and the soil. If you know how to feel for it, the whole city hums. The three of us came here from China&mdash;Eszahar, Shiyun, and I&mdash;and the islands were already saturated. Older Azhar had been here long before us.&rdquo;</p>
+
+<p>&ldquo;You&rsquo;ve lived here before.&rdquo;</p>
+
+<p>&ldquo;Many times. Different vessels, different centuries. Eszahar, Shiyun, and I moved east together after the Breaking&mdash;the subcontinent first, then China for over a millennium, then the sea crossing brought us here. Japan was where I stayed longest.&rdquo; He paused. The lantern light from a distant house caught the angles of his face, sharpened them. &ldquo;I died here once.&rdquo; He said it without weight&mdash;the particular casualness that only the very old achieved when discussing their own deaths, the way a traveller might mention a city they&rsquo;d passed through without stopping. &ldquo;Kyoto. Bakumatsu era. A friend killed me.&rdquo;</p>
+
+<p>Kastiel&rsquo;s hand dropped from the gate. His eyes found Ryuha&rsquo;s in the dark&mdash;violet, searching, carrying that quality of attention that always made Ryuha feel as though he were being read at a frequency he couldn&rsquo;t control.</p>
+
+<p>&ldquo;A friend?&rdquo;</p>
+
+<p>&ldquo;Wonho. Jae-won&rsquo;s Ashura operative. We&rsquo;d been killing each other on and off for centuries&mdash;different wars, different sides, the usual. He got me in Kyoto.&rdquo; Ryuha&rsquo;s mouth curved, dry and faint. &ldquo;My last words were apparently &lsquo;so tiring.&rsquo; Which is either philosophically profound or embarrassingly banal, depending on your interpretation.&rdquo;</p>
+
+<p>&ldquo;You remember dying?&rdquo;</p>
+
+<p>&ldquo;I remember being very tired of it. The dying, the returning, the finding new vessels and picking up where I left off. I&rsquo;d been doing it for two thousand years by then. Wonho&rsquo;s blade was almost a relief.&rdquo;</p>
+
+<p>They walked on. The temple gate receded behind them, swallowed by the dark.</p>
+
+<p>The streets narrowed further. They were deep into residential Ebisu now, where the houses crowded close and the power lines crisscrossed overhead in dense black webs against the grey-orange sky. A cat watched them from a wall, eyes catching the distant light in green sparks, its tail curling once before it dropped into a garden and vanished. The air was cold and still, and their breath mingled in the space between them, two columns of vapour winding into one.</p>
+
+<p>Kastiel&rsquo;s hand found his.</p>
+
+<p>It was a quiet thing&mdash;fingers threading through Ryuha&rsquo;s in the dark, grip certain, warm despite the cold. His hand was larger than Ryuha&rsquo;s, the fingers longer, callused across the palm from training, the knuckles scarred in fine white lines that wouldn&rsquo;t have been visible in anything but this close darkness, this intimate proximity.</p>
+
+<p>Ryuha closed his fingers around Kastiel&rsquo;s and held.</p>
+
+<p>They walked like that through the sleeping streets, hand in hand, two divine beings dressed in mortal cold, their resonances twining where their skin met&mdash;Ryuha&rsquo;s sapphirine depths braiding through Kastiel&rsquo;s blade-bright geometries, the two patterns finding each other with an ease that hadn&rsquo;t been there in Seoul, a familiarity that five days of absence had somehow deepened rather than diminished.</p>
+
+<p>&ldquo;Tell me something,&rdquo; Ryuha said, after a while.</p>
+
+<p>&ldquo;What?&rdquo;</p>
+
+<p>&ldquo;Anything. Something I don&rsquo;t know.&rdquo;</p>
+
+<p>Kastiel was quiet for several steps. Their footfalls sounded soft on the pavement, the rhythm even, synchronised without effort.</p>
+
+<p>&ldquo;I&rsquo;m afraid of this,&rdquo; he said. &ldquo;Not of you. Of what it means to want something I can&rsquo;t optimise. I&rsquo;ve spent my entire life in systems&mdash;Kira&rsquo;s training protocols, my father&rsquo;s strategic frameworks, the operational hierarchies. Everything has structure. Everything has a solution set. And then there&rsquo;s you, and the solution set is empty, and I keep running the variables and the output is always the same.&rdquo;</p>
+
+<p>&ldquo;What output?&rdquo;</p>
+
+<p>&ldquo;That I want to be here. Walking through a city I don&rsquo;t know, holding your hand in the dark, with no operational justification and no strategic value and no outcome I can model.&rdquo; His grip tightened fractionally. &ldquo;For a Daeva, that should be terrifying. The absence of structure. The inability to optimise.&rdquo;</p>
+
+<p>&ldquo;Is it terrifying?&rdquo;</p>
+
+<p>&ldquo;No.&rdquo; His voice came soft in the cold. &ldquo;It&rsquo;s the first thing that&rsquo;s ever felt correct without having to be calculated first.&rdquo;</p>
+
+<p>Ryuha stopped walking.</p>
+
+<p>They stood in a narrow lane between two sleeping houses, the sky a strip of grey-orange above them, the vending machine at the corner casting its blue-white glow across the pavement. Somewhere a train rumbled distantly&mdash;the last of the night services, carrying its cargo of drunks and shift workers toward the terminus. The city breathed around them, vast and indifferent and alive.</p>
+
+<p>Ryuha turned toward Kastiel. Lifted his free hand and laid it against his face&mdash;palm to cheek, thumb tracing the line of his cheekbone in the cold, feeling the warmth of him, the fine grain of his skin, the involuntary tightening of his jaw beneath the touch. Kastiel&rsquo;s eyes were dark in the vending machine light, the violet reduced to a thin ring around blown pupils, and his breath came visible between them in a slow, steady cloud.</p>
+
+<p>&ldquo;You terrify me,&rdquo; Ryuha said. &ldquo;For the record. Not because you&rsquo;re Valen&rsquo;s son, or because you&rsquo;re nineteen, or because your mother could dismantle my career with a phone call. You terrify me because I have spent three thousand years building a version of myself that doesn&rsquo;t need anyone, and you are dismantling it by existing. By eating ramen. By holding my hand in a street I died on six centuries ago and making it feel like somewhere I&rsquo;d want to come back to.&rdquo;</p>
+
+<p>He kissed him.</p>
+
+<p>Slow. Unhurried. Standing in the cold between two houses with the vending machine humming its fluorescent hymn and the last train shuddering the ground beneath their feet. He kissed Kastiel the way he hadn&rsquo;t in Seoul&mdash;without urgency, without the desperate compression of stolen time, with the long slow patience of someone who had forever and was choosing to spend this particular piece of it here, in this alley, with this mouth, with these hands in his hair.</p>
+
+<p>Kastiel made a sound against his lips&mdash;low, unguarded, rougher than his composure would have allowed in daylight&mdash;and his hands came up to grip Ryuha&rsquo;s hips, pulling him close, their bodies flush from chest to thigh. The cold air bit at the back of Ryuha&rsquo;s neck and Kastiel&rsquo;s body was a furnace against his front, and the contrast between the two&mdash;the sharp winter air and the heat of him, the silence of the sleeping street and the sound of their breathing&mdash;was so vivid it felt like a blade drawn across Ryuha&rsquo;s senses, every nerve laid open.</p>
+
+<p>Kastiel kissed him back with the thoroughness he brought to everything&mdash;lips parting, tongue finding his, the angle of his head shifting to deepen the contact. His hands slid from Ryuha&rsquo;s hips to the small of his back, fingers spreading, pressing him closer. The grip was proprietary. Certain. The grip of someone who had decided what he wanted and was done pretending otherwise.</p>
+
+<p>Their resonances flared.</p>
+
+<p>Kastiel&rsquo;s blade-bright geometries unfurled against the sapphirine depth of Ryuha&rsquo;s field&mdash;luminous, intricate, patterns folding into patterns with a complexity that stole the breath. Ryuha&rsquo;s own resonance answered without permission, rising to meet that architecture, the two fields tangling and interweaving in the dark. Behind his closed eyes, Ryuha saw it&mdash;or felt it, or both, the distinction meaningless at this depth&mdash;a lattice of light and shadow, crystal and deep water, each structure reaching for the other with the slow inevitability of tides.</p>
+
+<p>The vending machine flickered. The nearest streetlight hummed louder, then dimmed.</p>
+
+<p>They broke apart.</p>
+
+<p>Kastiel&rsquo;s forehead rested against his, breath coming in warm gusts that misted in the cold. His hands were still on Ryuha&rsquo;s back, fingers dug into the wool of his coat. His composure was in ruins&mdash;lips swollen, hair wrecked, the flush across his cheekbones visible even in the blue-white light.</p>
+
+<p>&ldquo;February,&rdquo; he breathed. &ldquo;I can&rsquo;t keep doing this in increments. Seoul. Tokyo. Stolen hours between operational windows.&rdquo;</p>
+
+<p>&ldquo;Then don&rsquo;t.&rdquo;</p>
+
+<p>&ldquo;I have obligations. The anomaly. Kira&rsquo;s training schedule. My coursework.&rdquo;</p>
+
+<p>&ldquo;I know.&rdquo;</p>
+
+<p>&ldquo;And you have the comeback. Paris was last week, New York is in three weeks, and between them the album, the choreography, the&mdash;&rdquo;</p>
+
+<p>&ldquo;I know.&rdquo; Ryuha pressed his thumb against Kastiel&rsquo;s lower lip, silencing him. The lip was warm, swollen, and Kastiel&rsquo;s breath stuttered against the pad of his thumb. &ldquo;I know all of it. Every logistical obstacle, every scheduling conflict, every reason this is operationally inadvisable. I&rsquo;ve been cataloguing them for five months.&rdquo;</p>
+
+<p>&ldquo;And?&rdquo;</p>
+
+<p>&ldquo;And none of them are sufficient.&rdquo;</p>
+
+<p>Kastiel closed his eyes. His jaw worked beneath Ryuha&rsquo;s hand&mdash;a muscle tensing, releasing, the visible evidence of a mind processing a decision it had already made.</p>
+
+<p>&ldquo;New York,&rdquo; he said. &ldquo;February. I&rsquo;ll coordinate with Shiyun.&rdquo;</p>
+
+<p>&ldquo;Your father already gave logistical guidance.&rdquo;</p>
+
+<p>Kastiel&rsquo;s eyes opened. Something moved through the violet&mdash;surprise, amusement, a complicated warmth. &ldquo;He gave&mdash;?&rdquo;</p>
+
+<p>&ldquo;In the group chat. After the photo incident. He told you to coordinate with Shiyun on secure logistics for New York.&rdquo;</p>
+
+<p>&ldquo;That was operational.&rdquo;</p>
+
+<p>&ldquo;Kira said it was permission.&rdquo;</p>
+
+<p>&ldquo;Kira says many things.&rdquo;</p>
+
+<p>&ldquo;Your mother is rarely wrong.&rdquo;</p>
+
+<p>Kastiel exhaled&mdash;a long breath that clouded between them and dissipated into the Tokyo dark. His hands tightened once on Ryuha&rsquo;s back, then released, sliding to his hips instead, holding him at a distance that was close enough to feel and far enough to think.</p>
+
+<p>&ldquo;New York,&rdquo; he said again. Firmer. &ldquo;After Fashion Week. I&rsquo;ll clear three days.&rdquo;</p>
+
+<p>&ldquo;Four.&rdquo;</p>
+
+<p>His mouth curved&mdash;sharp, warm, the grin that cracked his father&rsquo;s composure and revealed the heat beneath. &ldquo;Four. I&rsquo;ll tell Kira it&rsquo;s operational training in the New York theatre.&rdquo;</p>
+
+<p>&ldquo;Is it?&rdquo;</p>
+
+<p>&ldquo;Being near you is operationally destabilising. Learning to function despite that is a valid training exercise.&rdquo; The grin widened. &ldquo;That&rsquo;s what the report will say.&rdquo;</p>
+
+<p>Ryuha laughed&mdash;short, bright, startled out of him into the sleeping street. A light came on in an upstairs window nearby, and they both went still, caught in the sudden awareness of where they were: two tall, conspicuous figures standing far too close together in a residential lane at one in the morning, their resonances still tangled in the air around them like something visible to anyone with eyes to see.</p>
+
+<p>&ldquo;Hotel,&rdquo; Kastiel said. &ldquo;Before we wake the neighbourhood.&rdquo;</p>
+
+<p>&ldquo;Or get photographed again.&rdquo;</p>
+
+<p>&ldquo;That too.&rdquo;</p>
+
+<p>They disentangled. Walked back toward the main street, toward the glow of Ebisu station and the taxi stands and the mortal infrastructure of a city that ferried millions of people to millions of destinations without ever guessing what moved among them. Their hands brushed as they walked&mdash;knuckles grazing, deliberate, the contact maintained and released and maintained again, a morse code of touch that said everything their mouths had stopped saying.</p>
+
+<p>At the taxi stand, Kastiel paused.</p>
+
+<p>&ldquo;Four days,&rdquo; he said.</p>
+
+<p>&ldquo;Four days.&rdquo;</p>
+
+<p>&ldquo;Don&rsquo;t get photographed before then.&rdquo;</p>
+
+<p>&ldquo;I&rsquo;ll use the car service.&rdquo;</p>
+
+<p>&ldquo;Good.&rdquo; Kastiel&rsquo;s hand came up&mdash;quick, certain&mdash;and cupped the back of Ryuha&rsquo;s neck, pulling him forward into a kiss so brief it was more pressure than contact, a seal rather than an invitation. His lips were cold from the night air. His grip was warm.</p>
+
+<p>Then he let go. Stepped into the waiting cab. The door closed, and the tail lights bled red into the dark, and Ryuha stood on the curb in the cold and watched them disappear the way he&rsquo;d watched them disappear in Seoul&mdash;with the same hollow weight in his chest, the same maddening certainty that the distance between them was already too much.</p>
+
+<p>His phone buzzed.</p>
+
+<p>Kastiel: Four days. New York. Non-negotiable.</p>
+
+<p>Kastiel: Also the ramen was transcendent. Thank you.</p>
+
+<p>Ryuha: You had broth on your chin for ten minutes and I said nothing because you looked perfect with it.</p>
+
+<p>Kastiel: That&rsquo;s disgusting.</p>
+
+<p>Ryuha: That&rsquo;s three thousand years of standards being obliterated by a nineteen year old who can&rsquo;t use a napkin.</p>
+
+<p>Kastiel: I used the napkin.</p>
+
+<p>Ryuha: After I told you.</p>
+
+<p>Kastiel: Goodnight, Ryuha.</p>
+
+<p>Ryuha: Goodnight.</p>
+
+<p>He pocketed his phone and walked toward the station. The last train had gone, but the night buses ran until three, and he knew this city well enough to navigate it half-asleep with his eyes closed and his heart hammering and the taste of someone else&rsquo;s mouth still burning on his lips.</p>
+
+<p>Tokyo breathed around him&mdash;vast, ancient, layered with the resonance of every Azhar who had ever walked its streets. Somewhere in its depths, the anomaly pulsed, drawing closer, the geometric signature tightening like a fist. Somewhere in a hotel in Roppongi, Kastiel was writing a field report that would contain none of what had happened in the alley.</p>
+
+<p>And somewhere in the marrow of the city, in the sediment of a thousand years of divine memory pressed into stone and wood and soil, the echo of a blade that had killed Ryuha in a Kyoto street six centuries ago hummed faintly, answered by the warmth of a hand that had held his in the dark, and Ryuha thought: <em>this is what it means to come back. Not to a place. To a reason for being in one.</em></p>
+
+<p>Three weeks to New York.</p>
+
+<p>He could do three weeks.</p>
+
+</div>
+
+<div class="back-link">
+  <a href="../read.html">&larr; Back to Read</a>
+</div>
+
+<!-- CHANGE 4: Audio file path -->
+<div class="audio-player" id="audioPlayer">
+  <div class="player-inner">
+    <div class="player-controls">
+      <button class="player-btn" id="skipBack" title="Back 15s">&#8634;</button>
+      <button class="player-btn play-btn" id="playPause">&#9654;</button>
+      <button class="player-btn" id="skipFwd" title="Forward 15s">&#8635;</button>
+      <div class="player-progress-wrap">
+        <span class="player-time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar">
+          <div class="progress-fill" id="progressFill">
+            <div class="progress-handle"></div>
+          </div>
+        </div>
+        <span class="player-time" id="totalTime">0:00</span>
+      </div>
+      <button class="player-speed" id="speedBtn">1&times;</button>
+      <button class="player-close" id="playerClose">&times;</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>&copy; 2026 Kit Rivas</span>
+  <div class="footer-links">
+    <a href="#">Twitter</a>
+    <a href="#">Instagram</a>
+    <a href="#">Threads</a>
+  </div>
+</footer>
+
+<script>
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Theme
+const toggle = document.getElementById('themeToggle');
+const html = document.documentElement;
+function getSystemTheme() {
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+}
+function applyTheme(theme) {
+  html.setAttribute('data-theme', theme);
+  toggle.textContent = theme === 'dark' ? 'Light' : 'Dark';
+}
+let currentTheme = getSystemTheme();
+applyTheme(currentTheme);
+let manualOverride = false;
+window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+  if (!manualOverride) {
+    currentTheme = e.matches ? 'light' : 'dark';
+    applyTheme(currentTheme);
+  }
+});
+toggle.addEventListener('click', () => {
+  manualOverride = true;
+  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  applyTheme(currentTheme);
+});
+
+// Font size
+const fontSlider = document.getElementById('fontSlider');
+fontSlider.addEventListener('input', (e) => {
+  document.documentElement.style.fontSize = e.target.value + 'px';
+});
+
+// Audio
+const audioPlayer = document.getElementById('audioPlayer');
+const listenBtn = document.getElementById('listenBtn');
+const playPause = document.getElementById('playPause');
+const skipBack = document.getElementById('skipBack');
+const skipFwd = document.getElementById('skipFwd');
+const progressBar = document.getElementById('progressBar');
+const progressFill = document.getElementById('progressFill');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+const speedBtn = document.getElementById('speedBtn');
+const playerClose = document.getElementById('playerClose');
+
+// CHANGE 4: Audio file path — update this to match the story
+const audio = new Audio('audio/FILENAME.mp3');
+let isPlaying = false;
+const speeds = [0.75, 1, 1.25, 1.5, 2];
+let speedIndex = 1;
+
+function formatTime(s) {
+  if (isNaN(s)) return '0:00';
+  const m = Math.floor(s / 60);
+  const sec = Math.floor(s % 60);
+  return m + ':' + (sec < 10 ? '0' : '') + sec;
+}
+listenBtn.addEventListener('click', () => {
+  audioPlayer.classList.add('visible');
+  document.body.classList.add('body-audio-active');
+  audio.play();
+  isPlaying = true;
+  playPause.innerHTML = '&#10074;&#10074;';
+});
+playPause.addEventListener('click', () => {
+  if (isPlaying) { audio.pause(); playPause.innerHTML = '&#9654;'; }
+  else { audio.play(); playPause.innerHTML = '&#10074;&#10074;'; }
+  isPlaying = !isPlaying;
+});
+skipBack.addEventListener('click', () => { audio.currentTime = Math.max(0, audio.currentTime - 15); });
+skipFwd.addEventListener('click', () => { audio.currentTime = Math.min(audio.duration, audio.currentTime + 15); });
+speedBtn.addEventListener('click', () => {
+  speedIndex = (speedIndex + 1) % speeds.length;
+  audio.playbackRate = speeds[speedIndex];
+  speedBtn.textContent = speeds[speedIndex] + '\u00d7';
+});
+audio.addEventListener('loadedmetadata', () => { totalTimeEl.textContent = formatTime(audio.duration); });
+audio.addEventListener('timeupdate', () => {
+  const pct = (audio.currentTime / audio.duration) * 100;
+  progressFill.style.width = pct + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+audio.addEventListener('ended', () => { isPlaying = false; playPause.innerHTML = '&#9654;'; progressFill.style.width = '0%'; });
+progressBar.addEventListener('click', (e) => {
+  const rect = progressBar.getBoundingClientRect();
+  const pct = (e.clientX - rect.left) / rect.width;
+  audio.currentTime = pct * audio.duration;
+});
+playerClose.addEventListener('click', () => {
+  audio.pause();
+  isPlaying = false;
+  playPause.innerHTML = '&#9654;';
+  audioPlayer.classList.remove('visible');
+  document.body.classList.remove('body-audio-active');
+});
+</script>
+
+</body>
+</html>
