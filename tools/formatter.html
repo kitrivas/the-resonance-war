@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Story Formatter</title>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0c; color: #c8c5be; font-family: ui-serif, Georgia, serif; padding: 2rem; min-height: 100vh; }
+.wrap { max-width: 800px; margin: 0 auto; }
+h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 1.8rem; color: #e8e5de; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
+.info { font-family: Inter, -apple-system, sans-serif; font-size: 0.7rem; color: #6b6860; line-height: 1.8; margin-bottom: 2rem; white-space: pre-line; }
+textarea { width: 100%; height: 300px; background: #11110f; border: 1px solid #1e1d1a; color: #c8c5be; font-family: ui-serif, Georgia, serif; font-size: 0.9rem; line-height: 1.7; padding: 1.2rem; resize: vertical; outline: none; border-radius: 0; }
+textarea:focus { border-color: #2a2518; }
+.btns { display: flex; gap: 0.8rem; margin: 1.2rem 0; }
+.btn { background: none; border: 1px solid #7d6f55; color: #a89570; font-family: Inter, sans-serif; font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 0.6rem 1.5rem; cursor: pointer; transition: all 0.3s; }
+.btn:hover { background: #b5a07a; color: #0a0a0c; }
+.btn-secondary { border-color: #1e1d1a; color: #6b6860; }
+.btn-secondary:hover { border-color: #7d6f55; color: #a89570; background: none; }
+.btn-copied { color: #a89570 !important; }
+.label { font-family: Inter, sans-serif; font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: #7d6f55; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.8rem; }
+.label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, #2a2518, transparent); }
+pre { width: 100%; background: #11110f; border: 1px solid #1e1d1a; color: #b5b2ab; font-family: monospace; font-size: 0.75rem; line-height: 1.6; padding: 1.2rem; overflow: auto; max-height: 400px; white-space: pre-wrap; word-break: break-word; }
+.preview { max-width: 640px; padding: 2rem 0; }
+.preview p { font-family: ui-serif, Georgia, serif; font-size: 1rem; line-height: 1.9; color: #b5b2ab; margin-bottom: 1.3rem; text-indent: 1.5rem; }
+.preview p:first-child, .preview h2 + p { text-indent: 0; }
+.preview h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 1.4rem; color: #e8e5de; margin: 3rem 0 1.5rem; letter-spacing: 0.04em; text-align: center; }
+.preview .story-break { max-width: 120px; margin: 4rem auto; height: 1px; background: linear-gradient(90deg, transparent, #7d6f55, transparent); }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Story Formatter</h1>
+  <div class="info">Paste your plain text story. The formatter will:
+• Wrap each paragraph in &lt;p&gt; tags
+• Convert -- and — to &amp;mdash;
+• Convert "quotes" to smart quotes
+• Convert *italics* to &lt;em&gt; tags
+• Detect section breaks (blank lines with *** or --- or ===)
+• Detect lines that look like headings (short, no period, often a place/date)</div>
+
+  <textarea id="input" placeholder="Paste your plain text story here..."></textarea>
+
+  <div class="btns">
+    <button class="btn" onclick="handleFormat()">Format</button>
+    <button class="btn btn-secondary hidden" id="copyBtn" onclick="handleCopy()">Copy HTML</button>
+  </div>
+
+  <div id="outputSection" class="hidden">
+    <div class="label">Output</div>
+    <pre id="output"></pre>
+
+    <div class="label" style="margin-top: 2rem;">Preview</div>
+    <div class="preview" id="preview"></div>
+  </div>
+</div>
+
+<script>
+function formatInline(text) {
+  let t = text;
+  t = t.replace(/---/g, "\u2014");
+  t = t.replace(/--/g, "\u2014");
+  t = t.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+  t = t.replace(/\u201C|\u201D/g, '"');
+  t = t.replace(/\u2018|\u2019/g, "'");
+  t = t.replace(/"([^"]*?)"/g, "\u201C$1\u201D");
+  t = t.replace(/"(\S)/g, "\u201C$1");
+  t = t.replace(/(\S)"/g, "$1\u201D");
+  t = t.replace(/"/g, "\u201D");
+  t = t.replace(/(\w)'(\w)/g, "$1\u2019$2");
+  t = t.replace(/'(\S)/g, "\u2018$1");
+  t = t.replace(/(\S)'/g, "$1\u2019");
+  t = t.replace(/\u2014/g, "&mdash;");
+  t = t.replace(/\u201C/g, "&ldquo;");
+  t = t.replace(/\u201D/g, "&rdquo;");
+  t = t.replace(/\u2018/g, "&lsquo;");
+  t = t.replace(/\u2019/g, "&rsquo;");
+  return t;
+}
+
+function formatStory(raw) {
+  if (!raw.trim()) return "";
+  const lines = raw.split("\n");
+  const blocks = [];
+  let current = [];
+
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed === "") {
+      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
+      continue;
+    }
+    if (/^(\*\s*\*\s*\*|---+|===+|· · ·|\* \* \*)$/.test(trimmed)) {
+      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
+      blocks.push("__BREAK__");
+      continue;
+    }
+    current.push(trimmed);
+  }
+  if (current.length > 0) blocks.push(current.join(" "));
+
+  const htmlBlocks = [];
+  for (let i = 0; i < blocks.length; i++) {
+    const block = blocks[i];
+    if (block === "__BREAK__") {
+      htmlBlocks.push('<div class="story-break"></div>');
+      continue;
+    }
+    const isHeading = block.length < 80 && !block.endsWith(".") && !block.endsWith(",") && !block.endsWith('"') && !block.endsWith("\u2019") && (
+      /^[A-Z]/.test(block) && (
+        block.includes("\u2014") || block.includes("—") || block.includes("–") ||
+        block.includes(",") || /^\d{4}/.test(block) || /\d{4}$/.test(block) ||
+        (block.split(" ").length <= 8 && !block.includes('"') && !block.includes('\u201C'))
+      )
+    );
+    if (isHeading && block.length < 60) {
+      htmlBlocks.push(`<h2>${formatInline(block)}</h2>`);
+      continue;
+    }
+    htmlBlocks.push(`<p>${formatInline(block)}</p>`);
+  }
+  return htmlBlocks.join("\n\n");
+}
+
+function handleFormat() {
+  const raw = document.getElementById("input").value;
+  const result = formatStory(raw);
+  document.getElementById("output").textContent = result;
+  document.getElementById("preview").innerHTML = result;
+  document.getElementById("outputSection").classList.remove("hidden");
+  document.getElementById("copyBtn").classList.remove("hidden");
+}
+
+function handleCopy() {
+  const text = document.getElementById("output").textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("copyBtn");
+    btn.textContent = "Copied";
+    btn.classList.add("btn-copied");
+    setTimeout(() => { btn.textContent = "Copy HTML"; btn.classList.remove("btn-copied"); }, 2000);
+  });
+}
+</script>
+</body>
+</html>
