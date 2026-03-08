@@ -6,96 +6,30 @@
 <title>Media — The Resonance War</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
 <style>
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-:root {
-  --bg: #0a0a0c;
-  --bg-elevated: #11110f;
-  --text: #c8c5be;
-  --text-bright: #e8e5de;
-  --text-muted: #6b6860;
-  --accent: #b5a07a;
-  --accent-dim: #7d6f55;
-  --accent-soft: #a89570;
-  --accent-glow: rgba(181, 160, 122, 0.05);
-  --border: #1e1d1a;
-  --border-warm: #2a2518;
-  --serif: 'Cormorant Garamond', 'Georgia', serif;
-  --sans: 'Inter', -apple-system, sans-serif;
-  --cjk: 'Noto Serif SC', serif;
-}
-
-html { font-size: 18px; scroll-behavior: smooth; scrollbar-width: thin; scrollbar-color: #2a2a2e #0a0a0c; }
-body { background: var(--bg); color: var(--text); font-family: var(--serif); line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-::selection { background: rgba(181, 160, 122, 0.2); color: var(--text-bright); }
-
-nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; background: rgba(10, 10, 12, 0.88); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); transition: all 0.4s ease; }
-nav.scrolled { padding: 0.8rem 2rem; }
-.nav-title { font-family: var(--sans); font-weight: 300; font-size: 0.72rem; letter-spacing: 0.35em; text-transform: uppercase; color: var(--text-muted); }
-.nav-title span { color: #3a3830; margin: 0 0.4rem; }
-.nav-author { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
-.nav-author:hover { color: var(--accent-soft); }
-.nav-links { display: flex; gap: 2.2rem; list-style: none; }
-.nav-links a { font-family: var(--sans); font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); text-decoration: none; transition: color 0.3s; position: relative; }
-.nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width 0.3s ease; }
-.nav-links a:hover { color: var(--text-bright); }
-.nav-links a:hover::after { width: 100%; }
-.nav-links a.active { color: var(--accent-soft); }
-.nav-links a.active::after { width: 100%; }
-
-.page-header { padding: 10rem 2rem 4rem; max-width: 720px; margin: 0 auto; }
-.page-header h1 { font-family: var(--serif); font-weight: 300; font-size: clamp(2rem, 5vw, 3rem); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-bright); margin-bottom: 1rem; }
-.page-header p { font-size: 1rem; color: var(--text-muted); line-height: 1.8; }
-
-section { max-width: 720px; margin: 0 auto; padding: 3rem 2rem 6rem; }
-.section-label { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.4em; text-transform: uppercase; color: var(--accent-dim); margin-bottom: 2.5rem; display: flex; align-items: center; gap: 1rem; }
-.section-label::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--border-warm), transparent); }
-h2 { font-family: var(--serif); font-weight: 400; font-size: 1.8rem; color: var(--text-bright); margin-bottom: 1rem; letter-spacing: 0.04em; }
-p { font-size: 1rem; line-height: 1.85; margin-bottom: 1.2rem; }
-
 .featured-slot { border: 1px dashed var(--border); padding: 4rem 2rem; text-align: center; margin-bottom: 3rem; }
 .featured-slot .slot-label { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted); }
-
 .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
-
 .media-card { display: block; border: 1px solid var(--border); background: var(--bg-elevated); padding: 1.8rem; text-decoration: none; position: relative; transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s; }
 .media-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); opacity: 0; transition: opacity 0.4s; }
 .media-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); opacity: 0; transition: opacity 0.4s; }
 .media-card:hover { border-color: var(--border-warm); transform: translateY(-2px); box-shadow: 0 0 20px rgba(181, 160, 122, 0.04), inset 0 0 20px rgba(181, 160, 122, 0.02); }
 .media-card:hover::before, .media-card:hover::after { opacity: 1; }
-
 .media-icon { font-size: 1.4rem; margin-bottom: 1rem; color: var(--accent-dim); }
 .media-card h3 { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; color: var(--text-bright); margin-bottom: 0.3rem; letter-spacing: 0.02em; }
 .media-card .media-type { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-soft); margin-bottom: 0.8rem; }
 .media-card .media-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 0; }
 .media-status { display: inline-block; font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent-dim); border: 1px solid var(--border-warm); padding: 0.3rem 0.8rem; margin-top: 1rem; }
-
-.divider { max-width: 720px; margin: 0 auto; padding: 0 2rem; }
-.divider-line { height: 1px; background: linear-gradient(90deg, transparent, var(--border-warm), transparent); }
-
-footer { border-top: 1px solid var(--border); padding: 3rem 2rem; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
-footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15em; color: var(--text-muted); }
-.footer-links { display: flex; gap: 1.5rem; }
-.footer-links a { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.1em; color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
-.footer-links a:hover { color: var(--accent-soft); }
-
-@media (max-width: 640px) {
-  html { font-size: 16px; }
-  nav { padding: 1rem 1.2rem; }
-  .nav-links { gap: 1.2rem; }
-  .page-header { padding: 8rem 1.5rem 3rem; }
-  section { padding: 2rem 1.5rem 4rem; }
-  .media-grid { grid-template-columns: 1fr; }
-  .media-card { padding: 1.5rem; }
-}
+@media (max-width: 768px) { .media-grid { grid-template-columns: 1fr; } .media-card { padding: 1.5rem; } }
 </style>
 </head>
 <body>
 
 <nav id="nav">
   <div class="nav-title"><a href="../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
-  <ul class="nav-links">
+  <button class="menu-toggle" id="menuToggle">&#9776;</button>
+  <ul class="nav-links" id="navLinks">
     <li><a href="index.html">Home</a></li>
     <li><a href="world.html">World</a></li>
     <li><a href="characters.html">Characters</a></li>
@@ -115,11 +49,9 @@ footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15
   <div class="section-label">Watch</div>
   <h2>Series</h2>
   <p style="color: var(--text-muted); margin-bottom: 2rem;">Visual storytelling from the Resonance War universe.</p>
-
   <div class="featured-slot">
     <div class="slot-label">Featured content coming soon</div>
   </div>
-
   <div class="media-grid">
     <div class="media-card" style="cursor: default;">
       <div class="media-icon">&#9654;</div>
@@ -137,7 +69,6 @@ footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15
   <div class="section-label">Listen</div>
   <h2>Music</h2>
   <p style="color: var(--text-muted); margin-bottom: 2rem;">Tracks inspired by the world — character themes, battle scores, and the sound of resonance given form.</p>
-
   <div class="media-grid">
     <a href="#" class="media-card">
       <div class="media-icon">&#9835;</div>
@@ -157,28 +88,6 @@ footer span { font-family: var(--sans); font-size: 0.65rem; letter-spacing: 0.15
   </div>
 </footer>
 
-<script>
-const nav = document.getElementById('nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 60);
-});
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.style.opacity = '1';
-      e.target.style.transform = 'translateY(0)';
-    }
-  });
-}, { threshold: 0.15 });
-
-document.querySelectorAll('section').forEach(s => {
-  s.style.opacity = '0';
-  s.style.transform = 'translateY(20px)';
-  s.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
-  observer.observe(s);
-});
-</script>
-
+<script src="js/site.js"></script>
 </body>
 </html>
