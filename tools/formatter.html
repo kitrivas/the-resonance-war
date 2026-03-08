@@ -9,9 +9,8 @@
 body { background: #0a0a0c; color: #c8c5be; font-family: ui-serif, Georgia, serif; padding: 2rem; min-height: 100vh; }
 .wrap { max-width: 800px; margin: 0 auto; }
 h1 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 300; font-size: 1.8rem; color: #e8e5de; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.5rem; }
-.info { font-family: Inter, -apple-system, sans-serif; font-size: 0.7rem; color: #6b6860; line-height: 1.8; margin-bottom: 2rem; white-space: pre-line; }
-textarea, .richinput { width: 100%; height: 300px; background: #11110f; border: 1px solid #1e1d1a; color: #c8c5be; font-family: ui-serif, Georgia, serif; font-size: 0.9rem; line-height: 1.7; padding: 1.2rem; resize: vertical; outline: none; border-radius: 0; }
-.richinput { overflow-y: auto; white-space: pre-wrap; word-break: break-word; }
+.info { font-family: Inter, -apple-system, sans-serif; font-size: 0.7rem; color: #6b6860; line-height: 1.8; margin-bottom: 2rem; }
+.richinput { width: 100%; height: 300px; background: #11110f; border: 1px solid #1e1d1a; color: #c8c5be; font-family: ui-serif, Georgia, serif; font-size: 0.9rem; line-height: 1.7; padding: 1.2rem; overflow-y: auto; white-space: pre-wrap; word-break: break-word; outline: none; border-radius: 0; }
 .richinput:focus { border-color: #2a2518; }
 .richinput:empty::before { content: attr(data-placeholder); color: #4a4740; pointer-events: none; }
 .richinput em, .richinput i { font-style: italic; }
@@ -29,19 +28,22 @@ pre { width: 100%; background: #11110f; border: 1px solid #1e1d1a; color: #b5b2a
 .preview p:first-child, .preview h2 + p { text-indent: 0; }
 .preview h2 { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 400; font-size: 1.4rem; color: #e8e5de; margin: 3rem 0 1.5rem; letter-spacing: 0.04em; text-align: center; }
 .preview .story-break { max-width: 120px; margin: 4rem auto; height: 1px; background: linear-gradient(90deg, transparent, #7d6f55, transparent); }
+.preview em { font-style: italic; }
 .hidden { display: none; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Story Formatter</h1>
-  <div class="info">Paste your plain text story. The formatter will:
-• Wrap each paragraph in &lt;p&gt; tags
-• Convert -- and — to &amp;mdash;
-• Convert "quotes" to smart quotes
-• Preserves italics pasted from Word/Docs
-• Lines starting with ## become &lt;h2&gt; headings
-• Blank lines with *** or --- or === become section breaks</div>
+  <div class="info">
+    Paste your story from Word, Docs, or plain text. The formatter will:<br>
+    &bull; Wrap each paragraph in &lt;p&gt; tags<br>
+    &bull; Convert -- and &mdash; to &amp;mdash;<br>
+    &bull; Convert "quotes" to smart quotes<br>
+    &bull; Preserve italics pasted from Word/Docs (or use *text* for manual italics)<br>
+    &bull; Lines starting with ## become &lt;h2&gt; headings<br>
+    &bull; Blank lines with *** or --- or === become section breaks
+  </div>
 
   <div class="richinput" id="input" contenteditable="true" data-placeholder="Paste your story here (formatting preserved from Word/Docs)..."></div>
 
@@ -61,75 +63,88 @@ pre { width: 100%; background: #11110f; border: 1px solid #1e1d1a; color: #b5b2a
 
 <script>
 function getRawContent() {
-  const el = document.getElementById("input");
-  let html = el.innerHTML;
-  
-  // Normalize italic tags from Word/Docs/etc
-  html = html.replace(/<i\b[^>]*>(.*?)<\/i>/gi, '*$1*');
-  html = html.replace(/<em\b[^>]*>(.*?)<\/em>/gi, '*$1*');
-  html = html.replace(/<span[^>]*font-style:\s*italic[^>]*>(.*?)<\/span>/gi, '*$1*');
-  
+  var el = document.getElementById("input");
+  var html = el.innerHTML;
+
+  // Normalize italic tags from Word/Docs/etc to *markers*
+  html = html.replace(/<i\b[^>]*>([\s\S]*?)<\/i>/gi, '*$1*');
+  html = html.replace(/<em\b[^>]*>([\s\S]*?)<\/em>/gi, '*$1*');
+  html = html.replace(/<span[^>]*font-style:\s*italic[^>]*>([\s\S]*?)<\/span>/gi, '*$1*');
+
+  // Normalize bold (strip it, we don't use bold in stories)
+  html = html.replace(/<b\b[^>]*>([\s\S]*?)<\/b>/gi, '$1');
+  html = html.replace(/<strong\b[^>]*>([\s\S]*?)<\/strong>/gi, '$1');
+
   // Convert <br> and block elements to newlines
   html = html.replace(/<br\s*\/?>/gi, '\n');
   html = html.replace(/<\/p>/gi, '\n\n');
   html = html.replace(/<\/div>/gi, '\n');
   html = html.replace(/<\/h[1-6]>/gi, '\n\n');
-  
+  html = html.replace(/<\/li>/gi, '\n');
+
   // Strip all remaining HTML tags
   html = html.replace(/<[^>]+>/g, '');
-  
+
   // Decode HTML entities
-  const txt = document.createElement('textarea');
+  var txt = document.createElement('textarea');
   txt.innerHTML = html;
   return txt.value;
 }
 
 function formatInline(text) {
-  let t = text;
+  var t = text;
+
+  // Em dashes
   t = t.replace(/---/g, "\u2014");
   t = t.replace(/--/g, "\u2014");
-  t = t.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+  // Normalize any existing smart quotes to straight for re-processing
   t = t.replace(/\u201C|\u201D/g, '"');
   t = t.replace(/\u2018|\u2019/g, "'");
+
   // Italics: *text* to <em>text</em>
   t = t.replace(/\*([^*]+)\*/g, "<em>$1</em>");
+
+  // Smart double quotes
   t = t.replace(/"([^"]*?)"/g, "\u201C$1\u201D");
   t = t.replace(/"(\S)/g, "\u201C$1");
   t = t.replace(/(\S)"/g, "$1\u201D");
   t = t.replace(/"/g, "\u201D");
+
+  // Smart single quotes / apostrophes
   t = t.replace(/(\w)'(\w)/g, "$1\u2019$2");
   t = t.replace(/'(\S)/g, "\u2018$1");
   t = t.replace(/(\S)'/g, "$1\u2019");
+
+  // Convert to HTML entities
   t = t.replace(/\u2014/g, "&mdash;");
   t = t.replace(/\u201C/g, "&ldquo;");
   t = t.replace(/\u201D/g, "&rdquo;");
   t = t.replace(/\u2018/g, "&lsquo;");
   t = t.replace(/\u2019/g, "&rsquo;");
+
   return t;
 }
 
 function formatStory(raw) {
   if (!raw.trim()) return "";
-  const lines = raw.split("\n");
-  const blocks = [];
-  let current = [];
+  var lines = raw.split("\n");
+  var blocks = [];
+  var current = [];
 
-  for (const line of lines) {
-    const trimmed = line.trim();
+  for (var i = 0; i < lines.length; i++) {
+    var trimmed = lines[i].trim();
     if (trimmed === "") {
       if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
       continue;
     }
-    if (/^(\*\s*\*\s*\*|===+|· · ·|\* \* \*)$/.test(trimmed)) {
+    // Section break markers
+    if (/^(\*\s*\*\s*\*|---+|===+|\u00b7 \u00b7 \u00b7|\* \* \*)$/.test(trimmed)) {
       if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
       blocks.push("__BREAK__");
       continue;
     }
-    if (/^---+$/.test(trimmed)) {
-      if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
-      blocks.push("__BREAK__");
-      continue;
-    }
+    // Headings marked with ##
     if (/^##\s+/.test(trimmed)) {
       if (current.length > 0) { blocks.push(current.join(" ")); current = []; }
       blocks.push("__HEADING__" + trimmed.replace(/^##\s+/, ""));
@@ -139,26 +154,26 @@ function formatStory(raw) {
   }
   if (current.length > 0) blocks.push(current.join(" "));
 
-  const htmlBlocks = [];
-  for (let i = 0; i < blocks.length; i++) {
-    const block = blocks[i];
+  var htmlBlocks = [];
+  for (var j = 0; j < blocks.length; j++) {
+    var block = blocks[j];
     if (block === "__BREAK__") {
       htmlBlocks.push('<div class="story-break"></div>');
       continue;
     }
-    if (block.startsWith("__HEADING__")) {
-      let h = formatInline(block.replace("__HEADING__", ""));
-      htmlBlocks.push(`<h2>${h}</h2>`);
+    if (block.indexOf("__HEADING__") === 0) {
+      var h = formatInline(block.replace("__HEADING__", ""));
+      htmlBlocks.push('<h2>' + h + '</h2>');
       continue;
     }
-    htmlBlocks.push(`<p>${formatInline(block)}</p>`);
+    htmlBlocks.push('<p>' + formatInline(block) + '</p>');
   }
   return htmlBlocks.join("\n\n");
 }
 
 function handleFormat() {
-  const raw = getRawContent();
-  const result = formatStory(raw);
+  var raw = getRawContent();
+  var result = formatStory(raw);
   document.getElementById("output").textContent = result;
   document.getElementById("preview").innerHTML = result;
   document.getElementById("outputSection").classList.remove("hidden");
@@ -166,12 +181,12 @@ function handleFormat() {
 }
 
 function handleCopy() {
-  const text = document.getElementById("output").textContent;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = document.getElementById("copyBtn");
+  var text = document.getElementById("output").textContent;
+  navigator.clipboard.writeText(text).then(function() {
+    var btn = document.getElementById("copyBtn");
     btn.textContent = "Copied";
     btn.classList.add("btn-copied");
-    setTimeout(() => { btn.textContent = "Copy HTML"; btn.classList.remove("btn-copied"); }, 2000);
+    setTimeout(function() { btn.textContent = "Copy HTML"; btn.classList.remove("btn-copied"); }, 2000);
   });
 }
 </script>
