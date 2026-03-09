@@ -5,8 +5,8 @@
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
-  --bg: #0a0a0c;
-  --bg-elevated: #11110f;
+  --bg: #121215;
+  --bg-elevated: #18181b;
   --text: #d0cdc6;
   --text-bright: #e8e5de;
   --text-muted: #6b6860;
@@ -25,7 +25,7 @@ html {
   font-size: 18px;
   scroll-behavior: smooth;
   scrollbar-width: thin;
-  scrollbar-color: #2a2a2e #0a0a0c;
+  scrollbar-color: #2a2a2e #121215;
 }
 
 body {
@@ -52,7 +52,7 @@ nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(10, 10, 12, 0.88);
+  background: rgba(18, 18, 21, 0.88);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border);
   transition: all 0.4s ease;
@@ -286,7 +286,7 @@ footer span {
     top: 100%;
     left: 0;
     right: 0;
-    background: rgba(10, 10, 12, 0.95);
+    background: rgba(18, 18, 21, 0.95);
     backdrop-filter: blur(12px);
     padding: 1.2rem 1.5rem;
     border-top: 1px solid var(--border);
