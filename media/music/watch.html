@@ -6,7 +6,6 @@
 <!-- hls.js for Bunny Stream HLS playback. Bump version freely on the live site. -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hls.js/1.5.13/hls.min.js"></script>
 <style>
-  /* ── Resonance War design tokens (matches site.css) ─────── */
   :root {
     --bg:        #121215;
     --surface:   #18181b;
@@ -37,16 +36,6 @@
   .wrap { width: 100%; max-width: 880px; }
 
   .meta { margin: 0 0 20px; }
-  .meta .now-playing {
-    font-family: var(--ui);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent-dim);
-    margin: 12px 0 0;
-    min-height: 14px;
-  }
   .meta h1 {
     font-family: var(--serif);
     font-weight: 500;
@@ -56,6 +45,16 @@
     letter-spacing: 0.14em;
     color: var(--bright);
     margin: 0;
+  }
+  .meta .now-playing {
+    font-family: var(--ui);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-dim);
+    margin: 12px 0 0;
+    min-height: 14px;
   }
 
   /* ── Player shell ───────────────────────────── */
@@ -68,15 +67,8 @@
     aspect-ratio: 16 / 9;
     cursor: pointer;
   }
-  .player video {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: contain;
-    background: #000;
-  }
+  .player video { width: 100%; height: 100%; display: block; object-fit: contain; background: #000; }
 
-  /* native caption rendering */
   video::cue {
     font-family: var(--ui);
     font-size: 0.92em;
@@ -86,12 +78,7 @@
     padding: 0.1em 0.3em;
   }
 
-  /* center play / spinner */
-  .center-btn {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    pointer-events: none; transition: opacity 0.25s ease;
-  }
+  .center-btn { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; transition: opacity 0.25s ease; }
   .center-btn .ring {
     width: 78px; height: 78px; border-radius: 50%;
     background: rgba(18,18,21,0.5);
@@ -103,12 +90,7 @@
   .player.playing .center-btn { opacity: 0; }
 
   .spinner { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; pointer-events: none; }
-  .spinner div {
-    width: 40px; height: 40px;
-    border: 2px solid rgba(232,229,222,0.15);
-    border-top-color: var(--accent);
-    border-radius: 50%; animation: spin 0.8s linear infinite;
-  }
+  .spinner div { width: 40px; height: 40px; border: 2px solid rgba(232,229,222,0.15); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
   .player.buffering .spinner { display: flex; }
   .player.buffering .center-btn { opacity: 0; }
   @keyframes spin { to { transform: rotate(360deg); } }
@@ -126,24 +108,15 @@
   .player:not(.playing) .controls,
   .player.menu-open .controls { opacity: 1; transform: none; }
 
-  /* scrubber */
   .track { position: relative; height: 16px; display: flex; align-items: center; cursor: pointer; margin-bottom: 6px; }
   .track .rail { position: absolute; left: 0; right: 0; height: 3px; background: rgba(232,229,222,0.18); border-radius: 2px; overflow: hidden; }
   .track .buffered { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: rgba(232,229,222,0.30); }
   .track .played { position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background: var(--accent); }
-  .track .scrub-head {
-    position: absolute; width: 11px; height: 11px; border-radius: 50%;
-    background: var(--accent); left: 0;
-    transform: translateX(-50%) scale(0); transition: transform 0.12s ease; pointer-events: none;
-  }
+  .track .scrub-head { position: absolute; width: 11px; height: 11px; border-radius: 50%; background: var(--accent); left: 0; transform: translateX(-50%) scale(0); transition: transform 0.12s ease; pointer-events: none; }
   .track:hover .scrub-head, .track.dragging .scrub-head { transform: translateX(-50%) scale(1); }
 
   .row { display: flex; align-items: center; gap: 15px; }
-  .ctl {
-    background: none; border: none; padding: 0;
-    color: var(--bright); cursor: pointer; display: flex; align-items: center;
-    opacity: 0.82; transition: opacity 0.15s ease, color 0.15s ease;
-  }
+  .ctl { background: none; border: none; padding: 0; color: var(--bright); cursor: pointer; display: flex; align-items: center; opacity: 0.82; transition: opacity 0.15s ease, color 0.15s ease; }
   .ctl:hover, .ctl.on { opacity: 1; color: var(--accent); }
   .ctl svg { width: 19px; height: 19px; }
   .ctl.skip svg { width: 23px; height: 23px; }
@@ -152,44 +125,31 @@
   .time .sep { color: var(--muted); margin: 0 4px; }
   .spacer { flex: 1; }
 
-  /* volume */
   .vol { display: flex; align-items: center; gap: 8px; }
   .vol .vol-track { width: 0; overflow: hidden; transition: width 0.2s ease; height: 16px; display: flex; align-items: center; }
   .vol:hover .vol-track { width: 64px; }
   .vol .vol-rail { position: relative; width: 64px; height: 3px; background: rgba(232,229,222,0.2); border-radius: 2px; cursor: pointer; }
   .vol .vol-fill { position: absolute; left: 0; top: 0; bottom: 0; background: var(--accent); border-radius: 2px; }
 
-  /* ── Pop-up menus (captions / settings) ─────── */
+  /* ── Pop-up menus ─────── */
   .menu {
-    position: absolute; right: 16px; bottom: 64px;
-    min-width: 168px;
+    position: absolute; right: 16px; bottom: 64px; min-width: 168px;
     background: rgba(18,18,21,0.96);
     border: 1px solid var(--line);
     border-radius: var(--radius);
     backdrop-filter: blur(10px);
-    padding: 6px 0;
-    display: none;
-    box-shadow: 0 14px 40px rgba(0,0,0,0.55);
-    z-index: 5;
+    padding: 6px 0; display: none;
+    box-shadow: 0 14px 40px rgba(0,0,0,0.55); z-index: 5;
   }
   .menu.open { display: block; }
-  .menu .group-label {
-    font-family: var(--ui); font-size: 10px; font-weight: 500;
-    letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--accent-dim); padding: 9px 16px 5px;
-  }
+  .menu .group-label { font-family: var(--ui); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); padding: 9px 16px 5px; }
   .menu .group-label:not(:first-child) { border-top: 1px solid var(--line); margin-top: 4px; padding-top: 11px; }
-  .menu-item {
-    width: 100%; text-align: left; background: none; border: none; cursor: pointer;
-    font-family: var(--ui); font-size: 13px; color: var(--text);
-    padding: 8px 16px; display: flex; align-items: center; gap: 10px;
-    transition: background 0.12s ease, color 0.12s ease;
-  }
+  .menu-item { width: 100%; text-align: left; background: none; border: none; cursor: pointer; font-family: var(--ui); font-size: 13px; color: var(--text); padding: 8px 16px; display: flex; align-items: center; gap: 10px; transition: background 0.12s ease, color 0.12s ease; }
   .menu-item:hover { background: var(--surface); color: var(--bright); }
   .menu-item.active { color: var(--accent); }
   .menu-item .check { width: 12px; font-size: 11px; color: var(--accent); }
 
-  /* ── Playlist ──────────────────────────────── */
+  /* ── Playlist ──────────────── */
   .playlist { margin-top: 26px; display: grid; gap: 0; }
   .pl-item { display: flex; align-items: baseline; gap: 16px; padding: 16px 4px; border-top: 1px solid var(--line); cursor: pointer; transition: background 0.15s ease; }
   .pl-item:last-child { border-bottom: 1px solid var(--line); }
@@ -199,13 +159,7 @@
   .pl-item .pl-sub { font-size: 11px; color: var(--muted); margin-top: 3px; letter-spacing: 0.16em; text-transform: uppercase; }
   .pl-item.active .pl-title, .pl-item.active .idx { color: var(--accent); }
   .playlist.hidden { display: none; }
-  .pl-section {
-    font-family: var(--ui); font-size: 10px; font-weight: 600;
-    letter-spacing: 0.26em; text-transform: uppercase;
-    color: var(--accent);
-    padding: 28px 4px 12px;
-    border-top: 1px solid var(--line);
-  }
+  .pl-section { font-family: var(--ui); font-size: 10px; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; color: var(--accent); padding: 28px 4px 12px; border-top: 1px solid var(--line); }
   .pl-section:first-child { border-top: none; padding-top: 8px; }
 
   .player.hide-cursor { cursor: none; }
@@ -225,13 +179,11 @@
     </div>
     <div class="spinner"><div></div></div>
 
-    <!-- caption menu -->
     <div class="menu" id="ccMenu">
       <div class="group-label">Subtitles / CC</div>
       <div id="ccList"></div>
     </div>
 
-    <!-- settings menu: quality + speed -->
     <div class="menu" id="setMenu">
       <div class="group-label">Quality</div>
       <div id="qualList"></div>
@@ -272,11 +224,11 @@
         <div class="spacer"></div>
 
         <button class="ctl" id="ccBtn" aria-label="Captions">
-          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 10.2a2 2 0 0 0-3.4 1.5v.6A2 2 0 0 0 10 13.8M17.5 10.2a2 2 0 0 0-3.4 1.5v.6a2 2 0 0 0 3.4 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 10.2a2 2 0 0 0-3.4 1.5v.6A2 2 0 0 0 10 13.8M17.5 10.2a2 2 0 0 0-3.4 1.5v.6a2 2 0 0 0 3.4 1.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
 
         <button class="ctl" id="setBtn" aria-label="Settings">
-          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2.6" stroke="currentColor" stroke-width="1.5"/><path d="M12 3.5v2.2M12 18.3v2.2M5.5 5.5l1.6 1.6M16.9 16.9l1.6 1.6M3.5 12h2.2M18.3 12h2.2M5.5 18.5l1.6-1.6M16.9 7.1l1.6-1.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="2.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M12 3.5v2.2M12 18.3v2.2M5.5 5.5l1.6 1.6M16.9 16.9l1.6 1.6M3.5 12h2.2M18.3 12h2.2M5.5 18.5l1.6-1.6M16.9 7.1l1.6-1.6" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
 
         <button class="ctl" id="fsBtn" aria-label="Fullscreen">
@@ -291,15 +243,12 @@
 
 <script>
   /* ═══════════════════════════════════════════════════════
-     BUNNY STREAM — paste the HLS playlist URL per video.
-       src    : https://{pull_zone}.b-cdn.net/{video_id}/playlist.m3u8
-     Poster (thumbnail.jpg) and caption (captions/{code}.vtt) URLs are
-     derived from each src automatically — placeholder posters are ignored.
+     BUNNY STREAM — paste the HLS playlist URL per video (src).
+     Poster (thumbnail.jpg) and caption files are derived from src
+     automatically. Captions: tries  …/captions/{CODE}.vtt  then  .srt,
+     converting SRT→VTT in-browser. CODE is case-sensitive on the CDN.
      ═══════════════════════════════════════════════════════ */
-
-  // Bunny caption language code. Builds  …/{video_id}/captions/{CODE}.vtt
-  // CASE-SENSITIVE on the CDN. If your file is ENG.vtt, set this to "ENG".
-  const CAPTION_LANG  = "eng";
+  const CAPTION_LANG  = "eng";       // change to match Bunny exactly (e.g. "ENG", "en")
   const CAPTION_LABEL = "English";
 
   const SOURCES = [
@@ -353,7 +302,7 @@
 
   let current=0, dragging=false, hideTimer=null;
   let hls=null, usingHls=false;
-  let speedIdx=1; // default 1×
+  let speedIdx=1;
 
   const ICON_PLAY="M8 5v14l11-7z", ICON_PAUSE="M6 5h4v14H6zM14 5h4v14h-4z";
 
@@ -375,14 +324,13 @@
     });
   }
 
-  // SRT → WebVTT (an HTML <track> only understands VTT)
+  /* ── captions: SRT→VTT, fetch + convert + attach blob track ── */
   function srtToVtt(text){
     return "WEBVTT\n\n" + text
       .replace(/^\uFEFF/, "")
       .replace(/\r+/g, "")
       .replace(/(\d\d:\d\d:\d\d),(\d\d\d)/g, "$1.$2");
   }
-  // Bunny serves captions as a separate file; fetch, convert if needed, attach as a blob track.
   async function fetchCaptionText(base){
     for(const ext of ["vtt","srt"]){
       try{
@@ -391,7 +339,7 @@
         let t=await res.text();
         if(ext==="srt" || !/^\uFEFF?WEBVTT/i.test(t.trim())) t=srtToVtt(t);
         return t;
-      }catch(e){ /* try next extension */ }
+      }catch(e){ /* try next */ }
     }
     return null;
   }
@@ -414,7 +362,7 @@
     buildCaptionMenu();
   }
 
-  // ── source loading (HLS via hls.js, native fallback for Safari / mp4) ──
+  /* ── source loading ── */
   function load(i){
     current=(i+SOURCES.length)%SOURCES.length;
     const s=SOURCES[current];
@@ -441,7 +389,6 @@
       hls.attachMedia(video);
       hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
         buildQualityMenu();
-        // if Bunny didn't carry captions in the manifest, attach the external VTT
         if(!hls.subtitleTracks || hls.subtitleTracks.length===0) addCaptionTracks(s);
         buildCaptionMenu();
       });
@@ -457,7 +404,7 @@
     buildSpeedMenu();
   }
 
-  // ── quality ──
+  /* ── quality ── */
   function buildQualityMenu(){
     let items=[{label:"Auto", level:-1}], sel=0;
     if(usingHls && hls && hls.levels && hls.levels.length){
@@ -474,7 +421,7 @@
     });
   }
 
-  // ── speed ──
+  /* ── speed ── */
   function buildSpeedMenu(){
     const items=SPEEDS.map(s=>({label:(s===1?"Normal":s+"×")}));
     buildMenu(speedList, items, speedIdx, idx=>{
@@ -482,7 +429,7 @@
     });
   }
 
-  // ── captions (unified: reads the video's own text-track list) ──
+  /* ── captions menu (reads the video's own text-track list) ── */
   function buildCaptionMenu(){
     const tts=video.textTracks;
     let items=[{label:"Off", idx:-1}], sel=0;
@@ -500,7 +447,7 @@
     });
   }
 
-  // ── menu open/close ──
+  /* ── menu open/close ── */
   function closeMenus(){ ccMenu.classList.remove("open"); setMenu.classList.remove("open"); player.classList.remove("menu-open"); }
   function toggleMenu(menu){
     const open=menu.classList.contains("open");
@@ -513,17 +460,15 @@
   ccMenu.addEventListener("click", e=>e.stopPropagation());
   setMenu.addEventListener("click", e=>e.stopPropagation());
 
-  // ── playlist ──
+  /* ── playlist ── */
   function buildPlaylist(){
     if(SOURCES.length<=1){ plEl.classList.add("hidden"); return; }
     let lastSection=null;
     SOURCES.forEach((s,i)=>{
       if(s.section && s.section!==lastSection){
         const h=document.createElement("div");
-        h.className="pl-section";
-        h.textContent=s.section;
-        plEl.appendChild(h);
-        lastSection=s.section;
+        h.className="pl-section"; h.textContent=s.section;
+        plEl.appendChild(h); lastSection=s.section;
       }
       const item=document.createElement("div");
       item.className="pl-item"+(i===0?" active":"");
@@ -535,7 +480,7 @@
     });
   }
 
-  // ── transport ──
+  /* ── transport ── */
   function toggle(){ video.paused?video.play():video.pause(); }
   player.addEventListener("click", e=>{ if(e.target.closest(".controls")||e.target.closest(".menu")) return; closeMenus(); toggle(); });
   playBtn.addEventListener("click", e=>{ e.stopPropagation(); toggle(); });
@@ -559,7 +504,7 @@
   });
   video.addEventListener("ended", ()=>{ if(SOURCES.length>1 && current<SOURCES.length-1){ load(current+1); video.play(); } });
 
-  // ── scrub ──
+  /* ── scrub ── */
   function seekFromEvent(e){
     const r=track.getBoundingClientRect();
     const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
@@ -575,7 +520,7 @@
   track.addEventListener("touchmove", e=>{ if(dragging) seekFromEvent(e); }, {passive:true});
   track.addEventListener("touchend", ()=>{ if(dragging){ video.currentTime=parseFloat(played.style.width)/100*video.duration; dragging=false; } });
 
-  // ── volume ──
+  /* ── volume ── */
   function setVol(v){ v=Math.min(1,Math.max(0,v)); video.volume=v; video.muted=v===0; volFill.style.width=(v*100)+"%"; updateVolIcon(); }
   function updateVolIcon(){
     const muted=video.muted||video.volume===0;
@@ -586,10 +531,10 @@
   muteBtn.addEventListener("click", e=>{ e.stopPropagation(); setVol(video.muted?0.8:0); });
   volRail.addEventListener("click", e=>{ const r=volRail.getBoundingClientRect(); setVol((e.clientX-r.left)/r.width); });
 
-  // ── fullscreen ──
+  /* ── fullscreen ── */
   fsBtn.addEventListener("click", e=>{ e.stopPropagation(); if(document.fullscreenElement) document.exitFullscreen(); else player.requestFullscreen?.(); });
 
-  // ── auto-hide ──
+  /* ── auto-hide ── */
   function showUI(){
     player.classList.add("show-ui"); player.classList.remove("hide-cursor");
     clearTimeout(hideTimer);
@@ -598,7 +543,7 @@
   player.addEventListener("mousemove", showUI);
   player.addEventListener("mouseleave", ()=>{ if(!video.paused && !player.classList.contains("menu-open")) player.classList.remove("show-ui"); });
 
-  // ── keyboard ──
+  /* ── keyboard ── */
   document.addEventListener("keydown", e=>{
     if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
     switch(e.key){
@@ -616,7 +561,7 @@
     }
   });
 
-  // ── init ──
+  /* ── init ── */
   if(video.textTracks && video.textTracks.addEventListener)
     video.textTracks.addEventListener("addtrack", buildCaptionMenu);
   buildPlaylist();
