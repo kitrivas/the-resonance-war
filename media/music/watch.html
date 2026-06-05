@@ -145,7 +145,7 @@
     opacity: 0.82; transition: opacity 0.15s ease, color 0.15s ease;
   }
   .ctl:hover, .ctl.on { opacity: 1; color: var(--accent); }
-  .ctl svg { width: 19px; height: 19px; fill: currentColor; }
+  .ctl svg { width: 19px; height: 19px; }
   .ctl.skip svg { width: 23px; height: 23px; }
 
   .time { font-family: var(--ui); font-size: 12px; letter-spacing: 0.04em; color: var(--text); font-variant-numeric: tabular-nums; opacity: 0.9; }
@@ -250,7 +250,7 @@
 
       <div class="row">
         <button class="ctl" id="playBtn" aria-label="Play/Pause">
-          <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
 
         <button class="ctl skip" id="back15" aria-label="Back 15 seconds">
@@ -262,7 +262,7 @@
 
         <div class="vol">
           <button class="ctl" id="muteBtn" aria-label="Mute">
-            <svg id="volIcon" viewBox="0 0 24 24"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16 8a5 5 0 010 8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+            <svg id="volIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M3 10v4h4l5 5V5L7 10H3z"/><path d="M16 8a5 5 0 010 8" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
           </button>
           <div class="vol-track"><div class="vol-rail" id="volRail"><div class="vol-fill" id="volFill"></div></div></div>
         </div>
@@ -293,45 +293,49 @@
   /* ═══════════════════════════════════════════════════════
      BUNNY STREAM — paste the HLS playlist URL per video.
        src    : https://{pull_zone}.b-cdn.net/{video_id}/playlist.m3u8
-       poster : https://{pull_zone}.b-cdn.net/{video_id}/thumbnail.jpg
-     Resolutions + captions are read from the manifest automatically.
+     Poster (thumbnail.jpg) and caption (captions/{code}.vtt) URLs are
+     derived from each src automatically — placeholder posters are ignored.
      ═══════════════════════════════════════════════════════ */
+
+  // Bunny caption language code. Builds  …/{video_id}/captions/{CODE}.vtt
+  // CASE-SENSITIVE on the CDN. If your file is ENG.vtt, set this to "ENG".
+  const CAPTION_LANG  = "eng";
+  const CAPTION_LABEL = "English";
+
   const SOURCES = [
     // ── Intros ──
     { section:"Intros", title:"kitsvne", sub:"Intro",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/d24fe468-dcc3-440a-840a-bcbb590e34ad/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/d24fe468-dcc3-440a-840a-bcbb590e34ad/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/d24fe468-dcc3-440a-840a-bcbb590e34ad/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-01/thumbnail.jpg" },
     { section:"Intros", title:"AEON", sub:"Intro",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/450dc084-1aac-4a2b-a010-611f215dbc51/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/450dc084-1aac-4a2b-a010-611f215dbc51/thumbnail.jpg" },
-
+      src:"https://vz-a37fa5de-03f.b-cdn.net/450dc084-1aac-4a2b-a010-611f215dbc51/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-02/thumbnail.jpg" },
     // ── AEON ──
     { section:"AEON", title:"AEON — Ontology",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/8946f571-df66-4a14-91a5-0ffcecc31ca0/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/8946f571-df66-4a14-91a5-0ffcecc31ca0/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/8946f571-df66-4a14-91a5-0ffcecc31ca0/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-03/thumbnail.jpg" },
     { section:"AEON", title:"AEON — Rise",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/65da0aaf-b451-416d-900e-76b0596637bb/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/65da0aaf-b451-416d-900e-76b0596637bb/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/65da0aaf-b451-416d-900e-76b0596637bb/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-04/thumbnail.jpg" },
     { section:"AEON", title:"AEON — Prism",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/edcb1ab6-1997-401f-b4e1-5ee6f7040fdc/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/edcb1ab6-1997-401f-b4e1-5ee6f7040fdc/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/edcb1ab6-1997-401f-b4e1-5ee6f7040fdc/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-05/thumbnail.jpg" },
     { section:"AEON", title:"AEON — Infinite Game",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/9e8f419c-7edc-4b2a-9546-603f3410ff93/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/9e8f419c-7edc-4b2a-9546-603f3410ff93/thumbnail.jpg" },
-
+      src:"https://vz-a37fa5de-03f.b-cdn.net/9e8f419c-7edc-4b2a-9546-603f3410ff93/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-06/thumbnail.jpg" },
     // ── kitsvne ──
     { section:"kitsvne", title:"kitsvne", sub:"Project Intro",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/aad998e4-0c0b-4db0-8cd9-c340befeaa83/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/aad998e4-0c0b-4db0-8cd9-c340befeaa83/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/aad998e4-0c0b-4db0-8cd9-c340befeaa83/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-07/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Blade-Wet Mouth",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/2266a0af-7b55-4d6e-ad92-0bb019556357/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/2266a0af-7b55-4d6e-ad92-0bb019556357/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/2266a0af-7b55-4d6e-ad92-0bb019556357/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-08/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Glitch",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/286c21ba-795b-4fab-9966-bc3ed418bbe8/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/286c21ba-795b-4fab-9966-bc3ed418bbe8/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/286c21ba-795b-4fab-9966-bc3ed418bbe8/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-09/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Blood on the Floor",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/ec7f5a81-9762-425c-8b36-77b8af18b3a1/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/ec7f5a81-9762-425c-8b36-77b8af18b3a1/thumbnail.jpg" },
-    { section:"kitsvne", title:"kitsvne — Raison d'Etre (Orchestral Vers.)",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/e89e78cc-03be-4c29-ae02-6e7c66350c8e/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/e89e78cc-03be-4c29-ae02-6e7c66350c8e/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/ec7f5a81-9762-425c-8b36-77b8af18b3a1/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-10/thumbnail.jpg" },
+    { section:"kitsvne", title:"kitsvne — Raison d'Etre Orchestral Vers.",
+      src:"https://vz-a37fa5de-03f.b-cdn.net/e89e78cc-03be-4c29-ae02-6e7c66350c8e/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-11/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — 7x7 (San Francisco)",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/e99a3a2a-8cad-4f06-b672-d3b2fced690d/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/e99a3a2a-8cad-4f06-b672-d3b2fced690d/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/e99a3a2a-8cad-4f06-b672-d3b2fced690d/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-12/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Valentine",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/71c95388-b6b2-4ac0-aba6-71b1a5cec131/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/71c95388-b6b2-4ac0-aba6-71b1a5cec131/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/71c95388-b6b2-4ac0-aba6-71b1a5cec131/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-13/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Gilt",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/36b3945e-2fa8-41a5-8512-dcf32c949f0b/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/36b3945e-2fa8-41a5-8512-dcf32c949f0b/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/36b3945e-2fa8-41a5-8512-dcf32c949f0b/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-14/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — The Last Word",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/1742167f-8a4c-45fa-8a79-89b24f46bd37/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/1742167f-8a4c-45fa-8a79-89b24f46bd37/thumbnail.jpg" }
+      src:"https://vz-a37fa5de-03f.b-cdn.net/1742167f-8a4c-45fa-8a79-89b24f46bd37/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-15/thumbnail.jpg" }
   ];
 
   const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
@@ -371,6 +375,45 @@
     });
   }
 
+  // SRT → WebVTT (an HTML <track> only understands VTT)
+  function srtToVtt(text){
+    return "WEBVTT\n\n" + text
+      .replace(/^\uFEFF/, "")
+      .replace(/\r+/g, "")
+      .replace(/(\d\d:\d\d:\d\d),(\d\d\d)/g, "$1.$2");
+  }
+  // Bunny serves captions as a separate file; fetch, convert if needed, attach as a blob track.
+  async function fetchCaptionText(base){
+    for(const ext of ["vtt","srt"]){
+      try{
+        const res=await fetch(base+"."+ext, {mode:"cors"});
+        if(!res.ok) continue;
+        let t=await res.text();
+        if(ext==="srt" || !/^\uFEFF?WEBVTT/i.test(t.trim())) t=srtToVtt(t);
+        return t;
+      }catch(e){ /* try next extension */ }
+    }
+    return null;
+  }
+  async function addCaptionTracks(s){
+    if(s.tracks && s.tracks.length){
+      s.tracks.forEach(t=>{
+        const tr=document.createElement("track");
+        tr.kind="subtitles"; tr.label=t.label||"English"; tr.srclang=t.srclang||"en"; tr.src=t.src;
+        video.appendChild(tr);
+      });
+      buildCaptionMenu(); return;
+    }
+    const base=s.src.replace(/playlist\.m3u8.*$/i, "captions/"+CAPTION_LANG);
+    const vtt=await fetchCaptionText(base);
+    if(!vtt){ buildCaptionMenu(); return; }
+    const url=URL.createObjectURL(new Blob([vtt], {type:"text/vtt"}));
+    const tr=document.createElement("track");
+    tr.kind="subtitles"; tr.label=CAPTION_LABEL; tr.srclang="en"; tr.src=url;
+    video.appendChild(tr);
+    buildCaptionMenu();
+  }
+
   // ── source loading (HLS via hls.js, native fallback for Safari / mp4) ──
   function load(i){
     current=(i+SOURCES.length)%SOURCES.length;
@@ -381,7 +424,10 @@
     [...video.querySelectorAll("track")].forEach(t=>t.remove());
 
     nowTitle.textContent=s.title||"—";
-    if(s.poster) video.poster=s.poster; else video.removeAttribute("poster");
+    const poster=(s.poster && !/YOUR-PULLZONE|VIDEO-\d/i.test(s.poster))
+      ? s.poster : s.src.replace(/playlist\.m3u8.*$/i, "thumbnail.jpg");
+    if(poster) video.poster=poster; else video.removeAttribute("poster");
+
     document.querySelectorAll(".pl-item").forEach((el,idx)=>el.classList.toggle("active",idx===current));
     player.classList.remove("playing");
     playIcon.querySelector("path").setAttribute("d",ICON_PLAY);
@@ -393,17 +439,17 @@
       hls=new Hls({ capLevelToPlayerSize:true });
       hls.loadSource(s.src);
       hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, ()=>{ buildQualityMenu(); });
-      hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, ()=>{ buildCaptionMenu(); });
-      hls.on(Hls.Events.LEVEL_SWITCHED, ()=>{ buildQualityMenu(); });
+      hls.on(Hls.Events.MANIFEST_PARSED, ()=>{
+        buildQualityMenu();
+        // if Bunny didn't carry captions in the manifest, attach the external VTT
+        if(!hls.subtitleTracks || hls.subtitleTracks.length===0) addCaptionTracks(s);
+        buildCaptionMenu();
+      });
+      hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, buildCaptionMenu);
+      hls.on(Hls.Events.LEVEL_SWITCHED, buildQualityMenu);
     } else {
       video.src=s.src;
-      (s.tracks||[]).forEach(t=>{
-        const tr=document.createElement("track");
-        tr.kind="subtitles"; tr.label=t.label; tr.srclang=t.srclang||"en"; tr.src=t.src;
-        if(t.default) tr.default=true;
-        video.appendChild(tr);
-      });
+      addCaptionTracks(s);
       video.addEventListener("loadedmetadata", buildCaptionMenu, {once:true});
       buildQualityMenu();
     }
@@ -436,30 +482,20 @@
     });
   }
 
-  // ── captions ──
+  // ── captions (unified: reads the video's own text-track list) ──
   function buildCaptionMenu(){
-    let items=[{label:"Off", track:-1}], sel=0;
-    if(usingHls && hls && hls.subtitleTracks && hls.subtitleTracks.length){
-      hls.subtitleTracks.forEach((t,idx)=>items.push({label:t.name||t.lang||("Track "+(idx+1)), track:idx}));
-      sel = hls.subtitleTrack>=0 ? items.findIndex(it=>it.track===hls.subtitleTrack) : 0;
-    } else if(video.textTracks && video.textTracks.length){
-      for(let i=0;i<video.textTracks.length;i++){
-        const tt=video.textTracks[i];
-        items.push({label:tt.label||tt.language||("Track "+(i+1)), track:i});
-        if(tt.mode==="showing") sel=i+1;
-      }
+    const tts=video.textTracks;
+    let items=[{label:"Off", idx:-1}], sel=0;
+    for(let i=0;i<tts.length;i++){
+      const tt=tts[i];
+      if(tt.kind && tt.kind!=="subtitles" && tt.kind!=="captions") continue;
+      items.push({label:tt.label||tt.language||("Track "+items.length), idx:i});
+      if(tt.mode==="showing") sel=items.length-1;
     }
-    if(sel<0) sel=0;
     ccBtn.classList.toggle("on", sel>0);
-    buildMenu(ccList, items, sel, idx=>{
-      const choice=items[idx];
-      if(usingHls && hls){
-        hls.subtitleTrack=choice.track;
-        hls.subtitleDisplay=choice.track>=0;
-      } else if(video.textTracks){
-        for(let i=0;i<video.textTracks.length;i++)
-          video.textTracks[i].mode = (i===choice.track) ? "showing" : "disabled";
-      }
+    buildMenu(ccList, items, sel, k=>{
+      const choice=items[k];
+      for(let i=0;i<tts.length;i++) tts[i].mode=(i===choice.idx)?"showing":"disabled";
       buildCaptionMenu();
     });
   }
@@ -581,6 +617,8 @@
   });
 
   // ── init ──
+  if(video.textTracks && video.textTracks.addEventListener)
+    video.textTracks.addEventListener("addtrack", buildCaptionMenu);
   buildPlaylist();
   load(0);
   setVol(0.85);
