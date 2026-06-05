@@ -161,13 +161,20 @@
     box-shadow: 0 14px 40px rgba(0,0,0,0.55); z-index: 5;
     max-height: 60vh; overflow-y: auto;
   }
-  /* Narrow screens: the player is too short for an upward menu, so it gets
-     clipped. Drop it into a contained, inward sheet near the bottom instead. */
+  /* Narrow screens: the player is too short for an upward menu and a bottom
+     sheet hides under the browser toolbar. Center it as a scrollable popover. */
   @media (max-width: 640px){
     .menu {
       position: fixed;
-      left: 16px; right: 16px; bottom: 16px; top: auto;
-      min-width: 0; max-height: 56vh;
+      left: 16px; right: 16px;
+      top: 50%; bottom: auto;
+      transform: translateY(-50%);
+      min-width: 0;
+      max-height: 70vh;
+      max-height: 70svh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
       z-index: 50;
     }
   }
