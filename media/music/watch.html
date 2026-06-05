@@ -120,6 +120,7 @@
   .ctl:hover, .ctl.on { opacity: 1; color: var(--accent); }
   .ctl svg { width: 19px; height: 19px; }
   .ctl.skip svg { width: 23px; height: 23px; }
+  .ctl.tracknav svg { width: 18px; height: 18px; }
 
   .time { font-family: var(--ui); font-size: 12px; letter-spacing: 0.04em; color: var(--text); font-variant-numeric: tabular-nums; opacity: 0.9; }
   .time .sep { color: var(--muted); margin: 0 4px; }
@@ -205,11 +206,17 @@
           <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
 
+        <button class="ctl tracknav" id="prevTrack" aria-label="Previous track">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h2v12H6zM20 6v12l-9-6 9-6z"/></svg>
+        </button>
         <button class="ctl skip" id="back15" aria-label="Back 15 seconds">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5v11L4.5 12 12 6.5zM20 6.5v11L12.5 12 20 6.5z"/></svg>
         </button>
         <button class="ctl skip" id="fwd15" aria-label="Forward 15 seconds">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5v11L19.5 12 12 6.5zM4 6.5v11L11.5 12 4 6.5z"/></svg>
+        </button>
+        <button class="ctl tracknav" id="nextTrack" aria-label="Next track">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 6h2v12h-2zM4 6v12l9-6-9-6z"/></svg>
         </button>
 
         <div class="vol">
@@ -293,6 +300,7 @@
   const player=$("player"), video=$("video");
   const track=$("track"), played=$("played"), buffered=$("buffered"), scrubHead=$("scrubHead");
   const playBtn=$("playBtn"), playIcon=$("playIcon"), back15=$("back15"), fwd15=$("fwd15");
+  const prevTrack=$("prevTrack"), nextTrack=$("nextTrack");
   const muteBtn=$("muteBtn"), volIcon=$("volIcon"), volRail=$("volRail"), volFill=$("volFill");
   const curEl=$("cur"), durEl=$("dur");
   const ccBtn=$("ccBtn"), setBtn=$("setBtn"), fsBtn=$("fsBtn");
@@ -486,6 +494,9 @@
   playBtn.addEventListener("click", e=>{ e.stopPropagation(); toggle(); });
   back15.addEventListener("click", e=>{ e.stopPropagation(); video.currentTime=Math.max(0,video.currentTime-15); });
   fwd15.addEventListener("click",  e=>{ e.stopPropagation(); video.currentTime=Math.min(video.duration,video.currentTime+15); });
+  prevTrack.addEventListener("click", e=>{ e.stopPropagation();
+    if(video.currentTime>3){ video.currentTime=0; } else { load(current-1); video.play(); } });
+  nextTrack.addEventListener("click", e=>{ e.stopPropagation(); load(current+1); video.play(); });
 
   video.addEventListener("play", ()=>{ player.classList.add("playing"); playIcon.querySelector("path").setAttribute("d",ICON_PAUSE); });
   video.addEventListener("pause", ()=>{ player.classList.remove("playing"); playIcon.querySelector("path").setAttribute("d",ICON_PLAY); });
