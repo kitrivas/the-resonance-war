@@ -50,9 +50,10 @@
   .meta h1 {
     font-family: var(--serif);
     font-weight: 500;
-    font-size: clamp(26px, 4.4vw, 40px);
+    font-size: clamp(24px, 4.2vw, 38px);
     line-height: 1.1;
-    letter-spacing: 0.005em;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
     color: var(--bright);
     margin: 0;
   }
@@ -145,7 +146,7 @@
   }
   .ctl:hover, .ctl.on { opacity: 1; color: var(--accent); }
   .ctl svg { width: 19px; height: 19px; fill: currentColor; }
-  .ctl.skip svg { width: 22px; height: 22px; }
+  .ctl.skip svg { width: 23px; height: 23px; }
 
   .time { font-family: var(--ui); font-size: 12px; letter-spacing: 0.04em; color: var(--text); font-variant-numeric: tabular-nums; opacity: 0.9; }
   .time .sep { color: var(--muted); margin: 0 4px; }
@@ -253,18 +254,10 @@
         </button>
 
         <button class="ctl skip" id="back15" aria-label="Back 15 seconds">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 6.5a5.5 5.5 0 1 1-5.2 3.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M12 3.2 8.4 6.5 12 9.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <text x="12" y="15.4" text-anchor="middle" font-size="6.2" font-weight="600" font-family="Inter, sans-serif" fill="currentColor" stroke="none">15</text>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5v11L4.5 12 12 6.5zM20 6.5v11L12.5 12 20 6.5z"/></svg>
         </button>
         <button class="ctl skip" id="fwd15" aria-label="Forward 15 seconds">
-          <svg viewBox="0 0 24 24" fill="none">
-            <path d="M12 6.5a5.5 5.5 0 1 0 5.2 3.7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <path d="M12 3.2 15.6 6.5 12 9.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <text x="12" y="15.4" text-anchor="middle" font-size="6.2" font-weight="600" font-family="Inter, sans-serif" fill="currentColor" stroke="none">15</text>
-          </svg>
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 6.5v11L19.5 12 12 6.5zM4 6.5v11L11.5 12 4 6.5z"/></svg>
         </button>
 
         <div class="vol">
@@ -302,48 +295,45 @@
        src    : https://{pull_zone}.b-cdn.net/{video_id}/playlist.m3u8
        poster : https://{pull_zone}.b-cdn.net/{video_id}/thumbnail.jpg
      Resolutions + captions are read from the manifest automatically.
-     (A direct .mp4 URL also works — quality menu will just show "Auto".)
-     Optional manual caption tracks (only needed for plain .mp4 sources):
-       tracks: [{ label:"English", srclang:"en", src:".../captions/en.vtt", default:true }]
      ═══════════════════════════════════════════════════════ */
   const SOURCES = [
     // ── Intros ──
     { section:"Intros", title:"kitsvne", sub:"Intro",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/d24fe468-dcc3-440a-840a-bcbb590e34ad/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-01/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/d24fe468-dcc3-440a-840a-bcbb590e34ad/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/d24fe468-dcc3-440a-840a-bcbb590e34ad/thumbnail.jpg" },
     { section:"Intros", title:"AEON", sub:"Intro",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/450dc084-1aac-4a2b-a010-611f215dbc51/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-02/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/450dc084-1aac-4a2b-a010-611f215dbc51/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/450dc084-1aac-4a2b-a010-611f215dbc51/thumbnail.jpg" },
 
     // ── AEON ──
     { section:"AEON", title:"AEON — Ontology",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/8946f571-df66-4a14-91a5-0ffcecc31ca0/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-03/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/8946f571-df66-4a14-91a5-0ffcecc31ca0/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/8946f571-df66-4a14-91a5-0ffcecc31ca0/thumbnail.jpg" },
     { section:"AEON", title:"AEON — Rise",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/65da0aaf-b451-416d-900e-76b0596637bb/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-04/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/65da0aaf-b451-416d-900e-76b0596637bb/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/65da0aaf-b451-416d-900e-76b0596637bb/thumbnail.jpg" },
     { section:"AEON", title:"AEON — Prism",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/edcb1ab6-1997-401f-b4e1-5ee6f7040fdc/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-05/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/edcb1ab6-1997-401f-b4e1-5ee6f7040fdc/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/edcb1ab6-1997-401f-b4e1-5ee6f7040fdc/thumbnail.jpg" },
     { section:"AEON", title:"AEON — Infinite Game",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/9e8f419c-7edc-4b2a-9546-603f3410ff93/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-06/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/9e8f419c-7edc-4b2a-9546-603f3410ff93/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/9e8f419c-7edc-4b2a-9546-603f3410ff93/thumbnail.jpg" },
 
     // ── kitsvne ──
     { section:"kitsvne", title:"kitsvne", sub:"Project Intro",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/aad998e4-0c0b-4db0-8cd9-c340befeaa83/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-07/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/aad998e4-0c0b-4db0-8cd9-c340befeaa83/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/aad998e4-0c0b-4db0-8cd9-c340befeaa83/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Blade-Wet Mouth",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/2266a0af-7b55-4d6e-ad92-0bb019556357/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-08/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/2266a0af-7b55-4d6e-ad92-0bb019556357/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/2266a0af-7b55-4d6e-ad92-0bb019556357/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Glitch",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/286c21ba-795b-4fab-9966-bc3ed418bbe8/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-09/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/286c21ba-795b-4fab-9966-bc3ed418bbe8/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/286c21ba-795b-4fab-9966-bc3ed418bbe8/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Blood on the Floor",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/ec7f5a81-9762-425c-8b36-77b8af18b3a1/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-10/thumbnail.jpg" },
-    { section:"kitsvne", title:"kitsvne — Raison d'Etre Orchestral Vers.",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/e89e78cc-03be-4c29-ae02-6e7c66350c8e/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-11/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/ec7f5a81-9762-425c-8b36-77b8af18b3a1/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/ec7f5a81-9762-425c-8b36-77b8af18b3a1/thumbnail.jpg" },
+    { section:"kitsvne", title:"kitsvne — Raison d'Etre (Orchestral Vers.)",
+      src:"https://vz-a37fa5de-03f.b-cdn.net/e89e78cc-03be-4c29-ae02-6e7c66350c8e/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/e89e78cc-03be-4c29-ae02-6e7c66350c8e/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — 7x7 (San Francisco)",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/e99a3a2a-8cad-4f06-b672-d3b2fced690d/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-12/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/e99a3a2a-8cad-4f06-b672-d3b2fced690d/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/e99a3a2a-8cad-4f06-b672-d3b2fced690d/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — Valentine",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/71c95388-b6b2-4ac0-aba6-71b1a5cec131/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-13/thumbnail.jpg" },
-   { section:"kitsvne", title:"kitsvne — Gilt",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/36b3945e-2fa8-41a5-8512-dcf32c949f0b/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-14/thumbnail.jpg" },
+      src:"https://vz-a37fa5de-03f.b-cdn.net/71c95388-b6b2-4ac0-aba6-71b1a5cec131/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/71c95388-b6b2-4ac0-aba6-71b1a5cec131/thumbnail.jpg" },
+    { section:"kitsvne", title:"kitsvne — Gilt",
+      src:"https://vz-a37fa5de-03f.b-cdn.net/36b3945e-2fa8-41a5-8512-dcf32c949f0b/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/36b3945e-2fa8-41a5-8512-dcf32c949f0b/thumbnail.jpg" },
     { section:"kitsvne", title:"kitsvne — The Last Word",
-      src:"https://vz-a37fa5de-03f.b-cdn.net/1742167f-8a4c-45fa-8a79-89b24f46bd37/playlist.m3u8", poster:"https://YOUR-PULLZONE.b-cdn.net/VIDEO-15/thumbnail.jpg" }
+      src:"https://vz-a37fa5de-03f.b-cdn.net/1742167f-8a4c-45fa-8a79-89b24f46bd37/playlist.m3u8", poster:"https://vz-a37fa5de-03f.b-cdn.net/1742167f-8a4c-45fa-8a79-89b24f46bd37/thumbnail.jpg" }
   ];
-  
+
   const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
 
   const $ = id => document.getElementById(id);
@@ -388,7 +378,6 @@
 
     if(hls){ hls.destroy(); hls=null; }
     usingHls=false;
-    // clear old native tracks
     [...video.querySelectorAll("track")].forEach(t=>t.remove());
 
     nowTitle.textContent=s.title||"—";
@@ -408,7 +397,6 @@
       hls.on(Hls.Events.SUBTITLE_TRACKS_UPDATED, ()=>{ buildCaptionMenu(); });
       hls.on(Hls.Events.LEVEL_SWITCHED, ()=>{ buildQualityMenu(); });
     } else {
-      // native: Safari HLS, or a direct .mp4
       video.src=s.src;
       (s.tracks||[]).forEach(t=>{
         const tr=document.createElement("track");
@@ -417,9 +405,8 @@
         video.appendChild(tr);
       });
       video.addEventListener("loadedmetadata", buildCaptionMenu, {once:true});
-      buildQualityMenu(); // "Auto" only
+      buildQualityMenu();
     }
-    // speed persists across clips
     video.playbackRate=SPEEDS[speedIdx];
     buildSpeedMenu();
   }
@@ -428,10 +415,7 @@
   function buildQualityMenu(){
     let items=[{label:"Auto", level:-1}], sel=0;
     if(usingHls && hls && hls.levels && hls.levels.length){
-      const levels=hls.levels
-        .map((lv,idx)=>({h:lv.height||0, idx}))
-        .sort((a,b)=>b.h-a.h);
-      // Auto label shows the resolved height while in auto
+      const levels=hls.levels.map((lv,idx)=>({h:lv.height||0, idx})).sort((a,b)=>b.h-a.h);
       if(hls.autoLevelEnabled && hls.currentLevel>=0 && hls.levels[hls.currentLevel])
         items[0].label="Auto · "+hls.levels[hls.currentLevel].height+"p";
       levels.forEach(l=>{ if(l.h) items.push({label:l.h+"p", level:l.idx}); });
@@ -439,7 +423,7 @@
       if(sel<0) sel=0;
     }
     buildMenu(qualList, items, sel, idx=>{
-      if(usingHls && hls) hls.currentLevel=items[idx].level; // -1 = auto
+      if(usingHls && hls) hls.currentLevel=items[idx].level;
       buildQualityMenu();
     });
   }
