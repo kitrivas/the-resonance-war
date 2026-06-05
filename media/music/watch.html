@@ -1,5 +1,23 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>kitsvne: showcase</title>
+
+<!-- ── Social share card (Open Graph / Twitter) ──────────────────
+     Swap og:url for the live page URL and og:image for a cover image
+     hosted on kitrivas.com. Use a 1200×630 JPG/PNG for best results. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="kitsvne" />
+<meta property="og:title" content="kitsvne: showcase" />
+<meta property="og:description" content="Music videos and visuals from the kitsvne project." />
+<meta property="og:url" content="https://kitrivas.com/showcase/" />
+<meta property="og:image" content="https://kitrivas.com/showcase/og-cover.jpg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="kitsvne: showcase" />
+<meta name="twitter:description" content="Music videos and visuals from the kitsvne project." />
+<meta name="twitter:image" content="https://kitrivas.com/showcase/og-cover.jpg" />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
@@ -141,6 +159,17 @@
     backdrop-filter: blur(10px);
     padding: 6px 0; display: none;
     box-shadow: 0 14px 40px rgba(0,0,0,0.55); z-index: 5;
+    max-height: 60vh; overflow-y: auto;
+  }
+  /* Narrow screens: the player is too short for an upward menu, so it gets
+     clipped. Drop it into a contained, inward sheet near the bottom instead. */
+  @media (max-width: 640px){
+    .menu {
+      position: fixed;
+      left: 16px; right: 16px; bottom: 16px; top: auto;
+      min-width: 0; max-height: 56vh;
+      z-index: 50;
+    }
   }
   .menu.open { display: block; }
   .menu .group-label { font-family: var(--ui); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-dim); padding: 9px 16px 5px; }
