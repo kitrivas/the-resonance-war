@@ -1,54 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Characters — The Resonance War</title>
-<meta property="og:title" content="Characters — The Resonance War">
-<meta property="og:description" content="Beings older than the civilizations that named them.">
-<meta property="og:image" content="https://kitrivas.com/the-resonance-war/images/og-image.jpg">
-<meta property="og:url" content="https://kitrivas.com/the-resonance-war/characters.html">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Serif+KR:wght@300;400;600&family=Noto+Serif+JP:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css">
-<style>
-.char-list { display: flex; flex-direction: column; gap: 1.5rem; }
-.char-card { border: 1px solid var(--border); background: var(--bg-elevated); padding: 2rem 2.2rem; position: relative; transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s; }
-.char-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); opacity: 0; transition: opacity 0.4s; }
-.char-card:hover { border-color: var(--border-warm); transform: translateY(-2px); box-shadow: 0 0 20px rgba(181, 160, 122, 0.03); }
-.char-card:hover::before { opacity: 1; }
-.char-header { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.3rem; flex-wrap: wrap; }
-.char-name { font-family: var(--serif); font-weight: 500; font-size: 1.35rem; color: var(--text-bright); letter-spacing: 0.02em; }
-.char-cjk { font-family: var(--cjk); font-size: 0.75rem; color: var(--accent-dim); }
-.char-faction { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-soft); margin-bottom: 1rem; }
-.char-desc { font-size: 0.95rem; color: var(--text); line-height: 1.8; margin: 0; }
-.aeon-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-.aeon-card { border: 1px solid var(--border); background: var(--bg-elevated); padding: 1.5rem 1.6rem; position: relative; transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s; }
-.aeon-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); opacity: 0; transition: opacity 0.4s; }
-.aeon-card:hover { border-color: var(--border-warm); transform: translateY(-2px); box-shadow: 0 0 20px rgba(181, 160, 122, 0.03); }
-.aeon-card:hover::before { opacity: 1; }
-.aeon-card .char-name { font-size: 1.15rem; margin-bottom: 0.15rem; }
-.aeon-card .char-faction { margin-bottom: 0.7rem; }
-.aeon-card .char-desc { font-size: 0.88rem; }
-@media (max-width: 768px) { .char-card { padding: 1.5rem; } .aeon-grid { grid-template-columns: 1fr; } .aeon-card { padding: 1.3rem; } }
-</style>
-</head>
-<body>
-
-<nav id="nav">
-  <div class="nav-title"><a href="../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
-  <button class="menu-toggle" id="menuToggle">&#9776;</button>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="world.html">World</a></li>
-    <li><a href="characters.html" class="active">Characters</a></li>
-    <li><a href="read.html">Read</a></li>
-    <li><a href="media.html">Media</a></li>
-  </ul>
-</nav>
-
+---
+layout: default
+title_full: "Characters — The Resonance War"
+description: "Beings older than the civilizations that named them."
+nav_active: characters
+page_css: /css/pages/characters.css
+fonts: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Serif+KR:wght@300;400;600&family=Noto+Serif+JP:wght@300;400;600&display=swap"
+---
+{% raw %}
 <div class="page-header">
   <h1>Characters</h1>
   <p>Beings older than the civilizations that named them.</p>
@@ -115,16 +73,4 @@
     </div>
   </div>
 </section>
-
-<footer>
-  <span>&copy; 2026 Kit Rivas</span>
-  <div class="footer-links">
-    <a href="#">Twitter</a>
-    <a href="#">Instagram</a>
-    <a href="#">Threads</a>
-  </div>
-</footer>
-
-<script src="js/site.js"></script>
-</body>
-</html>
+{% endraw %}

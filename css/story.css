@@ -416,3 +416,15 @@ nav {
   .audio-player { padding: 0.6rem 1.2rem; }
   .player-speed { display: none; }
 }
+
+/* ─── Part Navigation (multi-part stories) ─── */
+.part-label { margin-top: 2.6rem; }
+.part-nav { margin-top: 2.2rem; display: flex; gap: 1.6rem; justify-content: center; }
+.part-nav a, .part-nav span { font-family: var(--sans); font-size: 0.95rem; letter-spacing: 0.05em; padding-bottom: 0.35rem; }
+.part-nav span { color: var(--accent-soft); border-bottom: 1px solid var(--accent-dim); }
+.part-nav a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.part-nav a:hover { color: var(--accent-soft); }
+
+/* Compact variant (e.g. The Pursuit — Part I / Part II) */
+.part-nav--compact { margin-top: 1.5rem; gap: 1rem; }
+.part-nav--compact a, .part-nav--compact span { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; padding-bottom: 0.2rem; }

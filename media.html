@@ -1,49 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Media — The Resonance War</title>
-<meta property="og:title" content="Media — The Resonance War">
-<meta property="og:description" content="Sound and vision from the world of The Resonance War.">
-<meta property="og:image" content="https://kitrivas.com/the-resonance-war/images/og-image.jpg">
-<meta property="og:url" content="https://kitrivas.com/the-resonance-war/media.html">
-<meta property="og:type" content="website">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/site.css">
-<style>
-.featured-slot { border: 1px dashed var(--border); padding: 4rem 2rem; text-align: center; margin-bottom: 3rem; }
-.featured-slot .slot-label { font-family: var(--sans); font-size: 0.6rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--text-muted); }
-.media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin: 2rem 0; }
-.media-card { display: block; border: 1px solid var(--border); background: var(--bg-elevated); padding: 1.8rem; text-decoration: none; position: relative; transition: border-color 0.4s, transform 0.3s, box-shadow 0.4s; }
-.media-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); opacity: 0; transition: opacity 0.4s; }
-.media-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent-dim), transparent); opacity: 0; transition: opacity 0.4s; }
-.media-card:hover { border-color: var(--border-warm); transform: translateY(-2px); box-shadow: 0 0 20px rgba(181, 160, 122, 0.04), inset 0 0 20px rgba(181, 160, 122, 0.02); }
-.media-card:hover::before, .media-card:hover::after { opacity: 1; }
-.media-icon { font-size: 1.4rem; margin-bottom: 1rem; color: var(--accent-dim); }
-.media-card h3 { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; color: var(--text-bright); margin-bottom: 0.3rem; letter-spacing: 0.02em; }
-.media-card .media-type { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-soft); margin-bottom: 0.8rem; }
-.media-card .media-desc { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; margin-bottom: 0; }
-.media-status { display: inline-block; font-family: var(--sans); font-size: 0.55rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--accent-dim); border: 1px solid var(--border-warm); padding: 0.3rem 0.8rem; margin-top: 1rem; }
-@media (max-width: 768px) { .media-grid { grid-template-columns: 1fr; } .media-card { padding: 1.5rem; } }
-</style>
-</head>
-<body>
-
-<nav id="nav">
-  <div class="nav-title"><a href="../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
-  <button class="menu-toggle" id="menuToggle">&#9776;</button>
-  <ul class="nav-links" id="navLinks">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="world.html">World</a></li>
-    <li><a href="characters.html">Characters</a></li>
-    <li><a href="read.html">Read</a></li>
-    <li><a href="media.html" class="active">Media</a></li>
-  </ul>
-</nav>
-
+---
+layout: default
+title_full: "Media — The Resonance War"
+description: "Sound and vision from the world of The Resonance War."
+nav_active: media
+page_css: /css/pages/media.css
+---
+{% raw %}
 <div class="page-header">
   <h1>Media</h1>
   <p>Sound and vision from the world of The Resonance War.</p>
@@ -84,16 +46,4 @@
     </a>
   </div>
 </section>
-
-<footer>
-  <span>&copy; 2026 Kit Rivas</span>
-  <div class="footer-links">
-    <a href="#">Twitter</a>
-    <a href="#">Instagram</a>
-    <a href="#">Threads</a>
-  </div>
-</footer>
-
-<script src="js/site.js"></script>
-</body>
-</html>
+{% endraw %}
