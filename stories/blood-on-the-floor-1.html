@@ -1,17 +1,80 @@
----
-layout: story
-title_full: "Blood On The Floor: The Descent — The Resonance War"
-title: "Blood On The Floor"
-description: "Marseille. 1973. A Kratarch resurfaces in the Mediterranean corridor. Two Azhar — legendary, estranged, and the only ones who can find him — are forced back into the same orbit."
-og_type: article
-tagline: "Marseille. 1973. A Kratarch resurfaces in the Mediterranean corridor. Two Azhar &mdash; legendary, estranged, and the only ones who can find him &mdash; are forced back into the same orbit."
-part_label: "Part 2 of 9 &mdash; The Descent"
-series: { slug: blood-on-the-floor, count: 9, index: 1 }
-audio: "https://pub-6640defbff2e4fabab5c9af071e903b8.r2.dev/blood-on-the-floor-1.mp3"
-nav_prev: { url: "blood-on-the-floor-0.html", label: "&larr; Part 0: The Non-Life" }
-nav_next: { url: "blood-on-the-floor-2.html", label: "Part 2: The Gambling Den &rarr;" }
----
-{% raw %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood On The Floor: The Descent &mdash; The Resonance War</title>
+<meta property="og:title" content="Blood On The Floor: The Descent — The Resonance War">
+<meta property="og:description" content="Marseille. 1973. A Kratarch resurfaces in the Mediterranean corridor. Two Azhar — legendary, estranged, and the only ones who can find him — are forced back into the same orbit.">
+<meta property="og:image" content="https://kitrivas.com/the-resonance-war/images/og-image.jpg">
+<meta property="og:url" content="https://kitrivas.com/the-resonance-war/stories/blood-on-the-floor-1.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/story.css">
+<style>
+.part-label { margin-top: 2.6rem; }
+.part-nav { margin-top: 2.2rem; display: flex; gap: 1.6rem; justify-content: center; }
+.part-nav a, .part-nav span { font-family: var(--sans); font-size: 0.95rem; letter-spacing: 0.05em; padding-bottom: 0.35rem; }
+.part-nav span { color: var(--accent-soft); border-bottom: 1px solid var(--accent-dim); }
+.part-nav a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.part-nav a:hover { color: var(--accent-soft); }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-left">
+    <div class="nav-title"><a href="../../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
+  </div>
+  <div class="nav-right">
+    <button class="menu-toggle" id="menuToggle">&#9776;</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../world.html">World</a></li>
+      <li><a href="../characters.html">Characters</a></li>
+      <li><a href="../read.html">Read</a></li>
+      <li><a href="../media.html">Media</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle">Light</button>
+    <div class="font-sizer">
+      <span class="sizer-label">A</span>
+      <input type="range" id="fontSlider" min="16" max="24" value="18" step="1">
+      <span class="sizer-label sizer-large">A</span>
+    </div>
+  </div>
+</nav>
+
+<div class="story-header">
+  <div class="story-meta">Short Fiction</div>
+  <h1>Blood On The Floor</h1>
+  <div class="story-tagline">Marseille. 1973. A Kratarch resurfaces in the Mediterranean corridor. Two Azhar &mdash; legendary, estranged, and the only ones who can find him &mdash; are forced back into the same orbit.</div>
+  <div class="part-label">Part 1 of 9 &mdash; The Descent</div>
+  <div class="part-nav">
+    <a href="blood-on-the-floor-0.html">0</a>
+    <span>1</span>
+    <a href="blood-on-the-floor-2.html">2</a>
+    <a href="blood-on-the-floor-3.html">3</a>
+    <a href="blood-on-the-floor-4.html">4</a>
+    <a href="blood-on-the-floor-5.html">5</a>
+    <a href="blood-on-the-floor-6.html">6</a>
+    <a href="blood-on-the-floor-7.html">7</a>
+    <a href="blood-on-the-floor-8.html">8</a>
+  </div>
+</div>
+
+<div class="story-rule"></div>
+
+<div class="story-body">
+
+<div style="text-align: center; margin-bottom: 2.5rem;">
+  <button class="listen-btn" id="listenBtn" data-audio="https://pub-6640defbff2e4fabab5c9af071e903b8.r2.dev/blood-on-the-floor-1.mp3">
+    <span class="listen-icon">&#9654;</span> Listen
+  </button>
+</div>
+
 <h2>Geneva &mdash; February 1973</h2>
 
 <p>The report arrived at eleven minutes past nine on a Tuesday evening. Valen noted the time because the sealed pouch had spent twelve minutes in the diplomatic tray while he finished a provenance dispute: a Vermeer attribution, a Dutch family whose claim to the canvas had survived three centuries of war only to founder on the question of whether the master&rsquo;s hand had painted the sky or merely approved it. Twelve minutes of inattention. The most consequential of his recent memory.</p>
@@ -173,4 +236,37 @@ nav_next: { url: "blood-on-the-floor-2.html", label: "Part 2: The Gambling Den &
 <p>Valen sat at the table. The two glasses of terrible pastis. The maps. The lighthouse counting its nine-second intervals. He listened to Kira&rsquo;s breathing settle in the next room, not into sleep, neither of them would sleep tonight, but into the particular stillness of a body at rest while the mind behind it ran calculations and replayed conversations and held, in the space where sleep should have been, the image of a face across a table.</p>
 <p>He picked up his glass. Drank the rest of the pastis in one swallow, because the burn of bad anise was at least a sensation that belonged to the present moment rather than to the centuries behind it or the morning ahead.</p>
 <p>He had work to do.</p>
-{% endraw %}
+
+</div>
+
+<div class="story-nav">
+  <a href="blood-on-the-floor-0.html">&larr; Part 0: The Non-Life</a>
+  <a href="blood-on-the-floor-2.html">Part 2: The Gambling Den &rarr;</a>
+</div>
+
+<div class="audio-player" id="audioPlayer">
+  <div class="player-inner">
+    <div class="player-controls">
+      <button class="player-btn" id="skipBack" title="Back 15s">&#8634;</button>
+      <button class="player-btn play-btn" id="playPause">&#9654;</button>
+      <button class="player-btn" id="skipFwd" title="Forward 15s">&#8635;</button>
+      <div class="player-progress-wrap">
+        <span class="player-time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"><div class="progress-handle"></div></div></div>
+        <span class="player-time" id="totalTime">0:00</span>
+      </div>
+      <button class="player-speed" id="speedBtn">1&times;</button>
+      <button class="player-close" id="playerClose">&times;</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>&copy; 2026 Kit Rivas</span>
+  <div class="footer-links"><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">Threads</a></div>
+</footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/story.js"></script>
+</body>
+</html>

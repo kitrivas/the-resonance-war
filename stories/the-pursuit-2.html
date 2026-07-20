@@ -1,17 +1,96 @@
----
-layout: story
-title_full: "The Pursuit: Part II — The Resonance War"
-title: "The Pursuit"
-description: "Budapest. Ankara. Beirut. Damascus. A Cold War manhunt across four cities."
-og_type: article
-meta: "Short Fiction &middot; Part II"
-tagline: "Budapest. Ankara. Beirut. Damascus."
-part_links: [ { label: "Part I", url: "the-pursuit-1.html", current: false }, { label: "Part II", url: null, current: true } ]
-audio: "https://pub-6640defbff2e4fabab5c9af071e903b8.r2.dev/the-pursuit-2v2.mp3"
-nav_prev: { url: "the-pursuit-1.html", label: "&larr; Part I" }
-nav_next: { url: "../read.html", label: "Back to Read &rarr;" }
----
-{% raw %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Pursuit: Part II — The Resonance War</title>
+<meta property="og:title" content="The Pursuit: Part II — The Resonance War">
+<meta property="og:description" content="Budapest. Ankara. Beirut. Damascus. A Cold War manhunt across four cities.">
+<meta property="og:image" content="https://kitrivas.com/the-resonance-war/images/og-image.jpg">
+<meta property="og:url" content="https://kitrivas.com/the-resonance-war/stories/the-pursuit-2.html">
+<meta property="og:type" content="article">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/story.css">
+<style>
+.part-nav { margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center; }
+.part-nav a, .part-nav span { font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; padding-bottom: 0.2rem; }
+.part-nav span { color: var(--accent-soft); border-bottom: 1px solid var(--accent-dim); }
+.part-nav a { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+.part-nav a:hover { color: var(--accent-soft); }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-left">
+    <div class="nav-title"><a href="../../index.html" class="nav-author">Kit Rivas</a> <span>/</span> The Resonance War</div>
+  </div>
+  <div class="nav-right">
+    <button class="menu-toggle" id="menuToggle">&#9776;</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="../index.html">Home</a></li>
+      <li><a href="../world.html">World</a></li>
+      <li><a href="../characters.html">Characters</a></li>
+      <li><a href="../read.html">Read</a></li>
+      <li><a href="../media.html">Media</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle">Light</button>
+    <div class="font-sizer">
+      <span class="sizer-label">A</span>
+      <input type="range" id="fontSlider" min="16" max="24" value="18" step="1">
+      <span class="sizer-label sizer-large">A</span>
+    </div>
+  </div>
+</nav>
+
+<div class="story-header">
+  <div class="story-meta">Short Fiction &middot; Part II</div>
+  <h1>The Pursuit</h1>
+  <div class="story-tagline">Budapest. Ankara. Beirut. Damascus.</div>
+  <div class="part-nav">
+    <a href="the-pursuit-1.html">Part I</a>
+    <span>Part II</span>
+  </div>
+</div>
+
+<div class="story-rule"></div>
+
+<div class="story-body">
+  <div style="text-align: center; margin-bottom: 2.5rem;">
+    <button class="listen-btn" id="listenBtn" data-audio="https://pub-6640defbff2e4fabab5c9af071e903b8.r2.dev/the-pursuit-2v2.mp3">
+      <span class="listen-icon">&#9654;</span> Listen
+    </button>
+  </div>
+
+<!-- CHANGE 4: Story content goes here -->
+<!-- Use these building blocks:
+
+  Section header:
+  <h2>Place &mdash; Date</h2>
+
+  Paragraph (first after header — no indent):
+  <p>Text here.</p>
+
+  Paragraph (all others — auto-indented):
+  <p>Text here.</p>
+
+  Italics within a paragraph:
+  <em>italicised text</em>
+
+  Dialogue (use smart quotes):
+  &ldquo;Dialogue here,&rdquo;
+
+  Em dash:
+  &mdash;
+
+  Section break:
+  <div class="story-break"></div>
+
+-->
+
 <h2>V. Damascus &mdash; September 1974</h2>
 
 <p>They crossed the border at Masnaa in the back of a produce truck that smelled of overripe figs and diesel, wedged between crates stamped with Arabic that identified the contents as agricultural supplies bound for the wholesale market at Souk al-Hal. The driver was a contact of a contact &mdash; a Lebanese Druze who ran goods across the border twice weekly and who asked no questions of the two Europeans who paid him in francs and sat in silence among the fruit.</p>
@@ -339,4 +418,37 @@ nav_next: { url: "../read.html", label: "Back to Read &rarr;" }
 <p>Valen watched him go. He watched until the sodium light took him and the street&rsquo;s curve erased the last of his silhouette, and then he pushed off the wall and walked west, toward the Vashirai station in Bern by way of Beirut and whatever border crossings would admit a Swiss cultural consultant whose paperwork radiated quiet institutional authority.</p>
 
 <p>Behind them, Damascus held its breath. The muezzin would begin in an hour. The street vendors in an hour after that. The sun would arrive with its desert dust, and the city would resume its ancient, continuous performance of being inhabited, and on the second floor of a building in Bab Touma a dead man would sit against a wall with cracked glass at his feet and the smell of iron fading in the heat, and no one in the neighbourhood &mdash; not Abu Nabil, not Umm Rashid, not the woman with the laundry &mdash; would understand what had passed through their streets in the night.</p>
-{% endraw %}
+
+</div>
+
+<div class="story-nav">
+  <a href="the-pursuit-1.html">&larr; Part I</a>
+  <a href="../read.html">Back to Read &rarr;</a>
+</div>
+
+<div class="audio-player" id="audioPlayer">
+  <div class="player-inner">
+    <div class="player-controls">
+      <button class="player-btn" id="skipBack" title="Back 15s">&#8634;</button>
+      <button class="player-btn play-btn" id="playPause">&#9654;</button>
+      <button class="player-btn" id="skipFwd" title="Forward 15s">&#8635;</button>
+      <div class="player-progress-wrap">
+        <span class="player-time" id="currentTime">0:00</span>
+        <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"><div class="progress-handle"></div></div></div>
+        <span class="player-time" id="totalTime">0:00</span>
+      </div>
+      <button class="player-speed" id="speedBtn">1&times;</button>
+      <button class="player-close" id="playerClose">&times;</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>&copy; 2026 Kit Rivas</span>
+  <div class="footer-links"><a href="#">Twitter</a><a href="#">Instagram</a><a href="#">Threads</a></div>
+</footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/story.js"></script>
+</body>
+</html>
