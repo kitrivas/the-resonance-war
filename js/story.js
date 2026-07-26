@@ -140,3 +140,22 @@
     document.body.classList.remove('body-audio-active');
   });
 })();
+
+// ─── Back to Top ───
+(function() {
+  var btn = document.getElementById('toTop');
+  if (!btn) return;
+  var shown = false;
+  function onScroll() {
+    var past = window.pageYOffset > 400;
+    if (past !== shown) {
+      shown = past;
+      btn.classList.toggle('visible', past);
+    }
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  btn.addEventListener('click', function() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
