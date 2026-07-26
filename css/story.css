@@ -435,14 +435,14 @@ nav {
   bottom: 2.2rem;
   right: 2.2rem;
   z-index: 90;
-  width: 2rem;
-  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
   background: none;
   border: none;
-  padding: 0;
   color: var(--text-muted);
   cursor: pointer;
   opacity: 0;
@@ -450,14 +450,7 @@ nav {
   pointer-events: none;
   transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s;
 }
-.to-top::before {
-  content: '';
-  width: 0.62rem;
-  height: 0.62rem;
-  border-top: 1.5px solid currentColor;
-  border-right: 1.5px solid currentColor;
-  transform: rotate(-45deg) translateY(2px);
-}
+.to-top svg { display: block; width: 1.2rem; height: 1.2rem; }
 .to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .to-top:hover { color: var(--accent-soft); }
 /* clear the audio player bar while it is showing */
