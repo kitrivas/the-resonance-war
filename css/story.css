@@ -435,28 +435,30 @@ nav {
   bottom: 2.2rem;
   right: 2.2rem;
   z-index: 90;
+  width: 2.1rem;
+  height: 2.1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  padding: 0;
-  background: none;
-  border: none;
-  color: var(--text-muted);
+  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-warm);
+  color: var(--accent-soft);
+  font-family: var(--sans);
+  font-size: 0.95rem;
+  line-height: 1;
   cursor: pointer;
   opacity: 0;
-  transform: translateY(6px);
+  transform: translateY(8px);
   pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s;
+  transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s, border-color 0.3s, background 0.4s;
 }
-.to-top svg { display: block; width: 1.2rem; height: 1.2rem; }
 .to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.to-top:hover { color: var(--accent-soft); }
-/* clear the audio player bar while it is showing */
-.body-audio-active .to-top { bottom: 5.4rem; }
+.to-top:hover { color: var(--accent); border-color: var(--accent-dim); background: var(--bg-elevated); }
+/* lift clear of the audio player bar while it is showing */
+.body-audio-active .to-top { bottom: 5.5rem; }
 
 @media (max-width: 768px) {
-  .to-top { bottom: 1.4rem; right: 1.4rem; }
-  .body-audio-active .to-top { bottom: 4.7rem; }
+  .to-top { bottom: 1.3rem; right: 1.3rem; width: 2rem; height: 2rem; }
+  .body-audio-active .to-top { bottom: 4.8rem; }
 }
