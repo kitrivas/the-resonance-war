@@ -432,33 +432,38 @@ nav {
 /* ─── Back to Top ─── */
 .to-top {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 2.2rem;
+  right: 2.2rem;
   z-index: 90;
-  width: 2.7rem;
-  height: 2.7rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--border-warm);
-  color: var(--accent-soft);
-  font-family: var(--sans);
-  font-size: 1.15rem;
-  line-height: 1;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--text-muted);
   cursor: pointer;
   opacity: 0;
-  transform: translateY(8px);
+  transform: translateY(6px);
   pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s, border-color 0.3s, background 0.4s;
+  transition: opacity 0.4s ease, transform 0.4s ease, color 0.3s;
+}
+.to-top::before {
+  content: '';
+  width: 0.62rem;
+  height: 0.62rem;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: rotate(-45deg) translateY(2px);
 }
 .to-top.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.to-top:hover { color: var(--accent); border-color: var(--accent-dim); background: var(--bg-elevated); }
-/* lift clear of the audio player bar while it is showing */
-.body-audio-active .to-top { bottom: 5.6rem; }
+.to-top:hover { color: var(--accent-soft); }
+/* clear the audio player bar while it is showing */
+.body-audio-active .to-top { bottom: 5.4rem; }
 
 @media (max-width: 768px) {
-  .to-top { bottom: 1.2rem; right: 1.2rem; width: 2.5rem; height: 2.5rem; }
-  .body-audio-active .to-top { bottom: 4.9rem; }
+  .to-top { bottom: 1.4rem; right: 1.4rem; }
+  .body-audio-active .to-top { bottom: 4.7rem; }
 }
