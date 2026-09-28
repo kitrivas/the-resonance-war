@@ -20,7 +20,7 @@ fonts: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,
   {% if page.series %}
   <div class="part-nav">
     {% assign last = page.series.count | minus: 1 %}
-    {% for i in (0..last) %}{% if i == page.series.index %}<span>{{ i | plus: 1 }}</span>{% else %}<a href="{{ page.series.slug }}-{{ i }}.html">{{ i | plus: 1 }}</a>{% endif %}
+    {% for i in (0..last) %}{% if i == page.series.index %}<span>{{ i }}</span>{% else %}<a href="{{ page.series.slug }}-{{ i }}.html">{{ i }}</a>{% endif %}
     {% endfor %}
   </div>
   {% elsif page.part_links %}
