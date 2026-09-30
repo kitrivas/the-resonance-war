@@ -321,7 +321,7 @@
     { section:"Movement II: The Made Self", title:"Fleur Du Mal",               ...bunny("https://player.mediadelivery.net/play/725543/d4857c66-189d-4bfa-a6e0-9cd7d11298d1") },
     { section:"Movement II: The Made Self", title:"Adore Me For A Season",      ...bunny("https://player.mediadelivery.net/play/725543/246a0555-d02e-4d41-b887-b0ba32846463") },
     { section:"Movement II: The Made Self", title:"Kept Man",                   ...bunny("https://player.mediadelivery.net/play/725543/3d30ac98-6548-4252-8acb-c57c0fb8b62b") },
-    { section:"Movement II: The Made Self", title:"Paris is Burning",           ...bunny("https://player.mediadelivery.net/play/725543/885091d2-1f41-4a5e-b5d3-1eb871640852") },
+    { section:"Movement II: The Made Self", title:"Paris is Burning",           pauseAfter:true, ...bunny("https://player.mediadelivery.net/play/725543/885091d2-1f41-4a5e-b5d3-1eb871640852") },
     // ── Movement III: Recollection ──
     { section:"Movement III: Recollection", title:"Recollection", sub:"Movement III · Narration", narration:true, ...bunny("https://player.mediadelivery.net/play/725543/7faf6573-de1b-4ad0-b88b-fbe00f06fc03") },
     { section:"Movement III: Recollection", title:"Cloud Impressions",          ...bunny("https://player.mediadelivery.net/play/725543/b3075bee-83bf-4579-90c1-e46f7014006b") },
@@ -334,9 +334,7 @@
     // ── Movement IV: Return ──
     { section:"Movement IV: Return", title:"Return", sub:"Movement IV · Narration", narration:true, ...bunny("https://player.mediadelivery.net/play/725543/36c60bf1-ea2b-41f4-8c3f-3eabedf2a9ae") },
     { section:"Movement IV: Return", title:"Gilt",                              ...bunny("https://player.mediadelivery.net/play/725543/9fde81cc-b4cc-4dcb-a678-2af40903b3ee") },
-    // The Last Word — new render still generating. Plays the K-star's Showcase copy until then;
-    // swap in the K-star's Videos play URL once it's uploaded.
-    { section:"Movement IV: Return", title:"The Last Word",                     ...bunny("https://player.mediadelivery.net/play/670627/1742167f-8a4c-45fa-8a79-89b24f46bd37") }
+    { section:"Movement IV: Return", title:"The Last Word",                     ...bunny("https://player.mediadelivery.net/play/725543/e5596153-a796-45a0-b6a2-c2a557117a06") }
   ];
 
   const SPEEDS = [0.75, 1, 1.25, 1.5, 2];
@@ -560,7 +558,7 @@
   video.addEventListener("progress", ()=>{
     if(video.buffered.length){ const end=video.buffered.end(video.buffered.length-1); buffered.style.width=(end/video.duration*100||0)+"%"; }
   });
-  video.addEventListener("ended", ()=>{ if(SOURCES.length>1 && current<SOURCES.length-1){ load(current+1); video.play(); } });
+  video.addEventListener("ended", ()=>{ if(SOURCES.length>1 && current<SOURCES.length-1){ const hold=SOURCES[current].pauseAfter; load(current+1); if(!hold) video.play(); } });  // pauseAfter: cue up the next track but wait for Play
 
   /* ── scrub ── */
   function seekFromEvent(e){
