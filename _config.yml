@@ -1,0 +1,24 @@
+title: The Resonance War
+description: >-
+  Before there were gods, there were the Azhar — and the war between them
+  shattered the architecture of heaven.
+author: Kit Rivas
+author_url: "/"
+
+# Live site is served as a project site at kitrivas.com/the-resonance-war/
+url: "https://kitrivas.com"
+baseurl: "/the-resonance-war"
+
+# Google Fonts links
+fonts_default: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&display=swap"
+fonts_story: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap"
+fonts_chars: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Serif+KR:wght@300;400;600&family=Noto+Serif+JP:wght@300;400;600&display=swap"
+
+# Build
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
+  - .sass-cache
+plugins: []
